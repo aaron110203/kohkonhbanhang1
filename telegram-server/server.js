@@ -53,37 +53,70 @@ bot.onText(/\/start/, (msg) => {
   userChatIds.set(username, chatId);
   console.log(`✅ Đã lưu ChatID cho ${username}`);
 
-  bot.sendMessage(chatId, 
-    `✅ CHÀO MỪNG ĐẾN VỚI KOHKONG SHOP BOT!\n\n` +
-    `👤 Username: ${username}\n` +
-    `🆔 Chat ID: ${chatId}\n\n` +
-    `🛒 BẠN LÀ KHÁCH HÀNG?\n` +
-    `• Truy cập website: https://taphoakohkong.live/products.html\n` +
-    `• Bấm nút "Kết Nối Bot Ngay"\n` +
-    `• Nhập username: ${username}\n` +
-    `• Khi đặt hàng, bạn sẽ nhận thông báo tại đây!\n\n` +
-    `👔 BẠN LÀ ĐẠI LÝ?\n` +
-    `1️⃣ Vào https://taphoakohkong.live/login.html\n` +
-    `2️⃣ Đăng ký với username: ${username}\n` +
-    `3️⃣ Bấm "Gửi Yêu Cầu Mã"\n` +
-    `4️⃣ Gửi /getcode để nhận mã xác minh\n` +
-    `5️⃣ Hoàn tất đăng ký\n\n` +
-    `📱 LỆNH CỦA BOT:\n` +
-    `/getcode - Lấy mã xác minh (cho đại lý)\n` +
-    `/stat - Xem trạng thái tài khoản\n` +
-    `/myinfo - Xem thông tin của bạn\n\n` +
-    `🌐 Website: https://taphoakohkong.live`,
-    {
-      reply_markup: {
-        inline_keyboard: [
-          [
-            { text: '🛒 Đặt Hàng', url: 'https://taphoakohkong.live/products.html' },
-            { text: '👔 Đăng Ký Đại Lý', url: 'https://taphoakohkong.live/login.html' }
+  // Check if user has pending verification code
+  const codeData = verificationCodes.get(username);
+  
+  if (codeData && Date.now() <= codeData.expiresAt) {
+    // User has active code - send it immediately
+    const remainingMs = codeData.expiresAt - Date.now();
+    const remainingMinutes = Math.ceil(remainingMs / 60000);
+    
+    bot.sendMessage(chatId, 
+      `🔐 MÃ XÁC MINH KOHKONG SHOP\n\n` +
+      `👤 Username: ${username}\n` +
+      `🔢 Mã của bạn: *${codeData.code}*\n\n` +
+      `⏰ Còn hiệu lực: ${remainingMinutes} phút\n\n` +
+      `📝 HƯỚNG DẪN:\n` +
+      `1. Copy mã trên\n` +
+      `2. Quay lại trang đăng ký\n` +
+      `3. Nhập mã vào ô "Mã Xác Minh"\n` +
+      `4. Hoàn tất đăng ký\n\n` +
+      `⚠️ Không chia sẻ mã này với ai!`,
+      { 
+        parse_mode: 'Markdown',
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: '📱 Quay Lại Trang Đăng Ký', url: 'https://taphoakohkong.live/login.html' }]
           ]
-        ]
+        }
       }
-    }
-  );
+    );
+    
+    console.log(`✅ Auto-sent code ${codeData.code} to ${username} on /start`);
+  } else {
+    // No code or expired - send welcome message
+    bot.sendMessage(chatId, 
+      `✅ CHÀO MỪNG ĐẾN VỚI KOHKONG SHOP BOT!\n\n` +
+      `👤 Username: ${username}\n` +
+      `🆔 Chat ID: ${chatId}\n\n` +
+      `🛒 BẠN LÀ KHÁCH HÀNG?\n` +
+      `• Truy cập website: https://taphoakohkong.live/products.html\n` +
+      `• Bấm nút "Kết Nối Bot Ngay"\n` +
+      `• Nhập username: ${username}\n` +
+      `• Khi đặt hàng, bạn sẽ nhận thông báo tại đây!\n\n` +
+      `👔 BẠN LÀ ĐẠI LÝ?\n` +
+      `1️⃣ Vào https://taphoakohkong.live/login.html\n` +
+      `2️⃣ Đăng ký với username: ${username}\n` +
+      `3️⃣ Bấm "Gửi Yêu Cầu Mã"\n` +
+      `4️⃣ Quay lại đây - mã sẽ tự động hiện\n` +
+      `5️⃣ Hoàn tất đăng ký\n\n` +
+      `📱 LỆNH CỦA BOT:\n` +
+      `/getcode - Lấy mã xác minh (nếu có)\n` +
+      `/stat - Xem trạng thái tài khoản\n` +
+      `/myinfo - Xem thông tin của bạn\n\n` +
+      `🌐 Website: https://taphoakohkong.live`,
+      {
+        reply_markup: {
+          inline_keyboard: [
+            [
+              { text: '🛒 Đặt Hàng', url: 'https://taphoakohkong.live/products.html' },
+              { text: '👔 Đăng Ký Đại Lý', url: 'https://taphoakohkong.live/login.html' }
+            ]
+          ]
+        }
+      }
+    );
+  }
 });
 
 // Bot command: /getcode - Lấy mã xác minh
@@ -344,21 +377,23 @@ app.post('/api/verification/request', async (req, res) => {
 
   console.log(`🔐 Generated code ${code} for ${telegram}`);
 
-  // Send instruction to user via Telegram
+  // Send code immediately to user via Telegram
   bot.sendMessage(chatId, 
-    `✅ MÃ XÁC MINH ĐÃ ĐƯỢC TẠO!\n\n` +
+    `🔐 MÃ XÁC MINH KOHKONG SHOP\n\n` +
     `👤 Username: ${telegram}\n` +
+    `🔢 Mã của bạn: *${code}*\n\n` +
     `⏰ Mã có hiệu lực trong 10 phút\n\n` +
-    `📋 CÁCH LẤY MÃ:\n` +
-    `Gửi lệnh /getcode để nhận mã xác minh của bạn!\n\n` +
-    `Hoặc gửi /stat để xem trạng thái tài khoản.`,
+    `📝 HƯỚNG DẪN:\n` +
+    `1. Copy mã trên\n` +
+    `2. Quay lại trang đăng ký\n` +
+    `3. Nhập mã vào ô "Mã Xác Minh"\n` +
+    `4. Hoàn tất đăng ký\n\n` +
+    `⚠️ Không chia sẻ mã này với ai!`,
     { 
       parse_mode: 'Markdown',
       reply_markup: {
         inline_keyboard: [
-          [
-            { text: '🔐 Lấy Mã Ngay', callback_data: 'get_code' }
-          ]
+          [{ text: '📱 Quay Lại Trang Đăng Ký', url: 'https://taphoakohkong.live/login.html' }]
         ]
       }
     }
@@ -372,7 +407,7 @@ app.post('/api/verification/request', async (req, res) => {
       `🔐 Mã: ${code}\n` +
       `⏰ Thời gian: ${new Date().toLocaleString('vi-VN')}\n` +
       `🌐 IP: ${req.ip || 'Unknown'}\n\n` +
-      `📱 User cần gửi /getcode để lấy mã!`,
+      `📱 Mã đã được gửi tự động cho user!`,
       { parse_mode: 'Markdown' }
     );
     console.log('✅ Notification sent to admin group');
@@ -382,7 +417,7 @@ app.post('/api/verification/request', async (req, res) => {
 
   res.json({ 
     success: true, 
-    message: 'Mã xác minh đã được tạo! Vui lòng mở Telegram và gửi lệnh /getcode để nhận mã.' 
+    message: 'Mã xác minh đã được gửi! Vui lòng kiểm tra Telegram của bạn.' 
   });
 });
 
