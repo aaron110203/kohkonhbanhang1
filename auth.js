@@ -352,7 +352,7 @@ async function handleRegister(e) {
   switchToLogin(e);
   
   // Pre-fill username
-  document.getElementById('username').value = username;
+  document.getElementById('login-username').value = username;
 }
 
 // Handle Login
