@@ -27,8 +27,6 @@ const userChatIds = new Map();
 
 console.log('🤖 Telegram Bot đã khởi động!');
 
-// ==================== BOT COMMANDS ====================
-
 // Bot command: /start
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
@@ -39,7 +37,7 @@ bot.onText(/\/start/, (msg) => {
 
   if (!username) {
     bot.sendMessage(chatId, 
-      '❌ BẠN CHƯA CÓ TELEGRAM USERNAME\n\n' +
+      '❌ Bạn cần có Telegram username để sử dụng bot này!\n\n' +
       '📝 Cách tạo username:\n' +
       '1. Mở Settings trong Telegram\n' +
       '2. Chọn "Username"\n' +
@@ -54,254 +52,41 @@ bot.onText(/\/start/, (msg) => {
   console.log(`✅ Đã lưu ChatID cho ${username}`);
 
   bot.sendMessage(chatId, 
-    `✅ CHÀO MỪNG ĐẾN VỚI KOHKONG SHOP BOT!\n\n` +
-    `👤 Username: ${username}\n` +
-    `🆔 Chat ID: ${chatId}\n\n` +
-    `📋 HƯỚNG DẪN ĐĂNG KÝ ĐẠI LÝ:\n\n` +
-    `1️⃣ Truy cập website để đăng ký\n` +
-    `2️⃣ Nhập username Telegram: ${username}\n` +
-    `3️⃣ Bấm "Gửi Yêu Cầu Mã" trên web\n` +
-    `4️⃣ Quay lại đây gửi lệnh /getcode để nhận mã\n` +
-    `5️⃣ Nhập mã vào website để hoàn tất\n\n` +
-    `📱 LỆNH CỦA BOT:\n` +
-    `/getcode - Lấy mã xác minh\n` +
-    `/stat - Xem trạng thái tài khoản\n` +
-    `/myinfo - Xem thông tin của bạn\n\n` +
-    `🌐 Website: https://taphoakohkong.live`,
+    `Xin chào ${firstName}! 👋\n\n` +
+    `✅ Username của bạn: ${username}\n\n` +
+    `🔹 Để đăng ký làm đại lý:\n` +
+    `1. Vào website: https://taphoakohkong.live\n` +
+    `2. Click "Đăng Ký Ngay"\n` +
+    `3. Nhập username Telegram: ${username}\n` +
+    `4. Click "Gửi Yêu Cầu Mã"\n` +
+    `5. Bot sẽ gửi mã xác minh 6 số cho bạn ngay tại đây!\n\n` +
+    `📱 Sau khi đăng ký thành công, bạn sẽ nhận thông báo đơn hàng tại đây khi có khách đặt hàng!`,
     {
       reply_markup: {
         inline_keyboard: [
-          [
-            { text: '🌐 Mở Website', url: 'https://taphoakohkong.live' },
-            { text: '📱 Đăng Ký', url: 'https://taphoakohkong.live/login.html' }
-          ]
+          [{ text: '🌐 Mở Website', url: 'https://taphoakohkong.live' }],
+          [{ text: '📦 Xem Sản Phẩm', url: 'https://taphoakohkong.live/products.html' }]
         ]
       }
     }
   );
 });
 
-// Bot command: /getcode - Lấy mã xác minh
-bot.onText(/\/getcode/, (msg) => {
-  const chatId = msg.chat.id;
-  const username = msg.from.username ? `@${msg.from.username}` : null;
-
-  if (!username) {
-    bot.sendMessage(chatId, 
-      `⚠️ BẠN CHƯA CÓ USERNAME\n\n` +
-      `Vui lòng tạo username Telegram trước khi sử dụng bot!`
-    );
-    return;
-  }
-
-  // Check if user has a pending verification code
-  const codeData = verificationCodes.get(username);
-
-  if (!codeData) {
-    bot.sendMessage(chatId, 
-      `❌ KHÔNG CÓ MÃ XÁC MINH\n\n` +
-      `Bạn chưa yêu cầu mã xác minh nào.\n\n` +
-      `📋 Vui lòng:\n` +
-      `1. Truy cập website: https://taphoakohkong.live/login.html\n` +
-      `2. Điền thông tin đăng ký\n` +
-      `3. Nhập username: ${username}\n` +
-      `4. Bấm "Gửi Yêu Cầu Mã"\n` +
-      `5. Sau đó quay lại đây gửi /getcode`,
-      {
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: '📱 Đăng Ký Ngay', url: 'https://taphoakohkong.live/login.html' }]
-          ]
-        }
-      }
-    );
-    return;
-  }
-
-  // Check if code is expired
-  if (Date.now() > codeData.expiresAt) {
-    verificationCodes.delete(username);
-    bot.sendMessage(chatId, 
-      `⏰ MÃ ĐÃ HẾT HẠN\n\n` +
-      `Mã xác minh của bạn đã hết hạn (10 phút).\n\n` +
-      `Vui lòng yêu cầu mã mới trên website!`,
-      {
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: '🔄 Yêu Cầu Mã Mới', url: 'https://taphoakohkong.live/login.html' }]
-          ]
-        }
-      }
-    );
-    return;
-  }
-
-  // Calculate remaining time
-  const remainingMs = codeData.expiresAt - Date.now();
-  const remainingMinutes = Math.ceil(remainingMs / 60000);
-
-  bot.sendMessage(chatId, 
-    `🔐 MÃ XÁC MINH KOHKONG SHOP\n\n` +
-    `👤 Username: ${username}\n` +
-    `🔢 Mã của bạn: *${codeData.code}*\n\n` +
-    `⏰ Còn hiệu lực: ${remainingMinutes} phút\n\n` +
-    `📝 HƯỚNG DẪN:\n` +
-    `1. Copy mã trên\n` +
-    `2. Quay lại trang đăng ký\n` +
-    `3. Nhập mã vào ô "Mã Xác Minh"\n` +
-    `4. Hoàn tất đăng ký\n\n` +
-    `⚠️ Không chia sẻ mã này với ai!`,
-    { 
-      parse_mode: 'Markdown',
-      reply_markup: {
-        inline_keyboard: [
-          [{ text: '📱 Quay Lại Trang Đăng Ký', url: 'https://taphoakohkong.live/login.html' }]
-        ]
-      }
-    }
-  );
-
-  console.log(`✅ Code ${codeData.code} retrieved by ${username}`);
-});
-
-// Bot command: /stat - Xem trạng thái
-bot.onText(/\/stat/, (msg) => {
-  const chatId = msg.chat.id;
-  const username = msg.from.username ? `@${msg.from.username}` : null;
-
-  if (!username) {
-    bot.sendMessage(chatId, 
-      `⚠️ BẠN CHƯA CÓ USERNAME\n\n` +
-      `Vui lòng tạo username Telegram trước!`
-    );
-    return;
-  }
-
-  const codeData = verificationCodes.get(username);
-  const isRegistered = userChatIds.has(username);
-
-  let statusMessage = `📊 TRẠNG THÁI TÀI KHOẢN\n\n`;
-  statusMessage += `👤 Username: ${username}\n`;
-  statusMessage += `🆔 Chat ID: ${chatId}\n`;
-  statusMessage += `✅ Đã kết nối Bot: ${isRegistered ? 'Có' : 'Chưa'}\n\n`;
-
-  if (codeData) {
-    const remainingMs = codeData.expiresAt - Date.now();
-    if (remainingMs > 0) {
-      const remainingMinutes = Math.ceil(remainingMs / 60000);
-      statusMessage += `🔐 MÃ XÁC MINH ĐANG HOẠT ĐỘNG:\n`;
-      statusMessage += `🔢 Mã: *${codeData.code}*\n`;
-      statusMessage += `⏰ Còn lại: ${remainingMinutes} phút\n\n`;
-      statusMessage += `💡 Gửi /getcode để xem chi tiết`;
-    } else {
-      statusMessage += `⏰ Mã xác minh đã hết hạn\n`;
-      statusMessage += `🔄 Yêu cầu mã mới trên website`;
-    }
-  } else {
-    statusMessage += `📋 CHƯA CÓ MÃ XÁC MINH\n\n`;
-    statusMessage += `Vui lòng truy cập website để yêu cầu mã!`;
-  }
-
-  bot.sendMessage(chatId, statusMessage, { 
-    parse_mode: 'Markdown',
-    reply_markup: {
-      inline_keyboard: [
-        [
-          { text: '🔐 Lấy Mã', callback_data: 'get_code' },
-          { text: '📱 Đăng Ký', url: 'https://taphoakohkong.live/login.html' }
-        ]
-      ]
-    }
-  });
-});
-
-// Bot command: /myinfo - Xem thông tin
+// Bot command: /myinfo
 bot.onText(/\/myinfo/, (msg) => {
   const chatId = msg.chat.id;
-  const username = msg.from.username ? `@${msg.from.username}` : 'Chưa có username';
-  const firstName = msg.from.first_name || '';
+  const username = msg.from.username ? `@${msg.from.username}` : 'Không có';
+  const firstName = msg.from.first_name || 'N/A';
   const lastName = msg.from.last_name || '';
 
-  bot.sendMessage(chatId, 
-    `👤 THÔNG TIN CỦA BẠN\n\n` +
-    `📛 Tên: ${firstName} ${lastName}\n` +
-    `👤 Username: ${username}\n` +
+  bot.sendMessage(chatId,
+    `📋 THÔNG TIN CỦA BẠN:\n\n` +
+    `👤 Tên: ${firstName} ${lastName}\n` +
+    `📱 Username: ${username}\n` +
     `🆔 Chat ID: ${chatId}\n\n` +
-    `💡 Gửi /getcode để lấy mã xác minh\n` +
-    `💡 Gửi /stat để xem trạng thái`
+    `💡 Sử dụng username này để đăng ký trên website!`
   );
 });
-
-// Handle callback query (inline button clicks)
-bot.on('callback_query', async (query) => {
-  const chatId = query.message.chat.id;
-  const username = query.from.username ? `@${query.from.username}` : null;
-
-  if (query.data === 'get_code') {
-    // Same logic as /getcode command
-    if (!username) {
-      bot.answerCallbackQuery(query.id, { text: '❌ Bạn chưa có username!' });
-      return;
-    }
-
-    const codeData = verificationCodes.get(username);
-
-    if (!codeData) {
-      bot.answerCallbackQuery(query.id, { text: '❌ Không có mã xác minh' });
-      bot.sendMessage(chatId, 
-        `❌ KHÔNG CÓ MÃ XÁC MINH\n\n` +
-        `Vui lòng truy cập website và yêu cầu mã mới!`,
-        {
-          reply_markup: {
-            inline_keyboard: [
-              [{ text: '📱 Đăng Ký Ngay', url: 'https://taphoakohkong.live/login.html' }]
-            ]
-          }
-        }
-      );
-      return;
-    }
-
-    if (Date.now() > codeData.expiresAt) {
-      verificationCodes.delete(username);
-      bot.answerCallbackQuery(query.id, { text: '⏰ Mã đã hết hạn!' });
-      bot.sendMessage(chatId, 
-        `⏰ MÃ ĐÃ HẾT HẠN\n\n` +
-        `Vui lòng yêu cầu mã mới trên website!`,
-        {
-          reply_markup: {
-            inline_keyboard: [
-              [{ text: '🔄 Yêu Cầu Mã Mới', url: 'https://taphoakohkong.live/login.html' }]
-            ]
-          }
-        }
-      );
-      return;
-    }
-
-    const remainingMs = codeData.expiresAt - Date.now();
-    const remainingMinutes = Math.ceil(remainingMs / 60000);
-
-    bot.answerCallbackQuery(query.id, { text: '✅ Đây là mã của bạn!' });
-    bot.sendMessage(chatId, 
-      `🔐 MÃ XÁC MINH KOHKONG SHOP\n\n` +
-      `👤 Username: ${username}\n` +
-      `🔢 Mã của bạn: *${codeData.code}*\n\n` +
-      `⏰ Còn hiệu lực: ${remainingMinutes} phút\n\n` +
-      `⚠️ Không chia sẻ mã này với ai!`,
-      { 
-        parse_mode: 'Markdown',
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: '📱 Quay Lại Trang Đăng Ký', url: 'https://taphoakohkong.live/login.html' }]
-          ]
-        }
-      }
-    );
-  }
-});
-
-// ==================== API ENDPOINTS ====================
 
 // API: Request verification code
 app.post('/api/verification/request', async (req, res) => {
@@ -489,7 +274,7 @@ app.post('/api/telegram/notify', async (req, res) => {
     // Send notification to admin group about new order
     try {
       await bot.sendMessage(ADMIN_GROUP_ID,
-        `📦 ĐƠN HÀNG MỚI TỪ WEBSITE!\n\n` +
+        `📦 ĐơN HÀNG MỚI TỪ WEBSITE!\n\n` +
         `👤 Đại lý: ${telegram}\n` +
         `⏰ ${new Date().toLocaleString('vi-VN')}\n\n` +
         `${message.split('\n').slice(0, 6).join('\n')}`,
@@ -518,12 +303,6 @@ app.get('/', (req, res) => {
     status: 'OK',
     bot: 'KohKong Shop Bot',
     telegram: '@KohKongShopBot_bot',
-    commands: {
-      start: '/start - Đăng ký với bot',
-      getcode: '/getcode - Lấy mã xác minh',
-      stat: '/stat - Xem trạng thái tài khoản',
-      myinfo: '/myinfo - Xem thông tin cá nhân'
-    },
     endpoints: {
       verification_request: 'POST /api/verification/request',
       verification_verify: 'POST /api/verification/verify',
@@ -536,13 +315,8 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`✅ Server đang chạy tại http://localhost:${PORT}`);
   console.log(`✅ Telegram Bot @KohKongShopBot_bot đang hoạt động`);
-  console.log(`\n📋 LỆNH BOT:`);
-  console.log(`   /start - Đăng ký với bot`);
-  console.log(`   /getcode - Lấy mã xác minh`);
-  console.log(`   /stat - Xem trạng thái tài khoản`);
-  console.log(`   /myinfo - Xem thông tin cá nhân`);
   console.log(`\n📋 API Endpoints:`);
-  console.log(`   POST /api/verification/request - Tạo mã xác minh`);
+  console.log(`   POST /api/verification/request - Gửi mã xác minh`);
   console.log(`   POST /api/verification/verify - Xác minh mã`);
   console.log(`   POST /api/telegram/notify - Gửi thông báo đơn hàng`);
 });

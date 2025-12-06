@@ -38,7 +38,11 @@ async function requestVerificationCode() {
     const data = await response.json();
 
     if (data.success) {
-      alert('✅ ' + data.message + '\n\nVui lòng kiểm tra Telegram để lấy mã!');
+      alert('✅ MÃ XÁC MINH ĐÃ ĐƯỢC TẠO!\n\n' +
+            '📱 Mở Telegram và gửi lệnh:\n' +
+            '/getcode\n\n' +
+            'Cho bot @KohKongShopBot_bot để nhận mã.\n\n' +
+            'Hoặc gửi /stat để xem trạng thái tài khoản.');
     } else {
       if (data.error === 'user_not_found') {
         alert('❌ ' + data.message + '\n\n' +
