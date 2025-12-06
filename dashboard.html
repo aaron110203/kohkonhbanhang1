@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quản Lý Sản Phẩm - KohKong</title>
   <link rel="stylesheet" href="dashboard.css">
-  <script src="product-images.js"></script>
 </head>
 <body>
   <script>
@@ -108,9 +107,12 @@
 
           <div class="form-group">
             <label>Upload Ảnh Sản Phẩm *</label>
-            <input type="file" id="product-image" accept="image/*" required onchange="previewImage(event)">
-            <div id="image-preview" style="margin-top: 10px; display: none;">
-              <img id="preview-img" style="max-width: 200px; max-height: 200px; border-radius: 8px; border: 2px solid #ddd;">
+            <input type="file" id="product-image" accept="image/*" required>
+            <small style="color: #666; display: block; margin-top: 5px;">Chọn ảnh JPG, PNG hoặc GIF (tối đa 5MB)</small>
+            <div id="image-preview" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; display: none;">
+              <p style="margin-bottom: 10px; font-weight: 600; color: #333;">👁️ Xem Trước:</p>
+              <img id="preview-img" style="max-width: 100%; max-height: 250px; border-radius: 8px; border: 2px solid #667eea; display: block; margin: 0 auto;">
+              <div id="preview-info" style="margin-top: 10px; padding: 10px; background: white; border-radius: 6px; font-size: 0.85rem; color: #666;"></div>
             </div>
           </div>
 

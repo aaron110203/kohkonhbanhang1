@@ -15,6 +15,57 @@ if (currentUserStr) {
   window.location.href = 'login.html';
 }
 
+// Setup file input listener when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  const fileInput = document.getElementById('product-image');
+  if (fileInput) {
+    fileInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      const previewBox = document.getElementById('image-preview');
+      const previewImg = document.getElementById('preview-img');
+      const previewInfo = document.getElementById('preview-info');
+      
+      if (!file) {
+        previewBox.style.display = 'none';
+        return;
+      }
+
+      // Check file size (5MB max)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('⚠️ Ảnh quá lớn! Vui lòng chọn ảnh nhỏ hơn 5MB');
+        fileInput.value = '';
+        previewBox.style.display = 'none';
+        return;
+      }
+
+      // Check file type
+      if (!file.type.startsWith('image/')) {
+        alert('⚠️ Vui lòng chọn file ảnh (JPG, PNG, GIF)');
+        fileInput.value = '';
+        previewBox.style.display = 'none';
+        return;
+      }
+
+      // Read and preview
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        previewImg.src = event.target.result;
+        previewBox.style.display = 'block';
+        
+        const sizeKB = (file.size / 1024).toFixed(2);
+        const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+        
+        previewInfo.innerHTML = `
+          <strong>📁 Tên:</strong> ${file.name}<br>
+          <strong>📏 Kích thước:</strong> ${sizeKB} KB (${sizeMB} MB)<br>
+          <strong>✅ Trạng thái:</strong> <span style="color: #28a745; font-weight: bold;">Đã chọn thành công!</span>
+        `;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+});
+
 // Preview image before upload
 function previewImage(event) {
   const file = event.target.files[0];
