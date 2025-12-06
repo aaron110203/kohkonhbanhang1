@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng Nhập - KohKong Bán Hàng</title>
+  <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-box">
+      <div class="logo-section">
+        <span class="logo-icon">🏪</span>
+        <h1>KohKong Bán Hàng</h1>
+        <p>Hệ thống quản lý bán hàng trực tuyến</p>
+      </div>
+
+      <!-- Login Form -->
+      <div class="form-container" id="loginForm">
+        <h2>Đăng Nhập</h2>
+        <p class="form-subtitle">Chào mừng bạn trở lại</p>
+        
+        <form onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label>Tên Đăng Nhập</label>
+            <input type="text" id="login-username" placeholder="Nhập tên đăng nhập" required>
+          </div>
+
+          <div class="form-group">
+            <label>Mật Khẩu</label>
+            <input type="password" id="login-password" placeholder="Nhập mật khẩu" required>
+          </div>
+
+          <div class="form-options">
+            <label class="checkbox-label">
+              <input type="checkbox" id="remember-me">
+              <span>Ghi nhớ đăng nhập</span>
+            </label>
+          </div>
+
+          <button type="submit" class="btn-submit">Đăng Nhập</button>
+        </form>
+
+        <p class="form-switch">
+          Chưa có tài khoản? <a href="#" onclick="switchToRegister(event)">Đăng ký ngay</a>
+        </p>
+      </div>
+
+      <!-- Register Form -->
+      <div class="form-container hidden" id="registerForm">
+        <h2>Đăng Ký Đại Lý</h2>
+        <p class="form-subtitle">Tạo tài khoản để bắt đầu bán hàng</p>
+        
+        <form onsubmit="handleRegister(event)">
+          <div class="form-group">
+            <label>Họ Tên Đầy Đủ</label>
+            <input type="text" id="reg-fullname" placeholder="Nhập họ tên" required>
+          </div>
+
+          <div class="form-group">
+            <label>Số Điện Thoại</label>
+            <input type="tel" id="reg-phone" placeholder="Nhập số điện thoại" required pattern="[0-9]{9,11}">
+          </div>
+
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="reg-email" placeholder="Nhập email" required>
+          </div>
+
+          <div class="form-group">
+            <label>Tên Đăng Nhập</label>
+            <input type="text" id="reg-username" placeholder="Chọn tên đăng nhập" required minlength="4">
+          </div>
+
+          <div class="form-group">
+            <label>Mật Khẩu</label>
+            <input type="password" id="reg-password" placeholder="Tạo mật khẩu" required minlength="6">
+          </div>
+
+          <div class="form-group">
+            <label>Xác Nhận Mật Khẩu</label>
+            <input type="password" id="reg-confirm-password" placeholder="Nhập lại mật khẩu" required>
+          </div>
+
+          <div class="form-group">
+            <label>Telegram Username (không bắt buộc)</label>
+            <input type="text" id="reg-telegram" placeholder="@username">
+          </div>
+
+          <button type="submit" class="btn-submit">Đăng Ký Làm Đại Lý</button>
+        </form>
+
+        <p class="form-switch">
+          Đã có tài khoản? <a href="#" onclick="switchToLogin(event)">Đăng nhập</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="features-sidebar">
+      <h3>Tại sao chọn chúng tôi?</h3>
+      <div class="feature-item">
+        <div class="feature-icon">📱</div>
+        <div>
+          <h4>Quản lý dễ dàng</h4>
+          <p>Đăng sản phẩm, quản lý đơn hàng đơn giản</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">💰</div>
+        <div>
+          <h4>Miễn phí 100%</h4>
+          <p>Không tốn phí đăng ký, không hoa hồng</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🚀</div>
+        <div>
+          <h4>Telegram tích hợp</h4>
+          <p>Nhận đơn hàng trực tiếp qua Telegram</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+</body>
+</html>

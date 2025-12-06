@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản Lý Sản Phẩm - KohKong</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <script>
+    // Check authentication
+    const currentUser = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
+    if (!currentUser) {
+      alert('Vui lòng đăng nhập!');
+      window.location.href = 'login.html';
+    }
+  </script>
+
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="header-container">
+      <div class="logo">
+        <span class="logo-icon">🏪</span>
+        <h1>KohKong Bán Hàng</h1>
+      </div>
+      <div class="user-menu">
+        <span class="user-name" id="userName"></span>
+        <button class="btn-logout" onclick="logout()">Đăng Xuất</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" onclick="showSection('products')">
+          <span>📦</span> Sản Phẩm Của Tôi
+        </a>
+        <a href="#" class="nav-item" onclick="showSection('add-product')">
+          <span>➕</span> Thêm Sản Phẩm
+        </a>
+        <a href="index.html" class="nav-item" target="_blank">
+          <span>🌐</span> Xem Website
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Products List Section -->
+      <section id="products-section" class="content-section">
+        <div class="section-header">
+          <h2>Sản Phẩm Của Tôi</h2>
+          <button class="btn-primary" onclick="showSection('add-product')">+ Thêm Sản Phẩm Mới</button>
+        </div>
+
+        <div class="products-grid" id="myProductsGrid">
+          <p class="empty-state">Bạn chưa có sản phẩm nào. Hãy thêm sản phẩm đầu tiên!</p>
+        </div>
+      </section>
+
+      <!-- Add Product Section -->
+      <section id="add-product-section" class="content-section hidden">
+        <div class="section-header">
+          <h2>Thêm Sản Phẩm Mới</h2>
+        </div>
+
+        <form class="product-form" onsubmit="addProduct(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Tên Sản Phẩm *</label>
+              <input type="text" id="product-name" placeholder="Ví dụ: Gạo Thơm" required>
+            </div>
+
+            <div class="form-group">
+              <label>Giá (₭) *</label>
+              <input type="number" id="product-price" placeholder="Ví dụ: 25000" required min="0">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Danh Mục *</label>
+              <select id="product-category" required>
+                <option value="">-- Chọn danh mục --</option>
+                <option value="food">🍚 Đồ Ăn</option>
+                <option value="fashion">👕 Thời Trang</option>
+                <option value="medicine">💊 Thuốc</option>
+                <option value="personal">🧴 Chăm Sóc</option>
+                <option value="grocery">🛒 Tạp Hóa</option>
+                <option value="fruits">🍎 Trái Cây</option>
+                <option value="drinks">🥤 Đồ Uống</option>
+                <option value="electronics">📱 Điện Tử</option>
+                <option value="cosmetics">💄 Mỹ Phẩm</option>
+                <option value="home">🏠 Gia Dụng</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Icon Emoji</label>
+              <input type="text" id="product-icon" placeholder="🍚" maxlength="2">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Mô Tả Sản Phẩm</label>
+            <textarea id="product-description" rows="3" placeholder="Mô tả chi tiết về sản phẩm..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Link Telegram (không bắt buộc)</label>
+            <input type="url" id="product-telegram" placeholder="https://t.me/username">
+            <small>Để trống sẽ dùng Telegram của bạn</small>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" onclick="showSection('products')">Hủy</button>
+            <button type="submit" class="btn-primary">Thêm Sản Phẩm</button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>
