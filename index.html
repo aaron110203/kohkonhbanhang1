@@ -3,7 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KohKong Bán Hàng - Nền Tảng Bán Hàng Trực Tuyến</title>
+  
+  <!-- SEO Meta Tags -->
+  <title>KohKong Bán Hàng - Nền Tảng Bán Hàng Online Số 1 Campuchia</title>
+  <meta name="description" content="KohKong Shop - Nền tảng bán hàng online hàng đầu tại Campuchia. Mua bán đồ ăn, đồ uống, thời trang, mỹ phẩm, điện tử giá rẻ. Giao hàng tận nơi, thanh toán linh hoạt.">
+  <meta name="keywords" content="bán hàng online, mua sắm trực tuyến, KohKong, Campuchia, đồ ăn, thời trang, mỹ phẩm, điện tử, tạp hóa, giao hàng tận nơi">
+  <meta name="author" content="KohKong Shop">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://taphoakohkong.live">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://taphoakohkong.live">
+  <meta property="og:title" content="KohKong Bán Hàng - Nền Tảng Bán Hàng Online Số 1 Campuchia">
+  <meta property="og:description" content="Mua sắm online dễ dàng với hàng nghìn sản phẩm: đồ ăn, đồ uống, thời trang, mỹ phẩm, điện tử. Giao hàng nhanh chóng, giá cả hợp lý.">
+  <meta property="og:image" content="https://taphoakohkong.live/og-image.jpg">
+  <meta property="og:site_name" content="KohKong Shop">
+  <meta property="og:locale" content="vi_VN">
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://taphoakohkong.live">
+  <meta property="twitter:title" content="KohKong Bán Hàng - Nền Tảng Bán Hàng Online Số 1 Campuchia">
+  <meta property="twitter:description" content="Mua sắm online dễ dàng với hàng nghìn sản phẩm. Giao hàng nhanh, giá rẻ.">
+  <meta property="twitter:image" content="https://taphoakohkong.live/og-image.jpg">
+  
+  <!-- Telegram -->
+  <meta property="telegram:channel" content="@KohKongShopBot">
+  
+  <!-- WhatsApp -->
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  
+  <!-- Schema.org Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "KohKong Bán Hàng",
+    "url": "https://taphoakohkong.live",
+    "description": "Nền tảng bán hàng online hàng đầu tại Campuchia",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://taphoakohkong.live/products.html?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+  
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -945,6 +992,128 @@
         navbar.classList.add('scrolled');
       } else {
         navbar.classList.remove('scrolled');
+      }
+    });
+  </script>
+  
+  <!-- Social Share Floating Button -->
+  <style>
+    .share-floating {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 999;
+    }
+    .share-btn-float {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5);
+      transition: all 0.3s;
+      border: none;
+      font-size: 1.5rem;
+      animation: pulse 2s infinite;
+    }
+    .share-btn-float:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.7);
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    .share-menu {
+      position: absolute;
+      bottom: 70px;
+      right: 0;
+      background: white;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      display: none;
+      min-width: 200px;
+    }
+    .share-menu.active {
+      display: block;
+      animation: slideUp 0.3s;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .share-menu a {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      border-radius: 8px;
+      text-decoration: none;
+      color: #333;
+      transition: all 0.3s;
+      margin-bottom: 0.5rem;
+    }
+    .share-menu a:last-child {
+      margin-bottom: 0;
+    }
+    .share-menu a:hover {
+      background: #f0f0f0;
+      transform: translateX(-5px);
+    }
+    @media (max-width: 768px) {
+      .share-floating {
+        bottom: 15px;
+        right: 15px;
+      }
+      .share-btn-float {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+  
+  <div class="share-floating">
+    <button class="share-btn-float" onclick="toggleShareMenu()">📢</button>
+    <div class="share-menu" id="shareMenu">
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://taphoakohkong.live" target="_blank">
+        📘 Facebook
+      </a>
+      <a href="https://t.me/share/url?url=https://taphoakohkong.live&text=Khám phá KohKong Shop!" target="_blank">
+        ✈️ Telegram
+      </a>
+      <a href="https://api.whatsapp.com/send?text=Khám phá KohKong Shop! https://taphoakohkong.live" target="_blank">
+        💬 WhatsApp
+      </a>
+      <a href="javascript:void(0)" onclick="copyShareLink()">
+        📋 Copy Link
+      </a>
+    </div>
+  </div>
+  
+  <script>
+    function toggleShareMenu() {
+      const menu = document.getElementById('shareMenu');
+      menu.classList.toggle('active');
+    }
+    
+    function copyShareLink() {
+      navigator.clipboard.writeText('https://taphoakohkong.live').then(() => {
+        alert('✅ Đã sao chép link!');
+        document.getElementById('shareMenu').classList.remove('active');
+      });
+    }
+    
+    // Close share menu when clicking outside
+    document.addEventListener('click', (e) => {
+      const shareFloating = document.querySelector('.share-floating');
+      const shareMenu = document.getElementById('shareMenu');
+      if (!shareFloating.contains(e.target)) {
+        shareMenu.classList.remove('active');
       }
     });
   </script>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Share - KohKong Shop</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .share-container {
+      background: white;
+      border-radius: 20px;
+      padding: 3rem;
+      max-width: 500px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .logo {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 1rem;
+      font-size: 2rem;
+    }
+    p {
+      color: #666;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+    .share-buttons {
+      display: grid;
+      gap: 1rem;
+    }
+    .share-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+    .share-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    .facebook {
+      background: #1877F2;
+    }
+    .telegram {
+      background: #0088cc;
+    }
+    .whatsapp {
+      background: #25D366;
+    }
+    .twitter {
+      background: #1DA1F2;
+    }
+    .copy-link {
+      background: #6c757d;
+    }
+    .icon {
+      font-size: 1.5rem;
+    }
+    .home-link {
+      display: inline-block;
+      margin-top: 2rem;
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .home-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="share-container">
+    <div class="logo">🏪</div>
+    <h1>Chia Sẻ KohKong Shop</h1>
+    <p>Giúp bạn bè của bạn khám phá sản phẩm tuyệt vời tại KohKong Shop!</p>
+    
+    <div class="share-buttons">
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://taphoakohkong.live" 
+         target="_blank" 
+         class="share-btn facebook">
+        <span class="icon">📘</span>
+        Chia sẻ trên Facebook
+      </a>
+      
+      <a href="https://t.me/share/url?url=https://taphoakohkong.live&text=Khám phá KohKong Shop - Nền tảng bán hàng online số 1!" 
+         target="_blank" 
+         class="share-btn telegram">
+        <span class="icon">✈️</span>
+        Chia sẻ trên Telegram
+      </a>
+      
+      <a href="https://api.whatsapp.com/send?text=Khám phá KohKong Shop - Nền tảng bán hàng online số 1! https://taphoakohkong.live" 
+         target="_blank" 
+         class="share-btn whatsapp">
+        <span class="icon">💬</span>
+        Chia sẻ trên WhatsApp
+      </a>
+      
+      <a href="https://twitter.com/intent/tweet?url=https://taphoakohkong.live&text=Khám phá KohKong Shop - Nền tảng bán hàng online số 1!" 
+         target="_blank" 
+         class="share-btn twitter">
+        <span class="icon">🐦</span>
+        Chia sẻ trên Twitter
+      </a>
+      
+      <button onclick="copyLink()" class="share-btn copy-link">
+        <span class="icon">📋</span>
+        Sao chép Link
+      </button>
+    </div>
+    
+    <a href="index.html" class="home-link">← Quay lại Trang Chủ</a>
+  </div>
+  
+  <script>
+    function copyLink() {
+      const link = 'https://taphoakohkong.live';
+      navigator.clipboard.writeText(link).then(() => {
+        alert('✅ Đã sao chép link: ' + link);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+# Allow all search engines to crawl everything
+User-agent: *
+Allow: /
+
+# Specific rules for major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+# Disallow crawling of authentication pages
+User-agent: *
+Disallow: /dashboard.html
+
+# Sitemap location
+Sitemap: https://taphoakohkong.live/sitemap.xml
