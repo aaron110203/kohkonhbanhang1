@@ -1,0 +1,165 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                  HƯỚNG DẪN ĐĂNG KÝ ĐẠI LÝ                     ║
+║              Hệ Thống Xác Minh Telegram Bot                   ║
+╚═══════════════════════════════════════════════════════════════╝
+
+┌───────────────────────────────────────────────────────────────┐
+│  BƯỚC 1: KẾT NỐI VỚI BOT TELEGRAM                            │
+└───────────────────────────────────────────────────────────────┘
+
+  1. Mở Telegram
+  2. Tìm kiếm: @KohKongShopBot_bot
+  3. Nhấn START hoặc gửi: /start
+  
+  ✅ Bot sẽ lưu username của bạn
+
+
+┌───────────────────────────────────────────────────────────────┐
+│  BƯỚC 2: ĐĂNG KÝ TRÊN WEBSITE                                │
+└───────────────────────────────────────────────────────────────┘
+
+  1. Vào: https://taphoakohkong.live/login.html
+  2. Điền đầy đủ thông tin
+  3. Nhập Username Telegram (ví dụ: @yourname)
+  4. Nhấn nút: "Gửi Yêu Cầu Mã"
+  
+  ✅ Hệ thống sẽ tạo mã xác minh
+
+
+┌───────────────────────────────────────────────────────────────┐
+│  BƯỚC 3: LẤY MÃ XÁC MINH                                     │
+└───────────────────────────────────────────────────────────────┘
+
+  1. Quay lại Telegram
+  2. Gửi lệnh: /getcode
+  3. Bot sẽ gửi mã 6 chữ số
+  
+  ⏰ Mã có hiệu lực 10 phút
+
+
+┌───────────────────────────────────────────────────────────────┐
+│  BƯỚC 4: HOÀN TẤT ĐĂNG KÝ                                    │
+└───────────────────────────────────────────────────────────────┘
+
+  1. Copy mã từ Telegram
+  2. Quay lại trang đăng ký
+  3. Nhập mã vào ô "Mã Xác Minh"
+  4. Nhấn "Đăng Ký"
+  
+  🎉 HOÀN TẤT!
+
+
+╔═══════════════════════════════════════════════════════════════╗
+║                    LỆNH CỦA BOT                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  /start    - Đăng ký với bot (bắt buộc lần đầu)
+  /getcode  - Lấy mã xác minh
+  /stat     - Xem trạng thái tài khoản
+  /myinfo   - Xem thông tin cá nhân
+
+
+╔═══════════════════════════════════════════════════════════════╗
+║                  LỖI THƯỜNG GẶP & CÁCH SỬA                    ║
+╚═══════════════════════════════════════════════════════════════╝
+
+┌───────────────────────────────────────────────────────────────┐
+│  ❌ Lỗi: "user_not_found"                                    │
+└───────────────────────────────────────────────────────────────┘
+  
+  Nguyên nhân: Chưa gửi /start cho bot
+  
+  Giải pháp:
+    1. Mở Telegram
+    2. Tìm @KohKongShopBot_bot
+    3. Gửi /start
+    4. Thử lại
+
+
+┌───────────────────────────────────────────────────────────────┐
+│  ❌ Lỗi: "KHÔNG CÓ MÃ XÁC MINH"                              │
+└───────────────────────────────────────────────────────────────┘
+  
+  Nguyên nhân: Chưa yêu cầu mã trên website
+  
+  Giải pháp:
+    1. Vào website
+    2. Điền form đăng ký
+    3. Bấm "Gửi Yêu Cầu Mã"
+    4. Sau đó gửi /getcode
+
+
+┌───────────────────────────────────────────────────────────────┐
+│  ❌ Lỗi: "MÃ ĐÃ HẾT HẠN"                                    │
+└───────────────────────────────────────────────────────────────┘
+  
+  Nguyên nhân: Mã chỉ có hiệu lực 10 phút
+  
+  Giải pháp:
+    1. Quay lại website
+    2. Bấm "Gửi Yêu Cầu Mã" lại
+    3. Lấy mã mới bằng /getcode
+
+
+┌───────────────────────────────────────────────────────────────┐
+│  ❌ Lỗi: "Mã xác minh không đúng"                            │
+└───────────────────────────────────────────────────────────────┘
+  
+  Nguyên nhân: Nhập sai mã
+  
+  Giải pháp:
+    1. Gửi /getcode lại
+    2. Copy chính xác mã 6 chữ số
+    3. Paste vào website
+
+
+╔═══════════════════════════════════════════════════════════════╗
+║                    VÍ DỤ THỰC TẾ                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  📱 Trên Telegram:
+  
+  You: /start
+  Bot: ✅ CHÀO MỪNG ĐẾN VỚI KOHKONG SHOP BOT!
+       👤 Username: @yourname
+       ...
+  
+  
+  🌐 Trên Website:
+  
+  [Điền form]
+  Username Telegram: @yourname
+  [Bấm "Gửi Yêu Cầu Mã"]
+  
+  Alert: ✅ MÃ XÁC MINH ĐÃ ĐƯỢC TẠO!
+         📱 Mở Telegram và gửi lệnh: /getcode
+  
+  
+  📱 Quay lại Telegram:
+  
+  You: /getcode
+  Bot: 🔐 MÃ XÁC MINH KOHKONG SHOP
+       👤 Username: @yourname
+       🔢 Mã của bạn: 123456
+       ⏰ Còn hiệu lực: 9 phút
+  
+  
+  🌐 Quay lại Website:
+  
+  Mã Xác Minh: [123456]
+  [Bấm "Đăng Ký"]
+  
+  ✅ Đăng ký thành công!
+
+
+╔═══════════════════════════════════════════════════════════════╗
+║                  LIÊN HỆ & HỖ TRỢ                             ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Bot Telegram: @KohKongShopBot_bot
+  Website: https://taphoakohkong.live
+  
+  Nếu gặp vấn đề:
+    1. Gửi /stat để kiểm tra trạng thái
+    2. Thử gửi /start lại
+    3. Liên hệ admin qua nhóm Telegram
