@@ -1,3 +1,38 @@
+// Sync agent to server
+async function syncAgentToServer(agent) {
+  try {
+    const response = await fetch('https://kohkonhbanhang1.onrender.com/api/agents/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: agent.id,
+        fullname: agent.fullname,
+        username: agent.username,
+        password: agent.password,
+        telegram: agent.telegram,
+        verified: agent.verified || false,
+        role: agent.role || 'agent',
+        accountType: agent.accountType || 'FREE',
+        products: agent.products || [],
+        createdAt: agent.createdAt || agent.registeredAt || new Date().toISOString(),
+        isActive: agent.isActive !== false
+      })
+    });
+    
+    if (response.ok) {
+      console.log('✅ Agent synced to server:', agent.username);
+      return true;
+    } else {
+      throw new Error('Server response not OK');
+    }
+  } catch (error) {
+    console.error('❌ Failed to sync agent to server:', error);
+    throw error;
+  }
+}
+
 // Switch between login and register forms
 function switchToRegister(e) {
   e.preventDefault();
@@ -348,10 +383,22 @@ async function handleRegister(e) {
   users.push(newAgent);
   localStorage.setItem('agents', JSON.stringify(users));
   
-  alert('✅ Đăng ký thành công!\n\n🆓 Tài khoản Thường: 5 sản phẩm/ngày\n\nVui lòng đăng nhập.');
-  
-  // Switch to login form
-  switchToLogin(e);
+  // 🌐 ĐỒNG BỘ LÊN SERVER
+  syncAgentToServer(newAgent).then(() => {
+    alert('✅ Đăng ký thành công!\n\n🆓 Tài khoản Thường: 5 sản phẩm/ngày\n\nVui lòng đăng nhập.');
+    
+    // Switch to login form
+    switchToLogin(e);
+    
+    // Pre-fill username
+    document.getElementById('login-username').value = username;
+  }).catch(error => {
+    console.error('Server sync failed:', error);
+    alert('✅ Đăng ký thành công (lưu local)!\n\n🆓 Tài khoản Thường: 5 sản phẩm/ngày\n\nVui lòng đăng nhập.');
+    
+    switchToLogin(e);
+    document.getElementById('login-username').value = username;
+  });
   
   // Pre-fill username
   document.getElementById('login-username').value = username;
@@ -399,6 +446,9 @@ function handleLogin(e) {
   }
   
   alert('✅ Đăng nhập thành công!');
+  
+  // 🌐 ĐỒNG BỘ ĐẠI LÝ LÊN SERVER KHI ĐĂNG NHẬP
+  syncAgentToServer(user).catch(err => console.warn('Sync on login failed:', err));
   
   // Redirect to dashboard
   window.location.href = 'dashboard.html';
