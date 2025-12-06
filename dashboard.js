@@ -4,7 +4,17 @@ let currentUser = null;
 
 if (currentUserStr) {
   currentUser = JSON.parse(currentUserStr);
-  document.getElementById('userName').textContent = `Xin chào, ${currentUser.fullname}`;
+  
+  // Set default accountType if not exists
+  if (!currentUser.accountType) {
+    currentUser.accountType = 'FREE';
+  }
+  
+  const accountBadge = currentUser.accountType === 'VIP' ? 
+    '<span style="background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); color: #b8860b; padding: 3px 10px; border-radius: 15px; font-size: 0.85rem; margin-left: 10px;">👑 VIP</span>' : 
+    '<span style="background: #e3f2fd; color: #1976d2; padding: 3px 10px; border-radius: 15px; font-size: 0.85rem; margin-left: 10px;">🆓 Thường</span>';
+  
+  document.getElementById('userName').innerHTML = `Xin chào, ${currentUser.fullname} ${accountBadge}`;
   
   // Display agent's telegram
   const telegramDisplay = document.getElementById('agentTelegramDisplay');
@@ -167,6 +177,21 @@ function loadMyProducts() {
 // Add product
 async function addProduct(e) {
   e.preventDefault();
+
+  // ✅ KIỂM TRA QUOTA (5 sản phẩm/ngày cho FREE, không giới hạn cho VIP)
+  const accountType = currentUser.accountType || 'FREE';
+  
+  if (accountType === 'FREE') {
+    const todayCount = getTodayProductCount();
+    if (todayCount >= 5) {
+      alert('❌ HẾT HẠN MỨC ĐĂNG SẢN PHẨM HÔM NAY!\n\n' +
+            'Tài khoản Thường chỉ được đăng 5 sản phẩm/ngày.\n' +
+            'Bạn đã đăng: ' + todayCount + '/5\n\n' +
+            '👑 Nâng cấp lên VIP để đăng không giới hạn!\n' +
+            'Liên hệ Admin để nâng cấp.');
+      return;
+    }
+  }
 
   const name = document.getElementById('product-name').value.trim();
   const price = parseFloat(document.getElementById('product-price').value);
@@ -494,6 +519,20 @@ function selectImage(url, element) {
   
   // Set hidden input value
   document.getElementById('selected-image-url').value = url;
+}
+
+// Get today's product count for quota check
+function getTodayProductCount() {
+  const today = new Date().toDateString();
+  const agents = JSON.parse(localStorage.getItem('agents')) || [];
+  const agent = agents.find(a => a.username === currentUser.username);
+  
+  if (!agent || !agent.products) return 0;
+  
+  return agent.products.filter(p => {
+    const productDate = new Date(p.createdAt).toDateString();
+    return productDate === today;
+  }).length;
 }
 
 // Send Telegram notification

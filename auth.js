@@ -338,15 +338,17 @@ async function handleRegister(e) {
     telegram,
     verified: isVerified,
     role: 'agent',
+    accountType: 'FREE', // Mặc định là FREE (5 sản phẩm/ngày)
     products: [],
     registeredAt: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
     isActive: true
   };
   
   users.push(newAgent);
   localStorage.setItem('agents', JSON.stringify(users));
   
-  alert('✅ Đăng ký thành công! Vui lòng đăng nhập.');
+  alert('✅ Đăng ký thành công!\n\n🆓 Tài khoản Thường: 5 sản phẩm/ngày\n\nVui lòng đăng nhập.');
   
   // Switch to login form
   switchToLogin(e);

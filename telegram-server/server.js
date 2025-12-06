@@ -954,12 +954,70 @@ app.post('/api/agents/login', (req, res) => {
         username: agent.username,
         fullname: agent.fullname,
         telegram: agent.telegram,
+        accountType: agent.accountType || 'FREE',
         products: agent.products
       }
     });
   } catch (error) {
     console.error('Error logging in:', error);
     res.status(500).json({ error: 'Failed to login' });
+  }
+});
+
+// PUT: Upgrade/Downgrade agent
+app.put('/api/agents/:id/upgrade', (req, res) => {
+  try {
+    const { id } = req.params;
+    const { accountType } = req.body;
+    
+    const agent = globalAgents.find(a => a.id === id);
+    
+    if (!agent) {
+      return res.status(404).json({ error: 'Agent not found' });
+    }
+    
+    agent.accountType = accountType;
+    agent.upgradedAt = new Date().toISOString();
+    
+    res.json({
+      success: true,
+      message: `Agent upgraded to ${accountType}`,
+      agent: {
+        id: agent.id,
+        username: agent.username,
+        fullname: agent.fullname,
+        accountType: agent.accountType
+      }
+    });
+  } catch (error) {
+    console.error('Error upgrading agent:', error);
+    res.status(500).json({ error: 'Failed to upgrade agent' });
+  }
+});
+
+// DELETE: Delete agent
+app.delete('/api/agents/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const index = globalAgents.findIndex(a => a.id === id);
+    
+    if (index === -1) {
+      return res.status(404).json({ error: 'Agent not found' });
+    }
+    
+    const deleted = globalAgents.splice(index, 1)[0];
+    
+    // Also delete agent's products
+    globalProducts = globalProducts.filter(p => p.agentId !== id);
+    
+    res.json({
+      success: true,
+      message: 'Agent deleted successfully',
+      agent: deleted
+    });
+  } catch (error) {
+    console.error('Error deleting agent:', error);
+    res.status(500).json({ error: 'Failed to delete agent' });
   }
 });
 

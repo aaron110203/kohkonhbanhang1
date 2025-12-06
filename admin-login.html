@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - KohKong</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .admin-login-box {
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .admin-login-box h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    .admin-icon {
+      text-align: center;
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .btn-admin-login {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn-admin-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .back-link a {
+      color: #667eea;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-login-box">
+    <div class="admin-icon">🛡️</div>
+    <h2>Admin Login</h2>
+    <form id="adminLoginForm">
+      <div class="form-group">
+        <label>Admin Username</label>
+        <input type="text" id="admin-username" required>
+      </div>
+      <div class="form-group">
+        <label>Admin Password</label>
+        <input type="password" id="admin-password" required>
+      </div>
+      <button type="submit" class="btn-admin-login">Đăng Nhập Admin</button>
+    </form>
+    <div class="back-link">
+      <a href="index.html">← Quay lại trang chủ</a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const username = document.getElementById('admin-username').value;
+      const password = document.getElementById('admin-password').value;
+      
+      // Admin credentials (trong production nên lưu trên server)
+      const ADMIN_USERNAME = 'admin';
+      const ADMIN_PASSWORD = 'Admin@KohKong2025';
+      
+      if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+        const adminUser = {
+          username: username,
+          role: 'admin',
+          loginTime: new Date().toISOString()
+        };
+        
+        localStorage.setItem('adminUser', JSON.stringify(adminUser));
+        alert('✅ Đăng nhập Admin thành công!');
+        window.location.href = 'admin.html';
+      } else {
+        alert('❌ Sai thông tin đăng nhập Admin!');
+      }
+    });
+  </script>
+</body>
+</html>
