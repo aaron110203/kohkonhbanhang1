@@ -803,6 +803,17 @@ app.listen(PORT, () => {
   console.log(`   DELETE /api/upload/image/:filename - Xóa ảnh`);
   console.log(`   GET /api/upload/images - Danh sách ảnh`);
   console.log(`\n📁 Uploads folder: ${path.join(__dirname, 'uploads')}`);
+  
+  // 🔄 AUTO PING: Giữ server luôn hoạt động (tránh Render.com sleep)
+  if (process.env.RENDER) {
+    console.log('\n🔄 Auto-ping enabled (Keep server alive 24/7)');
+    setInterval(() => {
+      const url = process.env.RENDER_EXTERNAL_URL || 'https://kohkonhbanhang1.onrender.com';
+      fetch(url)
+        .then(() => console.log('🏓 Ping successful'))
+        .catch(() => console.log('⚠️ Ping failed'));
+    }, 10 * 60 * 1000); // Ping mỗi 10 phút
+  }
 });
 
 // Handle bot errors

@@ -1096,6 +1096,79 @@
   </div>
   
   <script>
+    // ==================== LOAD SẢN PHẨM ĐỘNG TỪ LOCALSTORAGE ====================
+    function loadDynamicProducts() {
+      const productGrid = document.getElementById('productGrid');
+      
+      // Đọc sản phẩm từ localStorage.products (do dashboard lưu vào)
+      const productsFromDashboard = JSON.parse(localStorage.getItem('products')) || [];
+      
+      // Đọc từ agents (backup)
+      const agents = JSON.parse(localStorage.getItem('agents')) || [];
+      let allProducts = [...productsFromDashboard];
+      
+      // Thêm sản phẩm từ agents nếu chưa có
+      agents.forEach(agent => {
+        if (agent.products && agent.products.length > 0) {
+          agent.products.forEach(product => {
+            const exists = allProducts.some(p => p.id === product.id);
+            if (!exists) {
+              allProducts.push({
+                ...product,
+                agentName: product.agentName || agent.fullname,
+                agentTelegram: product.telegram || agent.telegram
+              });
+            }
+          });
+        }
+      });
+
+      console.log('📦 Loaded products for index.html:', allProducts.length);
+
+      if (allProducts.length === 0) {
+        // Không có sản phẩm từ dashboard, giữ nguyên HTML tĩnh
+        console.log('⚠️ Chưa có sản phẩm từ đại lý, hiển thị sản phẩm mẫu');
+        return;
+      }
+
+      // CÓ sản phẩm từ dashboard → Hiển thị
+      const dynamicHTML = allProducts.map(product => `
+        <div class="product-card" data-category="${product.category || 'other'}">
+          <div class="product-image">
+            ${product.imageUrl ? 
+              `<img src="${product.imageUrl}" alt="${product.name}" loading="lazy">` : 
+              `<div style="display: flex; align-items: center; justify-content: center; height: 200px; font-size: 4rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">${product.icon || '📦'}</div>`
+            }
+            <span class="product-badge">Mới</span>
+          </div>
+          <div class="product-info">
+            <h3>${product.name}</h3>
+            <p class="product-desc">${product.description || 'Sản phẩm chất lượng'}</p>
+            <div class="product-meta">
+              <span class="price">${formatPrice(product.price)} ₭</span>
+              <span class="seller">${product.icon || '🏪'} ${product.agentName || 'KohKong Shop'}</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/${product.agentTelegram || 'KohKongShopBot_bot'}" target="_blank" class="telegram-link">
+                Liên Hệ Đặt Hàng
+              </a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      // THAY THẾ toàn bộ grid bằng sản phẩm động
+      productGrid.innerHTML = dynamicHTML;
+    }
+
+    function formatPrice(price) {
+      return new Intl.NumberFormat('vi-VN').format(price);
+    }
+
+    // Load khi trang load
+    document.addEventListener('DOMContentLoaded', loadDynamicProducts);
+
+    // ==================== SHARE FUNCTIONS ====================
     function toggleShareMenu() {
       const menu = document.getElementById('shareMenu');
       menu.classList.toggle('active');
