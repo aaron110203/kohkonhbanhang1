@@ -162,7 +162,7 @@ function loadMyProducts() {
       </div>
       <div class="product-info">
         <h3>${product.name}</h3>
-        <div class="product-price">${formatPrice(product.price)} ₭</div>
+        <div class="product-price">${formatPrice(product.price)}</div>
         <span class="product-category">${getCategoryName(product.category)}</span>
         ${product.description ? `<p class="product-description">${product.description}</p>` : ''}
         <div class="product-meta">
@@ -453,7 +453,7 @@ function generateId() {
 }
 
 function formatPrice(price) {
-  return price.toLocaleString('vi-VN');
+  return '$' + parseFloat(price).toFixed(2);
 }
 
 function formatDate(dateStr) {
@@ -540,7 +540,7 @@ async function sendTelegramNotification(product) {
   try {
     const message = `🆕 SẢN PHẨM MỚI ĐƯỢC ĐĂNG\n\n` +
                    `📦 Tên: ${product.name}\n` +
-                   `💰 Giá: ${formatPrice(product.price)} ₭\n` +
+                   `💰 Giá: ${formatPrice(product.price)}\n` +
                    `📂 Danh mục: ${getCategoryName(product.category)}\n` +
                    `👤 Đại lý: ${product.agentName}\n` +
                    `📱 Telegram: ${product.telegram}\n` +

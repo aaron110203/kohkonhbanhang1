@@ -207,9 +207,9 @@ async function sendCustomerNotification(order, customerTelegram) {
 Cảm ơn bạn đã đặt hàng tại KohKong Shop!
 
 📦 Sản phẩm: ${order.product.name}
-💰 Giá: ${formatPrice(order.product.price)} ₭
+💰 Giá: ${formatPrice(order.product.price)}
 🔢 Số lượng: ${order.quantity}
-💵 Tổng tiền: ${formatPrice(order.total)} ₭
+💵 Tổng tiền: ${formatPrice(order.total)}
 
 👤 Tên: ${order.customer.name}
 📱 SĐT: ${order.customer.phone}
@@ -251,9 +251,9 @@ async function sendTelegramNotification(order, agentTelegram) {
 🛒 ĐƠN HÀNG MỚI!
 
 📦 Sản phẩm: ${order.product.name}
-💰 Giá: ${formatPrice(order.product.price)} ₭
+💰 Giá: ${formatPrice(order.product.price)}
 🔢 Số lượng: ${order.quantity}
-💵 Tổng tiền: ${formatPrice(order.total)} ₭
+💵 Tổng tiền: ${formatPrice(order.total)}
 
 👤 Khách hàng: ${order.customer.name}
 📱 SĐT: ${order.customer.phone}

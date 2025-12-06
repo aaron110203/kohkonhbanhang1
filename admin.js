@@ -38,6 +38,7 @@ async function loadAdminData() {
 
   updateStats();
   renderAgentsTable();
+  renderProductsTable();
 }
 
 function updateStats() {
@@ -243,3 +244,83 @@ function logoutAdmin() {
     window.location.href = 'admin-login.html';
   }
 }
+
+// Render products table
+function renderProductsTable() {
+  const tbody = document.getElementById('productsTableBody');
+  
+  if (allProducts.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7" style="text-align: center; padding: 40px; color: #999;">
+          Chưa có sản phẩm nào
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = allProducts.map(product => {
+    const agent = allAgents.find(a => a.id === product.agentId);
+    const agentName = agent ? agent.fullname : product.agentName || 'Không rõ';
+    
+    return `
+      <tr>
+        <td style="width: 80px;">
+          ${product.imageUrl ? `<img src="${product.imageUrl}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">` : '📦'}
+        </td>
+        <td><strong>${product.name}</strong></td>
+        <td style="color: #4CAF50; font-weight: bold;">$${parseFloat(product.price).toFixed(2)}</td>
+        <td>${getCategoryName(product.category)}</td>
+        <td>${agentName}</td>
+        <td>${formatDate(product.createdAt)}</td>
+        <td>
+          <button class="btn-delete" onclick="deleteProduct('${product.id}')">
+            🗑️ Xóa
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function getCategoryName(category) {
+  const categories = {
+    'electronics': '📱 Điện tử',
+    'fashion': '👗 Thời trang',
+    'beauty': '💄 Mỹ phẩm',
+    'food': '🍜 Đồ ăn',
+    'drinks': '🥤 Đồ uống',
+    'other': '📦 Khác'
+  };
+  return categories[category] || '📦 Khác';
+}
+
+async function deleteProduct(productId) {
+  if (!confirm('⚠️ XÓA SẢN PHẨM?\n\nHành động này không thể hoàn tác!')) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`https://kohkonhbanhang1.onrender.com/api/products/${productId}`, {
+      method: 'DELETE'
+    });
+
+    if (response.ok) {
+      alert('✅ Đã xóa sản phẩm!');
+      loadAdminData();
+    } else {
+      throw new Error('Server error');
+    }
+  } catch (error) {
+    console.warn('Deleting from localStorage:', error);
+    // Fallback to localStorage
+    const products = JSON.parse(localStorage.getItem('products')) || [];
+    const newProducts = products.filter(p => p.id !== productId);
+    localStorage.setItem('products', JSON.stringify(newProducts));
+    
+    alert('✅ Đã xóa sản phẩm!');
+    loadAdminData();
+  }
+}
+
