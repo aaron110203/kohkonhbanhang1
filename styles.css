@@ -1,0 +1,532 @@
+/* Reset & base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body, html {
+  height: 100%;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), 
+              url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1600') center/cover no-repeat fixed;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header */
+.header {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.logo-icon {
+  font-size: 36px;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.logo-text {
+  font-size: 28px;
+  font-weight: bold;
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header-subtitle {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+/* Container */
+.container {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 20px;
+}
+
+/* Form Wrapper */
+.form-wrapper {
+  width: 100%;
+  max-width: 480px;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Form container */
+.form-container {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.signup-form {
+  padding: 40px 35px;
+}
+
+.signup-form h2 {
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.form-description {
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 30px;
+}
+
+.signup-form label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 6px;
+  margin-top: 12px;
+  color: #555;
+  font-weight: 600;
+}
+
+.signup-form input[type="email"],
+.signup-form input[type="password"],
+.signup-form input[type="text"],
+.signup-form input[type="tel"],
+.signup-form select {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  outline: none;
+  font-size: 14px;
+  transition: all 0.3s;
+  background: #f9f9f9;
+}
+
+.signup-form input:focus,
+.signup-form select:focus {
+  border-color: #ff6b35;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1);
+}
+
+.signup-form select {
+  cursor: pointer;
+}
+
+.terms {
+  display: flex;
+  align-items: flex-start;
+  font-size: 13px;
+  margin: 20px 0;
+  line-height: 1.5;
+}
+
+.terms input {
+  margin-right: 10px;
+  margin-top: 3px;
+  cursor: pointer;
+}
+
+.terms label {
+  margin: 0;
+  cursor: pointer;
+}
+
+.terms a {
+  color: #ff6b35;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.terms a:hover {
+  text-decoration: underline;
+}
+
+/* Telegram Section */
+.telegram-section {
+  background: linear-gradient(135deg, #e3f2fd 0%, #f0f8ff 100%);
+  padding: 20px;
+  border-radius: 12px;
+  margin: 20px 0;
+  border: 2px solid #90caf9;
+}
+
+.telegram-section label {
+  color: #0088cc;
+  font-weight: bold;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.telegram-info {
+  font-size: 12px;
+  color: #666;
+  margin: 5px 0 15px 0;
+}
+
+.telegram-manual {
+  margin-top: 10px;
+}
+
+.telegram-input-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.telegram-input {
+  flex: 1;
+  padding: 11px 14px;
+  border: 2px solid #0088cc;
+  border-radius: 10px;
+  outline: none;
+  font-size: 14px;
+  transition: all 0.3s;
+  background: white;
+}
+
+.telegram-input:focus {
+  border-color: #0066aa;
+  box-shadow: 0 0 0 4px rgba(0, 136, 204, 0.15);
+}
+
+.verify-telegram-btn-small {
+  padding: 11px 18px;
+  background: linear-gradient(135deg, #0088cc 0%, #0066aa 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+  white-space: nowrap;
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(0, 136, 204, 0.3);
+}
+
+.verify-telegram-btn-small:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 136, 204, 0.4);
+}
+
+.verify-telegram-btn-small:active {
+  transform: translateY(0);
+}
+
+.telegram-code {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  border: 2px solid #4caf50;
+  border-radius: 10px;
+  outline: none;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 4px;
+  background: #f1f8e9;
+}
+
+.telegram-verified {
+  background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
+  color: #2e7d32;
+  padding: 12px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: bold;
+  margin-top: 10px;
+  border: 2px solid #81c784;
+}
+
+/* Remember Me */
+.remember-me {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  margin: 15px 0 20px 0;
+}
+
+.remember-me input {
+  margin-right: 8px;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+.remember-me label {
+  margin: 0;
+  cursor: pointer;
+  color: #555;
+  font-weight: 500;
+}
+
+/* Popup Overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.popup-container {
+  position: relative;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.popup-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 35px;
+  height: 35px;
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.3s;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-close:hover {
+  background: #d32f2f;
+  transform: rotate(90deg);
+}
+
+.popup-content {
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+/* Scrollbar for popup */
+.popup-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.popup-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.popup-content::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.popup-content::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Toggle Form Link */
+.toggle-form-link {
+  text-align: center;
+  margin-top: 25px;
+  padding-top: 25px;
+  border-top: 2px solid #f0f0f0;
+}
+
+.toggle-form-link a {
+  color: #ff6b35;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.toggle-form-link a:hover {
+  color: #f7931e;
+  text-decoration: underline;
+}
+
+/* Submit Button */
+button[type="submit"] {
+  width: 100%;
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+  color: white;
+  border: none;
+  padding: 15px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  border-radius: 10px;
+  margin-top: 20px;
+  box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+}
+
+button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
+}
+
+button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+/* Footer */
+.footer {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  font-size: 13px;
+  backdrop-filter: blur(10px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header-container {
+    padding: 0 15px;
+  }
+  
+  .logo-icon {
+    font-size: 30px;
+  }
+  
+  .logo-text {
+    font-size: 22px;
+  }
+  
+  .header-subtitle {
+    font-size: 12px;
+  }
+  
+  .container {
+    padding: 20px 15px;
+  }
+  
+  .form-wrapper {
+    max-width: 100%;
+  }
+  
+  .signup-form {
+    padding: 30px 25px;
+  }
+  
+  .signup-form h2 {
+    font-size: 24px;
+  }
+  
+  .form-description {
+    font-size: 13px;
+  }
+  
+  .telegram-input-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .verify-telegram-btn-small {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 15px 0;
+  }
+  
+  .logo-icon {
+    font-size: 26px;
+  }
+  
+  .logo-text {
+    font-size: 20px;
+  }
+  
+  .signup-form {
+    padding: 25px 20px;
+  }
+  
+  .signup-form h2 {
+    font-size: 22px;
+  }
+  
+  .container {
+    padding: 15px 10px;
+  }
+}

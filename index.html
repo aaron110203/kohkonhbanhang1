@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KohKong Bán Hàng</title>
+  <link rel="stylesheet" href="styles.css">
+  <script async src="https://telegram.org/js/telegram-widget.js?22"></script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <span class="logo-icon">🏪</span>
+        <h1 class="logo-text">KohKong Bán Hàng</h1>
+      </div>
+      <p class="header-subtitle">Hệ thống quản lý bán hàng trực tuyến</p>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="container">
+    <div class="form-wrapper">
+      <!-- LOGIN FORM -->
+      <div class="form-container" id="loginContainer">
+        <form class="signup-form" id="loginForm">
+          <h2>Đăng Nhập</h2>
+          <p class="form-description">Chào mừng bạn trở lại</p>
+          
+          <label>Tên Đăng Nhập</label>
+          <input type="text" id="login-username" placeholder="Nhập tên đăng nhập" required>
+
+          <label>Mật Khẩu</label>
+          <input type="password" id="login-password" placeholder="Nhập mật khẩu" required>
+
+          <div class="remember-me">
+            <input type="checkbox" id="remember-password">
+            <label for="remember-password">Ghi nhớ mật khẩu</label>
+          </div>
+
+          <button type="submit">Đăng Nhập</button>
+
+          <p class="toggle-form-link">
+            <a href="#" onclick="showRegisterPopup(event)">Chưa có tài khoản? Đăng ký ngay</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGISTER POPUP -->
+  <div class="popup-overlay" id="registerPopup" style="display: none;">
+    <div class="popup-container">
+      <button class="popup-close" onclick="closeRegisterPopup()">&times;</button>
+      <div class="popup-content">
+        <form class="signup-form" id="registerForm">
+          <h2>Đăng Ký Tài Khoản</h2>
+          <p class="form-description">Tạo tài khoản mới để bắt đầu bán hàng</p>
+          
+          <label>Tên Đăng Nhập</label>
+          <input type="text" id="reg-username" placeholder="Nhập tên đăng nhập" required>
+
+          <label>Họ và Tên</label>
+          <input type="text" id="reg-fullname" placeholder="Nhập họ tên đầy đủ" required>
+
+          <label>Mật Khẩu</label>
+          <input type="password" id="reg-password" placeholder="Nhập mật khẩu (tối thiểu 6 ký tự)" required>
+
+          <label>Xác Nhận Mật Khẩu</label>
+          <input type="password" id="reg-confirm-password" placeholder="Nhập lại mật khẩu" required>
+
+          <div class="telegram-section">
+            <label>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#0088cc" style="vertical-align: middle; margin-right: 5px;">
+                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161l-1.894 8.927c-.141.631-.513.784-1.039.489l-2.875-2.119-1.387 1.334c-.153.153-.281.281-.576.281l.206-2.913 5.316-4.801c.231-.206-.05-.319-.357-.113l-6.571 4.138-2.831-.887c-.616-.193-.628-.616.131-.916l11.074-4.269c.513-.193.963.119.803.849z"/>
+              </svg>
+              Xác Minh Telegram (Bắt buộc)
+            </label>
+            <p class="telegram-info">Nhập Telegram ID để xác minh tài khoản</p>
+            
+            <div class="telegram-manual">
+              <div class="telegram-input-group">
+                <input type="text" id="reg-telegram" placeholder="@telegram_username hoặc Telegram ID" class="telegram-input" required>
+                <button type="button" class="verify-telegram-btn-small" onclick="verifyTelegram()">
+                  📲 Gửi Mã
+                </button>
+              </div>
+              <input type="text" id="reg-telegram-code" placeholder="Nhập mã 6 số từ @KohKongBanHang_bot" class="telegram-code" style="display:none;">
+              <div id="reg-telegram-verified" class="telegram-verified" style="display:none;">
+                ✅ Telegram đã xác minh
+              </div>
+            </div>
+          </div>
+
+          <button type="submit">Đăng Ký</button>
+
+          <p class="toggle-form-link">
+            <a href="#" onclick="closeRegisterPopup()">Đã có tài khoản? Đăng nhập</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 KohKong Bán Hàng. All rights reserved.</p>
+  </footer>
+
+  <script>
+    let telegramVerified = false;
+    let verifiedTelegramId = null;
+
+    // Load saved credentials on page load
+    window.addEventListener('DOMContentLoaded', function() {
+      const savedUsername = localStorage.getItem('saved_username');
+      const savedPassword = localStorage.getItem('saved_password');
+      
+      if (savedUsername && savedPassword) {
+        document.getElementById('login-username').value = savedUsername;
+        document.getElementById('login-password').value = savedPassword;
+        document.getElementById('remember-password').checked = true;
+      }
+    });
+
+    // Show Register Popup
+    function showRegisterPopup(event) {
+      event.preventDefault();
+      document.getElementById('registerPopup').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Close Register Popup
+    function closeRegisterPopup() {
+      document.getElementById('registerPopup').style.display = 'none';
+      document.body.style.overflow = 'auto';
+      document.getElementById('registerForm').reset();
+      telegramVerified = false;
+      document.getElementById('reg-telegram-code').style.display = 'none';
+      document.getElementById('reg-telegram-verified').style.display = 'none';
+    }
+
+    // Close popup when clicking outside
+    document.getElementById('registerPopup').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeRegisterPopup();
+      }
+    });
+
+    // Verify Telegram
+    async function verifyTelegram() {
+      const telegramInput = document.getElementById('reg-telegram').value;
+      
+      if (!telegramInput) {
+        alert('⚠️ Vui lòng nhập Telegram username hoặc ID!');
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:3000/api/send-verification', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({telegram: telegramInput})
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          document.getElementById('reg-telegram-code').style.display = 'block';
+          alert('✅ ' + data.message + '\n\nKiểm tra @KohKongBanHang_bot và nhập mã vào ô bên dưới.');
+        } else {
+          alert('❌ Lỗi: ' + data.error + '\n\n💡 Hướng dẫn:\n1. Mở Telegram, tìm @KohKongBanHang_bot\n2. Gửi /start cho bot\n3. Nhập đúng username (VD: @yourname) hoặc ID số');
+        }
+      } catch (error) {
+        alert('❌ Không thể kết nối server!\n\nVui lòng đảm bảo server đang chạy.');
+        console.error('Error:', error);
+      }
+    }
+
+    // Handle Login Form Submit
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const username = document.getElementById('login-username').value;
+      const password = document.getElementById('login-password').value;
+      const rememberPassword = document.getElementById('remember-password').checked;
+      
+      try {
+        const loginResponse = await fetch('http://localhost:3000/api/login', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            username: username,
+            password: password
+          })
+        });
+        
+        const loginData = await loginResponse.json();
+        
+        if (loginData.success) {
+          // Save credentials if remember is checked
+          if (rememberPassword) {
+            localStorage.setItem('saved_username', username);
+            localStorage.setItem('saved_password', password);
+          } else {
+            localStorage.removeItem('saved_username');
+            localStorage.removeItem('saved_password');
+          }
+          
+          alert('✅ Đăng nhập thành công!\n\nChào mừng ' + loginData.user.fullname);
+          // Redirect to dashboard
+          // window.location.href = '/dashboard.html';
+        } else {
+          alert('❌ ' + loginData.error);
+        }
+      } catch (error) {
+        alert('❌ Lỗi kết nối server!');
+        console.error('Error:', error);
+      }
+    });
+
+    // Handle Register Form Submit
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const username = document.getElementById('reg-username').value;
+      const fullname = document.getElementById('reg-fullname').value;
+      const password = document.getElementById('reg-password').value;
+      const confirmPassword = document.getElementById('reg-confirm-password').value;
+      const telegramInput = document.getElementById('reg-telegram').value;
+      const telegramCode = document.getElementById('reg-telegram-code').value;
+      
+      // Validate
+      if (password !== confirmPassword) {
+        alert('❌ Mật khẩu xác nhận không khớp!');
+        return;
+      }
+      
+      if (password.length < 6) {
+        alert('❌ Mật khẩu phải có ít nhất 6 ký tự!');
+        return;
+      }
+      
+      if (!telegramCode) {
+        alert('⚠️ Vui lòng xác minh Telegram trước khi đăng ký!');
+        return;
+      }
+      
+      try {
+        // Verify Telegram code first
+        const verifyResponse = await fetch('http://localhost:3000/api/verify-code', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            telegram: telegramInput,
+            code: telegramCode
+          })
+        });
+        
+        const verifyData = await verifyResponse.json();
+        
+        if (!verifyData.success) {
+          alert('❌ ' + verifyData.error);
+          return;
+        }
+        
+        // Show verification success
+        document.getElementById('reg-telegram-verified').style.display = 'block';
+        document.getElementById('reg-telegram-code').style.display = 'none';
+        verifiedTelegramId = verifyData.telegram_id;
+        
+        // Register user
+        const registerResponse = await fetch('http://localhost:3000/api/register', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            username: username,
+            fullname: fullname,
+            password: password,
+            telegram_id: verifiedTelegramId
+          })
+        });
+        
+        const registerData = await registerResponse.json();
+        
+        if (registerData.success) {
+          alert('🎉 Đăng ký thành công!\n\nTài khoản của bạn đã được tạo.\nBạn có thể đăng nhập ngay bây giờ.');
+          closeRegisterPopup();
+          
+          // Auto fill login form
+          document.getElementById('login-username').value = username;
+          document.getElementById('login-password').value = password;
+        } else {
+          alert('❌ ' + registerData.error);
+        }
+      } catch (error) {
+        alert('❌ Lỗi kết nối server!');
+        console.error('Error:', error);
+      }
+    });
+  </script>
+</body>
+</html>

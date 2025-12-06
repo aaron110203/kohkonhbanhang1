@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KohKong Bán Hàng - Nền Tảng Bán Hàng Trực Tuyến</title>
+  <link rel="stylesheet" href="landing.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <span class="logo-icon">🏪</span>
+        <span class="logo-text">KohKong Bán Hàng</span>
+      </div>
+      <ul class="nav-menu">
+        <li><a href="#home">Trang Chủ</a></li>
+        <li><a href="#products">Sản Phẩm</a></li>
+        <li><a href="#how-it-works">Cách Hoạt Động</a></li>
+        <li><a href="#pricing">Bảng Giá</a></li>
+        <li><a href="#contact">Liên Hệ</a></li>
+      </ul>
+      <div class="nav-buttons">
+        <a href="index.html" class="btn-login">Đăng Nhập</a>
+        <a href="index.html#register" class="btn-register">Đăng Ký Ngay</a>
+      </div>
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero">
+    <div class="hero-container">
+      <div class="hero-content">
+        <h1 class="hero-title">Bán Hàng Online <br><span class="highlight">Dễ Dàng & Hiệu Quả</span></h1>
+        <p class="hero-description">
+          Nền tảng bán hàng trực tuyến giúp bạn tiếp cận hàng nghìn khách hàng. 
+          Đăng sản phẩm, nhận đơn qua Telegram, quản lý dễ dàng!
+        </p>
+        <div class="hero-buttons">
+          <a href="#register" class="btn-primary" onclick="goToRegister(event)">
+            🚀 Bắt Đầu Miễn Phí
+          </a>
+          <a href="#how-it-works" class="btn-secondary">
+            📖 Tìm Hiểu Thêm
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <h3>500+</h3>
+            <p>Đại Lý</p>
+          </div>
+          <div class="stat-item">
+            <h3>10,000+</h3>
+            <p>Sản Phẩm</p>
+          </div>
+          <div class="stat-item">
+            <h3>50,000+</h3>
+            <p>Đơn Hàng</p>
+          </div>
+        </div>
+      </div>
+      <div class="hero-image">
+        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600" alt="Shopping">
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section id="products" class="categories">
+    <div class="section-container">
+      <div class="section-header">
+        <h2>Danh Mục Sản Phẩm</h2>
+        <p>Khám phá hàng ngàn sản phẩm từ các đại lý uy tín - Không cần đăng ký để xem</p>
+      </div>
+      
+      <!-- Category Filter -->
+      <div class="category-filter">
+        <button class="filter-btn active" onclick="filterCategory('all')">
+          <span class="filter-icon">🛍️</span> Tất Cả
+        </button>
+        <button class="filter-btn" onclick="filterCategory('food')">
+          <span class="filter-icon">🍜</span> Đồ Ăn
+        </button>
+        <button class="filter-btn" onclick="filterCategory('fashion')">
+          <span class="filter-icon">👕</span> Quần Áo
+        </button>
+        <button class="filter-btn" onclick="filterCategory('medicine')">
+          <span class="filter-icon">💊</span> Thuốc
+        </button>
+        <button class="filter-btn" onclick="filterCategory('personal')">
+          <span class="filter-icon">🧴</span> Đồ Dùng Cá Nhân
+        </button>
+        <button class="filter-btn" onclick="filterCategory('grocery')">
+          <span class="filter-icon">🛒</span> Nhận Đi Chợ Hộ
+        </button>
+        <button class="filter-btn" onclick="filterCategory('fruits')">
+          <span class="filter-icon">🍎</span> Hoa Quả
+        </button>
+        <button class="filter-btn" onclick="filterCategory('drinks')">
+          <span class="filter-icon">🥤</span> Nước Uống
+        </button>
+        <button class="filter-btn" onclick="filterCategory('electronics')">
+          <span class="filter-icon">📱</span> Điện Tử
+        </button>
+        <button class="filter-btn" onclick="filterCategory('cosmetics')">
+          <span class="filter-icon">💄</span> Mỹ Phẩm
+        </button>
+        <button class="filter-btn" onclick="filterCategory('home')">
+          <span class="filter-icon">🏠</span> Đồ Gia Dụng
+        </button>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="product-grid" id="productGrid">
+        <!-- Đồ Ăn -->
+        <div class="product-card" data-category="food">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400" alt="Bánh mì">
+            <span class="product-badge">Hot</span>
+          </div>
+          <div class="product-info">
+            <h3>Bánh Mì Đặc Biệt</h3>
+            <p class="product-desc">Bánh mì thịt nguội, pate, rau thơm</p>
+            <div class="product-meta">
+              <span class="price">25.000đ</span>
+              <span class="seller">🍞 Quán Bánh Mì Ngon</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-category="food">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400" alt="Cơm tấm">
+            <span class="product-badge">Mới</span>
+          </div>
+          <div class="product-info">
+            <h3>Cơm Tấm Sườn Bì</h3>
+            <p class="product-desc">Cơm tấm sườn nướng, bì, chả trứng</p>
+            <div class="product-meta">
+              <span class="price">35.000đ</span>
+              <span class="seller">🍚 Quán Cơm Tấm Sài Gòn</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-category="food">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400" alt="Pizza">
+          </div>
+          <div class="product-info">
+            <h3>Pizza Hải Sản</h3>
+            <p class="product-desc">Pizza size M, tôm, mực, phô mai</p>
+            <div class="product-meta">
+              <span class="price">120.000đ</span>
+              <span class="seller">🍕 Pizza House</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-category="food">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1562059390-a761a084768e?w=400" alt="Phở">
+          </div>
+          <div class="product-info">
+            <h3>Phở Bò Tái</h3>
+            <p class="product-desc">Phở bò tái nạm, nước dùng đậm đà</p>
+            <div class="product-meta">
+              <span class="price">45.000đ</span>
+              <span class="seller">🍜 Phở Hà Nội</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quần Áo -->
+        <div class="product-card" data-category="fashion">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400" alt="Áo thun">
+            <span class="product-badge">Sale -20%</span>
+          </div>
+          <div class="product-info">
+            <h3>Áo Thun Nam Basic</h3>
+            <p class="product-desc">Cotton 100%, form regular fit</p>
+            <div class="product-meta">
+              <span class="price">250.000đ</span>
+              <span class="seller">👕 Shop Thời Trang ABC</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-category="fashion">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1554568218-0f1715e72254?w=400" alt="Quần jean">
+          </div>
+          <div class="product-info">
+            <h3>Quần Jean Slim Fit</h3>
+            <p class="product-desc">Vải jean cao cấp, co giãn nhẹ</p>
+            <div class="product-meta">
+              <span class="price">450.000đ</span>
+              <span class="seller">👖 Jeans Store</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-category="fashion">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400" alt="Váy">
+            <span class="product-badge">Mới</span>
+          </div>
+          <div class="product-info">
+            <h3>Váy Hoa Vintage</h3>
+            <p class="product-desc">Họa tiết hoa nhí, chất vải mềm mại</p>
+            <div class="product-meta">
+              <span class="price">320.000đ</span>
+              <span class="seller">👗 Fashion Lady</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thuốc -->
+        <div class="product-card" data-category="medicine">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=400" alt="Thuốc">
+          </div>
+          <div class="product-info">
+            <h3>Vitamin C 1000mg</h3>
+            <p class="product-desc">Hộp 30 viên, tăng sức đề kháng</p>
+            <div class="product-meta">
+              <span class="price">85.000đ</span>
+              <span class="seller">💊 Nhà Thuốc Long Châu</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-category="medicine">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1585435557343-3b092031a831?w=400" alt="Thuốc cảm">
+          </div>
+          <div class="product-info">
+            <h3>Thuốc Cảm Paracetamol</h3>
+            <p class="product-desc">Hạ sốt, giảm đau, 100 viên</p>
+            <div class="product-meta">
+              <span class="price">25.000đ</span>
+              <span class="seller">💊 Nhà Thuốc An Khang</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Đồ Dùng Cá Nhân -->
+        <div class="product-card" data-category="personal">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400" alt="Dầu gội">
+          </div>
+          <div class="product-info">
+            <h3>Dầu Gội Dove</h3>
+            <p class="product-desc">650ml, dưỡng ẩm, mềm mượt</p>
+            <div class="product-meta">
+              <span class="price">115.000đ</span>
+              <span class="seller">🧴 Shop Chăm Sóc Tóc</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-category="personal">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?w=400" alt="Sữa rửa mặt">
+            <span class="product-badge">Hot</span>
+          </div>
+          <div class="product-info">
+            <h3>Sữa Rửa Mặt Cetaphil</h3>
+            <p class="product-desc">125ml, làm sạch sâu, không khô da</p>
+            <div class="product-meta">
+              <span class="price">165.000đ</span>
+              <span class="seller">🧴 Skincare Shop</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-category="personal">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400" alt="Kem đánh răng">
+          </div>
+          <div class="product-info">
+            <h3>Kem Đánh Răng Colgate</h3>
+            <p class="product-desc">200g, trắng răng, ngừa sâu răng</p>
+            <div class="product-meta">
+              <span class="price">35.000đ</span>
+              <span class="seller">🧴 Siêu Thị Mini</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Nhận Đi Chợ Hộ -->
+        <div class="product-card" data-category="grocery">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=400" alt="Đi chợ">
+            <span class="product-badge">Dịch Vụ</span>
+          </div>
+          <div class="product-info">
+            <h3>Dịch Vụ Đi Chợ Hộ</h3>
+            <p class="product-desc">Mua hộ, giao tận nhà, tươi ngon</p>
+            <div class="product-meta">
+              <span class="price">30.000đ/lần</span>
+              <span class="seller">🛒 Chợ Online</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng 
+                </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-category="grocery">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=400" alt="Rau củ">
+          </div>
+          <div class="product-info">
+            <h3>Combo Rau Củ Tươi</h3>
+            <p class="product-desc">5 loại rau củ theo mùa, 2kg</p>
+            <div class="product-meta">
+              <span class="price">50.000đ</span>
+              <span class="seller">🛒 Chợ Đầu Mối</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hoa Quả -->
+        <div class="product-card" data-category="fruits">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=400" alt="Táo">
+          </div>
+          <div class="product-info">
+            <h3>Táo Fuji Nhật Bản</h3>
+            <p class="product-desc">1kg, ngọt, giòn, nhập khẩu</p>
+            <div class="product-meta">
+              <span class="price">120.000đ</span>
+              <span class="seller">🍎 Hoa Quả Sạch</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-category="fruits">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1587049352846-4a222e784720?w=400" alt="Dưa hấu">
+            <span class="product-badge">Giảm 15%</span>
+          </div>
+          <div class="product-info">
+            <h3>Dưa Hấu Không Hạt</h3>
+            <p class="product-desc">1 trái ~3kg, ngọt mát</p>
+            <div class="product-meta">
+              <span class="price">45.000đ</span>
+              <span class="seller">🍉 Trái Cây Tươi</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/ADSaaron99" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-category="fruits">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1589927986089-35812ebccc42?w=400" alt="Cam">
+          </div>
+          <div class="product-info">
+            <h3>Cam Sành Hà Giang</h3>
+            <p class="product-desc">1kg, ngọt thanh, nhiều nước</p>
+            <div class="product-meta">
+              <span class="price">35.000đ</span>
+              <span class="seller">🍊 Vườn Cam Việt</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Nước Uống -->
+        <div class="product-card" data-category="drinks">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1546938576-6e6a64f317cc?w=400" alt="Trà sữa">
+            <span class="product-badge">Best Seller</span>
+          </div>
+          <div class="product-info">
+            <h3>Trà Sữa Trân Châu</h3>
+            <p class="product-desc">Size L, trân châu đen, ít đường</p>
+            <div class="product-meta">
+              <span class="price">35.000đ</span>
+              <span class="seller">🥤 Trà Sữa Gongcha</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-category="drinks">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=400" alt="Cà phê">
+          </div>
+          <div class="product-info">
+            <h3>Cà Phê Sữa Đá</h3>
+            <p class="product-desc">Cà phê phin truyền thống</p>
+            <div class="product-meta">
+              <span class="price">25.000đ</span>
+              <span class="seller">☕ Highlands Coffee</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-category="drinks">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1622597467836-f3c7ca9d1d1c?w=400" alt="Sinh tố">
+          </div>
+          <div class="product-info">
+            <h3>Sinh Tố Bơ</h3>
+            <p class="product-desc">Bơ Đắk Lắk, sữa tươi, không đường</p>
+            <div class="product-meta">
+              <span class="price">40.000đ</span>
+              <span class="seller">🥤 Quán Sinh Tố 168</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Điện Tử -->
+        <div class="product-card" data-category="electronics">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400" alt="Tai nghe">
+            <span class="product-badge">Hot</span>
+          </div>
+          <div class="product-info">
+            <h3>Tai Nghe Bluetooth AirPods</h3>
+            <p class="product-desc">Chống ồn, pin 24h, âm thanh HD</p>
+            <div class="product-meta">
+              <span class="price">3.500.000đ</span>
+              <span class="seller">📱 Tech Store</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-category="electronics">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400" alt="Chuột">
+          </div>
+          <div class="product-info">
+            <h3>Chuột Gaming Logitech</h3>
+            <p class="product-desc">RGB, 7 nút lập trình, DPI cao</p>
+            <div class="product-meta">
+              <span class="price">850.000đ</span>
+              <span class="seller">⌨️ Gaming Gear</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mỹ Phẩm -->
+        <div class="product-card" data-category="cosmetics">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400" alt="Son">
+            <span class="product-badge">Mới</span>
+          </div>
+          <div class="product-info">
+            <h3>Son Môi Lì MAC</h3>
+            <p class="product-desc">Lâu trôi 12h, nhiều màu sắc</p>
+            <div class="product-meta">
+              <span class="price">450.000đ</span>
+              <span class="seller">💄 Beauty Shop</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-category="cosmetics">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=400" alt="Phấn">
+          </div>
+          <div class="product-info">
+            <h3>Phấn Nước Cushion</h3>
+            <p class="product-desc">Che phủ tốt, kiềm dầu, SPF50+</p>
+            <div class="product-meta">
+              <span class="price">320.000đ</span>
+              <span class="seller">💄 Cosmetics Heaven</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Đồ Gia Dụng -->
+        <div class="product-card" data-category="home">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1556911220-bff31c812dba?w=400" alt="Nồi">
+          </div>
+          <div class="product-info">
+            <h3>Nồi Cơm Điện 1.8L</h3>
+            <p class="product-desc">Lòng niêu, nấu nhanh, giữ ấm</p>
+            <div class="product-meta">
+              <span class="price">650.000đ</span>
+              <span class="seller">🏠 Điện Máy Xanh</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-category="home">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1584556326561-c8746083993b?w=400" alt="Bộ chén">
+          </div>
+          <div class="product-info">
+            <h3>Bộ Bát Đĩa Sứ</h3>
+            <p class="product-desc">20 món, họa tiết hoa, cao cấp</p>
+            <div class="product-meta">
+              <span class="price">450.000đ</span>
+              <span class="seller">🍽️ Nhà Bếp Đẹp</span>
+            </div>
+            <div class="product-contact">
+              <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="telegram-link">Liên Hệ Đặt Hàng</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="view-more">
+        <p class="info-text">💡 Xem sản phẩm không cần đăng ký. Đăng ký để bán hàng và quản lý đơn!</p>
+        <a href="#register" class="btn-primary" onclick="goToRegister()">Đăng Ký Bán Hàng Ngay</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how-it-works" class="how-it-works">
+    <div class="section-container">
+      <div class="section-header">
+        <h2>Cách Hoạt Động</h2>
+        <p>Chỉ 4 bước đơn giản để bắt đầu bán hàng</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <div class="step-icon">📝</div>
+          <h3>Đăng Ký Tài Khoản</h3>
+          <p>Đăng ký miễn phí và xác minh qua Telegram trong vài giây</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <div class="step-icon">📸</div>
+          <h3>Đăng Sản Phẩm</h3>
+          <p>Upload hình ảnh, mô tả và giá bán sản phẩm của bạn</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <div class="step-icon">📲</div>
+          <h3>Nhận Đơn Qua Telegram</h3>
+          <p>Khách hàng đặt hàng, bạn nhận thông báo ngay trên Telegram</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">4</div>
+          <div class="step-icon">💰</div>
+          <h3>Giao Hàng & Thu Tiền</h3>
+          <p>Giao hàng cho khách và nhận thanh toán trực tiếp</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features">
+    <div class="section-container">
+      <div class="section-header">
+        <h2>Tại Sao Chọn KohKong?</h2>
+        <p>Những lợi ích vượt trội dành cho đại lý</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-icon">🚀</div>
+          <h3>Miễn Phí 100%</h3>
+          <p>Không mất phí đăng ký, không phí hoa hồng</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📱</div>
+          <h3>Tích Hợp Telegram</h3>
+          <p>Nhận đơn hàng trực tiếp qua Telegram Bot</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">⚡</div>
+          <h3>Dễ Sử Dụng</h3>
+          <p>Giao diện đơn giản, dễ hiểu, không cần kinh nghiệm</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🔒</div>
+          <h3>Bảo Mật Cao</h3>
+          <p>Xác minh Telegram, bảo vệ thông tin người dùng</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📊</div>
+          <h3>Quản Lý Đơn Hàng</h3>
+          <p>Theo dõi đơn hàng, doanh thu dễ dàng</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🎯</div>
+          <h3>Tiếp Cận Rộng</h3>
+          <p>Sản phẩm của bạn hiển thị cho hàng nghìn người</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" class="pricing">
+    <div class="section-container">
+      <div class="section-header">
+        <h2>Bảng Giá Dịch Vụ</h2>
+        <p>Hoàn toàn miễn phí cho đại lý bán hàng</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <div class="pricing-header">
+            <h3>Gói Miễn Phí</h3>
+            <div class="price">
+              <span class="currency">0đ</span>
+              <span class="period">/tháng</span>
+            </div>
+          </div>
+          <ul class="pricing-features">
+            <li>✅ Đăng không giới hạn sản phẩm</li>
+            <li>✅ Nhận đơn qua Telegram</li>
+            <li>✅ Quản lý đơn hàng cơ bản</li>
+            <li>✅ Hỗ trợ 24/7</li>
+            <li>✅ Không phí hoa hồng</li>
+          </ul>
+          <a href="#register" class="btn-pricing" onclick="goToRegister(event)">Đăng Ký Ngay</a>
+        </div>
+
+        <div class="pricing-card featured">
+          <div class="popular-badge">Phổ Biến</div>
+          <div class="pricing-header">
+            <h3>Gói Pro</h3>
+            <div class="price">
+              <span class="currency">50,000đ</span>
+              <span class="period">/tháng</span>
+            </div>
+          </div>
+          <ul class="pricing-features">
+            <li>✅ Tất cả tính năng Miễn Phí</li>
+            <li>✅ Ưu tiên hiển thị sản phẩm</li>
+            <li>✅ Thống kê chi tiết</li>
+            <li>✅ Công cụ marketing</li>
+            <li>✅ Hỗ trợ ưu tiên</li>
+          </ul>
+          <a href="#register" class="btn-pricing" onclick="goToRegister(event)">Nâng Cấp Ngay</a>
+        </div>
+
+        <div class="pricing-card">
+          <div class="pricing-header">
+            <h3>Gói Doanh Nghiệp</h3>
+            <div class="price">
+              <span class="currency">200,000đ</span>
+              <span class="period">/tháng</span>
+            </div>
+          </div>
+          <ul class="pricing-features">
+            <li>✅ Tất cả tính năng Pro</li>
+            <li>✅ Website riêng cho cửa hàng</li>
+            <li>✅ Tích hợp thanh toán online</li>
+            <li>✅ API cho developer</li>
+            <li>✅ Quản lý nhân viên</li>
+          </ul>
+          <a href="#contact" class="btn-pricing">Liên Hệ</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Telegram Order Section -->
+  <section class="telegram-order">
+    <div class="section-container">
+      <div class="telegram-content">
+        <div class="telegram-info">
+          <h2>🤖 Đặt Hàng Qua Telegram</h2>
+          <p class="telegram-desc">
+            Khách hàng của bạn có thể đặt hàng trực tiếp qua Telegram Bot. 
+            Bạn sẽ nhận thông báo ngay lập tức và xử lý đơn hàng nhanh chóng!
+          </p>
+          <div class="telegram-features">
+            <div class="telegram-feature">
+              <span class="check-icon">✅</span>
+              <span>Nhận đơn hàng tức thì</span>
+            </div>
+            <div class="telegram-feature">
+              <span class="check-icon">✅</span>
+              <span>Xác nhận đơn tự động</span>
+            </div>
+            <div class="telegram-feature">
+              <span class="check-icon">✅</span>
+              <span>Chat trực tiếp với khách</span>
+            </div>
+            <div class="telegram-feature">
+              <span class="check-icon">✅</span>
+              <span>Theo dõi trạng thái đơn</span>
+            </div>
+          </div>
+          <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="btn-telegram">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+              <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161l-1.894 8.927c-.141.631-.513.784-1.039.489l-2.875-2.119-1.387 1.334c-.153.153-.281.281-.576.281l.206-2.913 5.316-4.801c.231-.206-.05-.319-.357-.113l-6.571 4.138-2.831-.887c-.616-.193-.628-.616.131-.916l11.074-4.269c.513-.193.963.119.803.849z"/>
+            </svg>
+            Kết Nối Bot Ngay
+          </a>
+        </div>
+        <div class="telegram-demo">
+          <div class="phone-mockup">
+            <div class="phone-screen">
+              <div class="telegram-chat">
+                <div class="chat-header">
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram">
+                  <span>KohKong Bot</span>
+                </div>
+                <div class="chat-messages">
+                  <div class="message bot">
+                    <p>Xin chào! Bạn muốn đặt sản phẩm nào? 🛍️</p>
+                  </div>
+                  <div class="message user">
+                    <p>Tôi muốn đặt Phở bò đặc biệt</p>
+                  </div>
+                  <div class="message bot">
+                    <p>✅ Đã nhận đơn!<br>Sản phẩm: Phở bò<br>Giá: 45,000đ<br>Vui lòng xác nhận địa chỉ giao hàng</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="contact">
+    <div class="section-container">
+      <div class="section-header">
+        <h2>Liên Hệ Với Chúng Tôi</h2>
+        <p>Hỗ trợ 24/7 - Luôn sẵn sàng giúp đỡ bạn</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-item">
+          <div class="contact-icon">📱</div>
+          <h3>Telegram</h3>
+          <p>@KohKongSupport</p>
+          <a href="https://t.me/KohKongBanHang_bot" target="_blank">Nhắn tin ngay</a>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📧</div>
+          <h3>Email</h3>
+          <p>support@kohkong.vn</p>
+          <a href="mailto:support@kohkong.vn">Gửi email</a>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">🌐</div>
+          <h3>Website</h3>
+          <p>www.kohkong.vn</p>
+          <a href="#">Truy cập</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3>🏪 KohKong Bán Hàng</h3>
+          <p>Nền tảng bán hàng trực tuyến hàng đầu Việt Nam</p>
+        </div>
+        <div class="footer-col">
+          <h4>Sản Phẩm</h4>
+          <ul>
+            <li><a href="#products">Danh mục</a></li>
+            <li><a href="#pricing">Bảng giá</a></li>
+            <li><a href="#">Tính năng</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Hỗ Trợ</h4>
+          <ul>
+            <li><a href="#how-it-works">Hướng dẫn</a></li>
+            <li><a href="#contact">Liên hệ</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Pháp Lý</h4>
+          <ul>
+            <li><a href="#">Điều khoản</a></li>
+            <li><a href="#">Bảo mật</a></li>
+            <li><a href="#">Chính sách</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 KohKong Bán Hàng. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile menu toggle
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      navMenu.classList.toggle('active');
+    });
+
+    // Close mobile menu when clicking on a link
+    document.querySelectorAll('.nav-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+      });
+    });
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Go to register page
+    function goToRegister(event) {
+      if (event) event.preventDefault();
+      window.location.href = 'index.html';
+      setTimeout(() => {
+        const registerBtn = document.querySelector('.toggle-form-link a');
+        if (registerBtn) registerBtn.click();
+      }, 500);
+    }
+
+    // Category Filter Function
+    function filterCategory(category) {
+      const products = document.querySelectorAll('.product-card');
+      const filterBtns = document.querySelectorAll('.filter-btn');
+
+      // Update active button
+      filterBtns.forEach(btn => btn.classList.remove('active'));
+      event.target.closest('.filter-btn').classList.add('active');
+
+      // Filter products
+      products.forEach(product => {
+        if (category === 'all') {
+          product.style.display = 'block';
+          setTimeout(() => product.style.opacity = '1', 10);
+        } else {
+          if (product.getAttribute('data-category') === category) {
+            product.style.display = 'block';
+            setTimeout(() => product.style.opacity = '1', 10);
+          } else {
+            product.style.opacity = '0';
+            setTimeout(() => product.style.display = 'none', 300);
+          }
+        }
+      });
+
+      // Scroll to products
+      document.getElementById('productGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Navbar background on scroll
+    window.addEventListener('scroll', () => {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+  </script>
+</body>
+</html>
