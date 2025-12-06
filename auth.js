@@ -421,53 +421,79 @@ async function handleRegister(e) {
 }
 
 // Handle Login
-function handleLogin(e) {
+async function handleLogin(e) {
   e.preventDefault();
   
   const username = document.getElementById('login-username').value.trim();
   const password = document.getElementById('login-password').value;
   const rememberMe = document.getElementById('remember-me').checked;
   
-  // Get users
-  const users = JSON.parse(localStorage.getItem('agents')) || [];
-  
-  // Find user
-  const user = users.find(u => u.username === username && u.password === password);
-  
-  if (!user) {
-    alert('❌ Tên đăng nhập hoặc mật khẩu không đúng!');
+  if (!username || !password) {
+    alert('❌ Vui lòng nhập đầy đủ thông tin!');
     return;
   }
-  
-  if (!user.isActive) {
-    alert('❌ Tài khoản của bạn đã bị vô hiệu hóa!');
-    return;
+
+  try {
+    // KIỂM TRA VỚI SERVER (kiểm tra IP bị chặn)
+    const response = await fetch('https://kohkonhbanhang1.onrender.com/api/agents/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+
+    const data = await response.json();
+
+    // KIỂM TRA IP BỊ CHẶN
+    if (response.status === 403 || data.blocked) {
+      alert(
+        '🚫 TÀI KHOẢN BỊ KHÓA!\n\n' +
+        'IP của bạn đã bị Admin chặn.\n' +
+        'Bạn không thể đăng nhập hoặc đăng ký lại.\n\n' +
+        'Vui lòng liên hệ Admin để được hỗ trợ.'
+      );
+      // Xóa localStorage
+      localStorage.removeItem('currentAgent');
+      localStorage.removeItem('currentUser');
+      return;
+    }
+
+    if (!response.ok || !data.success) {
+      alert('❌ Tên đăng nhập hoặc mật khẩu không đúng!');
+      return;
+    }
+
+    const user = data.agent;
+
+    // Lưu session
+    const userSession = {
+      id: user.id,
+      fullname: user.fullname,
+      username: user.username,
+      telegram: user.telegram,
+      verified: user.verified || false,
+      role: user.role || 'agent',
+      accountType: user.accountType || 'FREE',
+      products: user.products || [],
+      loginAt: new Date().toISOString()
+    };
+    
+    if (rememberMe) {
+      localStorage.setItem('currentAgent', JSON.stringify(userSession));
+      localStorage.setItem('currentUser', JSON.stringify(userSession));
+    } else {
+      sessionStorage.setItem('currentAgent', JSON.stringify(userSession));
+      sessionStorage.setItem('currentUser', JSON.stringify(userSession));
+    }
+    
+    alert('✅ Đăng nhập thành công!');
+    
+    // Redirect to dashboard
+    window.location.href = 'dashboard.html';
+    
+  } catch (error) {
+    console.error('Login error:', error);
+    alert('❌ Lỗi kết nối server!\n\nVui lòng thử lại sau.');
   }
-  
-  // Save user session
-  const userSession = {
-    id: user.id,
-    fullname: user.fullname,
-    username: user.username,
-    telegram: user.telegram,
-    verified: user.verified,
-    role: user.role,
-    loginAt: new Date().toISOString()
-  };
-  
-  if (rememberMe) {
-    localStorage.setItem('currentUser', JSON.stringify(userSession));
-  } else {
-    sessionStorage.setItem('currentUser', JSON.stringify(userSession));
-  }
-  
-  alert('✅ Đăng nhập thành công!');
-  
-  // 🌐 ĐỒNG BỘ ĐẠI LÝ LÊN SERVER KHI ĐĂNG NHẬP
-  syncAgentToServer(user).catch(err => console.warn('Sync on login failed:', err));
-  
-  // Redirect to dashboard
-  window.location.href = 'dashboard.html';
 }
 
 // Check if already logged in

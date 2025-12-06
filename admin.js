@@ -262,7 +262,18 @@ async function downgradeAgent(agentId) {
 }
 
 async function deleteAgent(agentId) {
-  if (!confirm('⚠️ XÓA ĐẠI LÝ?\n\nTất cả sản phẩm của đại lý này cũng sẽ bị xóa!\nIP sẽ bị CHẶN vĩnh viễn!')) {
+  const agent = allAgents.find(a => a.id == agentId);
+  
+  if (!confirm(
+    '⚠️ XÓA TÀI KHOẢN VÀ CHẶN IP?\n\n' +
+    `👤 Tên: ${agent?.fullname}\n` +
+    `🆔 Username: ${agent?.username}\n` +
+    `📍 IP: ${agent?.ip || 'N/A'}\n\n` +
+    '❌ Toàn bộ sản phẩm sẽ bị xóa!\n' +
+    '🚫 IP sẽ bị chặn VĨNH VIỄN!\n' +
+    '📨 Admin sẽ nhận thông báo qua Telegram!\n\n' +
+    'Bạn có chắc chắn?'
+  )) {
     return;
   }
 
@@ -284,7 +295,13 @@ async function deleteAgent(agentId) {
       const newProducts = products.filter(p => p.agentId != agentId);
       localStorage.setItem('products', JSON.stringify(newProducts));
       
-      alert('✅ Đã xóa đại lý và chặn IP!\n\nĐại lý sẽ bị đăng xuất tự động.');
+      alert(
+        '✅ ĐÃ XÓA TÀI KHOẢN VÀ CHẶN IP!\n\n' +
+        `📍 IP bị khóa: ${data.blockedIP || 'N/A'}\n` +
+        `📨 Đã gửi thông báo cho Admin qua Telegram\n\n` +
+        '❌ Tài khoản này không thể đăng nhập lại!'
+      );
+      
       loadAdminData();
       loadBlockedIPs();
     } else {
@@ -456,7 +473,17 @@ async function unblockIP(ip, username) {
 }
 
 async function blockAgentIP(agentId, ip, username) {
-  if (!confirm(`⚠️ CHẶN IP của đại lý?\n\nUsername: ${username}\nIP: ${ip}\n\nĐại lý sẽ bị đăng xuất và không thể đăng ký/đăng nhập lại!`)) {
+  const agent = allAgents.find(a => a.id == agentId);
+  
+  if (!confirm(
+    `🚫 CHẶN IP CỦA ĐẠI LÝ?\n\n` +
+    `👤 Tên: ${agent?.fullname}\n` +
+    `🆔 Username: ${username}\n` +
+    `📍 IP: ${ip}\n\n` +
+    `❌ Đại lý sẽ BỊ ĐĂNG XUẤT ngay lập tức!\n` +
+    `🚫 Không thể đăng ký/đăng nhập lại!\n` +
+    `📨 Admin sẽ nhận thông báo qua Telegram!`
+  )) {
     return;
   }
 
@@ -468,14 +495,20 @@ async function blockAgentIP(agentId, ip, username) {
       body: JSON.stringify({ 
         ip, 
         username,
-        reason: 'Blocked by admin manually'
+        fullname: agent?.fullname || username,
+        reason: 'Chặn thủ công bởi Admin'
       })
     });
 
     const data = await response.json();
 
     if (response.ok && data.success) {
-      alert('✅ Đã chặn IP!\n\nĐại lý sẽ bị đăng xuất tự động.');
+      alert(
+        '✅ ĐÃ CHẶN IP!\n\n' +
+        `📍 IP: ${ip}\n` +
+        `📨 Đã gửi thông báo cho Admin\n\n` +
+        '❌ Đại lý sẽ bị đăng xuất tự động!'
+      );
       loadBlockedIPs();
     } else {
       throw new Error(data.error || 'Failed to block');

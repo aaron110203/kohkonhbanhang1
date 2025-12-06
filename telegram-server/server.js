@@ -1114,9 +1114,9 @@ app.post('/api/unblock-ip', (req, res) => {
 });
 
 // POST: Chặn IP thủ công
-app.post('/api/block-ip', (req, res) => {
+app.post('/api/block-ip', async (req, res) => {
   try {
-    const { ip, username, reason } = req.body;
+    const { ip, username, reason, fullname } = req.body;
 
     if (!ip) {
       return res.status(400).json({ 
@@ -1135,18 +1135,31 @@ app.post('/api/block-ip', (req, res) => {
     }
 
     // Thêm vào danh sách chặn
-    blockedIPs.push({
+    const blockEntry = {
       ip,
       username: username || 'Unknown',
+      fullname: fullname || username || 'Unknown',
       date: new Date().toISOString(),
-      reason: reason || 'Blocked by admin manually'
-    });
+      reason: reason || 'Chặn thủ công bởi Admin'
+    };
+    
+    blockedIPs.push(blockEntry);
 
     console.log(`🚫 Blocked IP manually: ${ip} (${username})`);
+    
+    // Thông báo cho admin
+    const adminMessage = `🚫 <b>IP ĐÃ BỊ KHÓA (Thủ công)</b>\n\n` +
+      `👤 <b>Tên:</b> ${blockEntry.fullname}\n` +
+      `🆔 <b>Username:</b> ${blockEntry.username}\n` +
+      `📍 <b>IP:</b> <code>${ip}</code>\n` +
+      `📅 <b>Thời gian:</b> ${new Date().toLocaleString('vi-VN')}\n` +
+      `⚠️ <b>Lý do:</b> ${blockEntry.reason}`;
+    
+    await notifyAdmin(adminMessage);
 
     res.json({
       success: true,
-      message: 'IP đã bị chặn'
+      message: 'IP đã bị chặn và thông báo đã gửi cho admin'
     });
   } catch (error) {
     console.error('Error blocking IP:', error);
