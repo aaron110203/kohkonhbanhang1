@@ -1,0 +1,5 @@
+# Cloudflare Pages - Static Site (No Wrangler needed)
+# This file is here to prevent errors, but Pages deployment doesn't use it
+
+name = "kohkonhbanhang"
+compatibility_date = "2025-12-06"
