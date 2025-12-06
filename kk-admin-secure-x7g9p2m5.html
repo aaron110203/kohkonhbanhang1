@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Truy Cập Bảo Mật</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .secure-box {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      padding: 50px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .lock-icon {
+      font-size: 5rem;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    h1 {
+      color: #ffd700;
+      margin-bottom: 15px;
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+    }
+
+    .code-display {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 20px;
+      border-radius: 10px;
+      margin: 30px 0;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+    }
+
+    .code-display h3 {
+      color: #ffd700;
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+    }
+
+    .credentials {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 8px;
+      margin: 10px 0;
+      text-align: left;
+    }
+
+    .credentials label {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .credentials code {
+      color: #4ade80;
+      font-size: 1.3rem;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      display: block;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 5px;
+    }
+
+    .btn-admin {
+      display: inline-block;
+      padding: 18px 50px;
+      background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+      color: #1a1a2e;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 20px;
+      transition: all 0.3s;
+      box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
+    }
+
+    .btn-admin:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(255, 215, 0, 0.5);
+    }
+
+    .warning {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 30px;
+      font-size: 0.95rem;
+    }
+
+    .warning strong {
+      color: #ef4444;
+    }
+
+    .security-features {
+      margin-top: 30px;
+      text-align: left;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .security-features li {
+      margin: 10px 0;
+      padding-left: 25px;
+      position: relative;
+    }
+
+    .security-features li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #4ade80;
+      font-weight: bold;
+    }
+
+    .link-display {
+      background: rgba(255, 215, 0, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px 0;
+      border: 2px dashed rgba(255, 215, 0, 0.5);
+    }
+
+    .link-display input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: none;
+      color: #4ade80;
+      padding: 12px;
+      border-radius: 5px;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    .btn-copy {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 10px 25px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+    }
+
+    .btn-copy:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  </style>
+</head>
+<body>
+  <div class="secure-box">
+    <div class="lock-icon">🔐</div>
+    <h1>Admin Access Portal</h1>
+    <p class="subtitle">Khu vực bảo mật - Chỉ dành cho quản trị viên</p>
+
+    <div class="link-display">
+      <h3 style="color: #ffd700; margin-bottom: 10px; font-size: 1rem;">🔗 Link Riêng Tư Của Bạn:</h3>
+      <input type="text" id="privateLink" value="kk-admin-secure-x7g9p2m5.html" readonly onclick="this.select()">
+      <button class="btn-copy" onclick="copyLink()">📋 Copy Link</button>
+    </div>
+
+    <div class="code-display">
+      <h3>🔑 Thông Tin Đăng Nhập</h3>
+      <div class="credentials">
+        <label>Username:</label>
+        <code>admin</code>
+      </div>
+      <div class="credentials">
+        <label>Password:</label>
+        <code>Admin@KohKong2025</code>
+      </div>
+    </div>
+
+    <a href="admin-login.html" class="btn-admin">
+      🛡️ Truy Cập Admin Panel
+    </a>
+
+    <ul class="security-features">
+      <li>Đường link riêng tư, khó đoán</li>
+      <li>Không hiển thị trên menu công khai</li>
+      <li>Chỉ bạn biết link này</li>
+      <li>Bảo vệ 2 lớp: Link + Password</li>
+      <li>Có thể bookmark để truy cập nhanh</li>
+    </ul>
+
+    <div class="warning">
+      <strong>⚠️ LƯU Ý BẢO MẬT:</strong><br>
+      • Không chia sẻ link này với người khác<br>
+      • Bookmark (Ctrl+D) để lưu lại<br>
+      • Đổi password sau lần đăng nhập đầu tiên<br>
+      • Đăng xuất sau khi sử dụng xong
+    </div>
+  </div>
+
+  <script>
+    function copyLink() {
+      const linkInput = document.getElementById('privateLink');
+      linkInput.select();
+      document.execCommand('copy');
+      
+      const btn = event.target;
+      const originalText = btn.textContent;
+      btn.textContent = '✅ Đã Copy!';
+      btn.style.background = 'rgba(74, 222, 128, 0.3)';
+      
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.style.background = 'rgba(255, 255, 255, 0.1)';
+      }, 2000);
+    }
+
+    // Auto-select link on page load
+    window.onload = function() {
+      document.getElementById('privateLink').select();
+    }
+  </script>
+</body>
+</html>
