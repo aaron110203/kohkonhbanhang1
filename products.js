@@ -45,8 +45,8 @@ function renderProducts() {
   }
 
   grid.innerHTML = filteredProducts.map(product => `
-    <div class="product-card" onclick='openOrderModal(${JSON.stringify(product).replace(/'/g, "&apos;")})'>
-      ${product.imageUrl ? `<img src="${product.imageUrl}" alt="${product.name}" class="product-image">` : '<div class="product-image" style="display: flex; align-items: center; justify-content: center; font-size: 4rem;">' + (product.icon || '📦') + '</div>'}
+    <div class="product-card">
+      ${product.imageUrl ? `<img src="${product.imageUrl}" alt="${product.name}" class="product-image" onclick='openOrderModal(${JSON.stringify(product).replace(/'/g, "&apos;")})'  style="cursor: pointer;">` : '<div class="product-image" style="display: flex; align-items: center; justify-content: center; font-size: 4rem; cursor: pointer;" onclick=\'openOrderModal(' + JSON.stringify(product).replace(/'/g, "&apos;") + ')\'>' + (product.icon || '📦') + '</div>'}
       <div class="product-body">
         <span class="product-category-badge">${getCategoryName(product.category)}</span>
         <h3 class="product-name">${product.name}</h3>
@@ -54,10 +54,20 @@ function renderProducts() {
         ${product.description ? `<p class="product-description">${product.description}</p>` : ''}
         <div class="product-agent">
           👤 Đại lý: <strong>${product.agentName}</strong>
+          ${product.telegram || product.agentTelegram ? `<br>📱 Telegram: <a href="https://t.me/${(product.telegram || product.agentTelegram).replace('@', '')}" target="_blank" style="color: #0088cc; text-decoration: none; font-weight: bold;" onclick="event.stopPropagation();">${product.telegram || product.agentTelegram}</a>` : ''}
         </div>
-        <button class="btn-order" onclick="event.stopPropagation(); openOrderModal(${JSON.stringify(product).replace(/'/g, "&apos;")})">
-          📱 Đặt Hàng Ngay
-        </button>
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+          <button class="btn-order" onclick="event.stopPropagation(); openOrderModal(${JSON.stringify(product).replace(/'/g, "&apos;")})">
+            🛒 Đặt Hàng
+          </button>
+          ${product.telegram || product.agentTelegram ? `
+          <a href="https://t.me/${(product.telegram || product.agentTelegram).replace('@', '')}" target="_blank" style="flex: 1;" onclick="event.stopPropagation();">
+            <button class="btn-telegram" style="width: 100%; background: linear-gradient(135deg, #0088cc 0%, #00aaff 100%); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: transform 0.2s;">
+              💬 Chat Telegram
+            </button>
+          </a>
+          ` : ''}
+        </div>
       </div>
     </div>
   `).join('');
