@@ -146,9 +146,7 @@ async function submitOrder(e) {
 }
 
 async function sendTelegramNotification(order) {
-  // In production, this would send a message to the Telegram Bot
-  // The bot would then notify the agent about the new order
-  
+  // Send message to agent's Telegram via Bot API
   const message = `
 🛒 ĐƠN HÀNG MỚI!
 
@@ -165,21 +163,32 @@ ${order.note ? `📝 Ghi chú: ${order.note}` : ''}
 ⏰ Thời gian: ${new Date(order.createdAt).toLocaleString('vi-VN')}
 `;
 
-  console.log('Telegram Notification:', message);
-  console.log('Agent Telegram:', order.product.agentTelegram);
+  try {
+    // Change this URL when deploy to production
+    const API_URL = 'http://localhost:3000';
+    
+    const response = await fetch(`${API_URL}/api/telegram/notify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        telegram: order.product.agentTelegram,
+        message: message
+      })
+    });
 
-  // In production, call your backend API:
-  // const response = await fetch('/api/telegram/notify', {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify({
-  //     telegram: order.product.agentTelegram,
-  //     message: message
-  //   })
-  // });
-
-  // For demo, we'll just log it
-  return true;
+    const data = await response.json();
+    
+    if (data.success) {
+      console.log('✅ Order notification sent to agent');
+      return true;
+    } else {
+      console.error('❌ Failed to send notification:', data.error);
+      return false;
+    }
+  } catch (error) {
+    console.error('❌ Telegram notification error:', error);
+    return false;
+  }
 }
 
 function formatPrice(price) {

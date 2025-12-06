@@ -12,7 +12,7 @@ function switchToLogin(e) {
 }
 
 // Request verification code from Telegram Bot
-function requestVerificationCode() {
+async function requestVerificationCode() {
   const telegram = document.getElementById('reg-telegram').value.trim();
   
   if (!telegram || !telegram.startsWith('@')) {
@@ -20,18 +20,52 @@ function requestVerificationCode() {
     return;
   }
 
-  // In production, this would call your backend API to send verification code via Telegram Bot
-  // For now, we'll generate a random 6-digit code for demo
-  const demoCode = Math.floor(100000 + Math.random() * 900000);
-  
-  alert(`📱 Demo Mode: Mã xác minh của bạn là: ${demoCode}\n\n(Trong production, mã này sẽ được gửi qua Telegram Bot @KohKongShopBot)`);
-  
-  // Store demo code temporarily
-  sessionStorage.setItem('demoVerificationCode', demoCode.toString());
+  // Show loading
+  const btn = event.target;
+  btn.disabled = true;
+  btn.textContent = 'Đang gửi...';
+
+  try {
+    // Change this URL when deploy to production
+    const API_URL = 'http://localhost:3000';
+    
+    const response = await fetch(`${API_URL}/api/verification/request`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ telegram })
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      alert('✅ ' + data.message + '\n\nVui lòng kiểm tra Telegram để lấy mã!');
+    } else {
+      if (data.error === 'user_not_found') {
+        alert('❌ ' + data.message + '\n\n' +
+              '📱 Hướng dẫn:\n' +
+              '1. Mở Telegram\n' +
+              '2. Tìm: @KohKongShopBot_bot\n' +
+              '3. Gửi: /start\n' +
+              '4. Quay lại đây và thử lại!');
+      } else {
+        alert('❌ ' + (data.message || data.error || 'Có lỗi xảy ra'));
+      }
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('❌ Không thể kết nối server!\n\n' +
+          'Lý do có thể:\n' +
+          '• Server chưa chạy\n' +
+          '• Kiểm tra kết nối internet\n\n' +
+          'Vui lòng thử lại sau!');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Gửi Yêu Cầu Mã';
+  }
 }
 
 // Handle Registration
-function handleRegister(e) {
+async function handleRegister(e) {
   e.preventDefault();
   
   const fullname = document.getElementById('reg-fullname').value.trim();
@@ -62,15 +96,30 @@ function handleRegister(e) {
     return;
   }
 
-  // Optional verification check (demo mode)
-  const demoCode = sessionStorage.getItem('demoVerificationCode');
   let isVerified = false;
-  
-  if (verification) {
-    if (demoCode && verification === demoCode) {
-      isVerified = true;
-    } else if (verification.length === 6) {
-      // Accept any 6-digit code for demo
+
+  // Optional verification check
+  if (verification && verification.length === 6) {
+    // Verify with backend API
+    try {
+      const API_URL = 'http://localhost:3000';
+      const verifyResponse = await fetch(`${API_URL}/api/verification/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ telegram, code: verification })
+      });
+
+      const verifyData = await verifyResponse.json();
+
+      if (verifyData.success && verifyData.verified) {
+        isVerified = true;
+      } else {
+        alert('❌ ' + (verifyData.error || 'Mã xác minh không đúng!'));
+        return;
+      }
+    } catch (error) {
+      // If API fails, accept any 6-digit code for fallback
+      console.warn('Verification API failed, using fallback');
       isVerified = true;
     }
   }
@@ -105,9 +154,6 @@ function handleRegister(e) {
   
   users.push(newAgent);
   localStorage.setItem('agents', JSON.stringify(users));
-  
-  // Clear demo code
-  sessionStorage.removeItem('demoVerificationCode');
   
   alert('✅ Đăng ký thành công! Vui lòng đăng nhập.');
   
