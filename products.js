@@ -13,22 +13,38 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function loadAllProducts() {
+  // ✅ ĐỌC TỪ PRODUCTS CHUNG (do dashboard lưu vào)
+  const productsFromDashboard = JSON.parse(localStorage.getItem('products')) || [];
+  
+  // Đọc từ agents (cũ)
   const agents = JSON.parse(localStorage.getItem('agents')) || [];
   
   // Collect all products from all agents
   allProducts = [];
+  
+  // Thêm sản phẩm từ dashboard
+  productsFromDashboard.forEach(product => {
+    allProducts.push(product);
+  });
+  
+  // Thêm sản phẩm từ agents (nếu chưa có)
   agents.forEach(agent => {
     if (agent.products && agent.products.length > 0) {
       agent.products.forEach(product => {
-        allProducts.push({
-          ...product,
-          agentName: agent.fullname,
-          agentTelegram: product.telegram || agent.telegram
-        });
+        // Kiểm tra không trùng
+        const exists = allProducts.some(p => p.id === product.id);
+        if (!exists) {
+          allProducts.push({
+            ...product,
+            agentName: agent.fullname,
+            agentTelegram: product.telegram || agent.telegram
+          });
+        }
       });
     }
   });
 
+  console.log('📦 Loaded products:', allProducts.length);
   filteredProducts = [...allProducts];
   renderProducts();
 }

@@ -749,9 +749,41 @@ app.get('/', (req, res) => {
       telegram_notify: 'POST /api/telegram/notify',
       upload_image: 'POST /api/upload/image',
       delete_image: 'DELETE /api/upload/image/:filename',
-      list_images: 'GET /api/upload/images'
+      list_images: 'GET /api/upload/images',
+      telegram_notify: 'POST /api/telegram/notify'
     }
   });
+});
+
+// ==================== TELEGRAM NOTIFICATION API ====================
+app.post('/api/telegram/notify', async (req, res) => {
+  try {
+    const { message, imageUrl } = req.body;
+
+    if (!message) {
+      return res.status(400).json({ error: 'Message is required' });
+    }
+
+    // Gửi thông báo đến admin group
+    if (imageUrl && imageUrl.startsWith('http')) {
+      // Nếu có ảnh từ server, gửi kèm ảnh
+      await bot.sendPhoto(ADMIN_GROUP_ID, imageUrl, {
+        caption: message,
+        parse_mode: 'HTML'
+      });
+    } else {
+      // Chỉ gửi text
+      await bot.sendMessage(ADMIN_GROUP_ID, message);
+    }
+
+    res.json({ 
+      success: true, 
+      message: 'Notification sent to Telegram' 
+    });
+  } catch (error) {
+    console.error('Error sending Telegram notification:', error);
+    res.status(500).json({ error: 'Failed to send notification' });
+  }
 });
 
 // Start server

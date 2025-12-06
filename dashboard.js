@@ -101,19 +101,30 @@ function logout() {
 
 // Show section
 function showSection(section) {
+  console.log('🔍 showSection called with:', section);
+  
   const allSections = document.querySelectorAll('.content-section');
+  console.log('📦 Found sections:', allSections.length);
   allSections.forEach(s => s.classList.add('hidden'));
 
   const navItems = document.querySelectorAll('.nav-item');
   navItems.forEach(item => item.classList.remove('active'));
 
   if (section === 'products') {
-    document.getElementById('products-section').classList.remove('hidden');
-    navItems[0].classList.add('active');
+    const productsSection = document.getElementById('products-section');
+    if (productsSection) {
+      productsSection.classList.remove('hidden');
+      console.log('✅ Showing products section');
+    }
+    if (navItems[0]) navItems[0].classList.add('active');
     loadMyProducts();
   } else if (section === 'add-product') {
-    document.getElementById('add-product-section').classList.remove('hidden');
-    navItems[1].classList.add('active');
+    const addProductSection = document.getElementById('add-product-section');
+    if (addProductSection) {
+      addProductSection.classList.remove('hidden');
+      console.log('✅ Showing add-product section');
+    }
+    if (navItems[1]) navItems[1].classList.add('active');
   }
 }
 
@@ -259,11 +270,22 @@ async function addProduct(e) {
       sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
     }
 
+    // ✅ LƯU VÀO PRODUCTS CHUNG (để web chính đọc được)
+    const allProducts = JSON.parse(localStorage.getItem('products')) || [];
+    allProducts.push(product);
+    localStorage.setItem('products', JSON.stringify(allProducts));
+    console.log('✅ Đã lưu vào products chung:', allProducts.length, 'sản phẩm');
+
+    // 📱 GỬI THÔNG BÁO TELEGRAM (không tự động đăng)
+    submitBtn.textContent = '📱 Đang gửi thông báo...';
+    await sendTelegramNotification(product);
+
     alert('✅ Thêm sản phẩm thành công!\n\n' + 
           (uploadMethod === 'server' ? 
             '📤 Ảnh đã upload lên server: ' + imageUrl : 
             '💾 Ảnh đã lưu Base64 vào LocalStorage') + 
-          '\n\n📱 Sản phẩm đã được cập nhật lên website taphoakohkong.live');
+          '\n\n📱 Sản phẩm đã hiển thị trên website taphoakohkong.live' +
+          '\n📢 Đã gửi thông báo đến Telegram Bot!');
 
     // Reset form
     e.target.reset();
@@ -461,4 +483,37 @@ function selectImage(url, element) {
   
   // Set hidden input value
   document.getElementById('selected-image-url').value = url;
+}
+
+// Send Telegram notification
+async function sendTelegramNotification(product) {
+  try {
+    const message = `🆕 SẢN PHẨM MỚI ĐƯỢC ĐĂNG\n\n` +
+                   `📦 Tên: ${product.name}\n` +
+                   `💰 Giá: ${formatPrice(product.price)} ₭\n` +
+                   `📂 Danh mục: ${getCategoryName(product.category)}\n` +
+                   `👤 Đại lý: ${product.agentName}\n` +
+                   `📱 Telegram: ${product.telegram}\n` +
+                   `📅 Ngày: ${formatDate(product.createdAt)}\n\n` +
+                   `🌐 Xem tại: https://taphoakohkong.live`;
+
+    const response = await fetch('https://kohkonhbanhang1.onrender.com/api/telegram/notify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: message,
+        imageUrl: product.uploadMethod === 'server' ? product.imageUrl : null
+      })
+    });
+
+    if (response.ok) {
+      console.log('✅ Đã gửi thông báo Telegram');
+    } else {
+      console.warn('⚠️ Không gửi được thông báo Telegram');
+    }
+  } catch (error) {
+    console.error('❌ Lỗi gửi Telegram:', error);
+  }
 }

@@ -9,8 +9,8 @@
 <body>
   <script>
     // Check authentication
-    const currentUser = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
-    if (!currentUser) {
+    const authUser = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
+    if (!authUser) {
       alert('Vui lòng đăng nhập!');
       window.location.href = 'login.html';
     }
