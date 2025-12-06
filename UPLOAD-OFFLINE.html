@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UPLOAD ẢNH - HOẠT ĐỘNG 100%</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2rem;
+    }
+    .success-box {
+      background: #d4edda;
+      border: 2px solid #28a745;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      color: #155724;
+      font-weight: 600;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    input[type="file"] {
+      border: 2px dashed #667eea;
+      background: #f8f9fa;
+      cursor: pointer;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    button:hover { transform: scale(1.02); }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .preview {
+      margin-top: 15px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      display: none;
+    }
+    .preview img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      display: none;
+    }
+    .product-display {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+    .product-display img {
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+    .price {
+      color: #667eea;
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📸 DEMO UPLOAD ẢNH</h1>
+    
+    <div class="success-box" id="status">
+      ✅ Trang đã sẵn sàng! Không cần server!
+    </div>
+
+    <form id="uploadForm">
+      <div class="form-group">
+        <label>📝 Tên Sản Phẩm</label>
+        <input type="text" id="name" value="Gạo Thơm ST25" required>
+      </div>
+
+      <div class="form-group">
+        <label>💰 Giá (₭)</label>
+        <input type="number" id="price" value="45000" required>
+      </div>
+
+      <div class="form-group">
+        <label>🏷️ Danh Mục</label>
+        <select id="category">
+          <option value="food">🍚 Đồ Ăn</option>
+          <option value="fashion">👕 Thời Trang</option>
+          <option value="medicine">💊 Thuốc</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>📸 CHỌN ẢNH (Click để chọn từ máy tính)</label>
+        <input type="file" id="imageFile" accept="image/*" required>
+        
+        <div class="preview" id="preview">
+          <strong>👁️ Xem trước:</strong>
+          <img id="previewImg" alt="Preview">
+          <div id="fileInfo" style="font-size: 0.9rem; color: #666;"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>📄 Mô Tả</label>
+        <textarea id="description">Gạo thơm cao cấp, chất lượng A1</textarea>
+      </div>
+
+      <button type="submit">💾 THÊM SẢN PHẨM</button>
+    </form>
+
+    <div class="result" id="result">
+      <h2 style="color: #28a745; margin-bottom: 15px;">✅ THÀNH CÔNG!</h2>
+      <div class="product-display" id="productDisplay"></div>
+    </div>
+  </div>
+
+  <script>
+    // Xử lý preview ảnh
+    const imageFile = document.getElementById('imageFile');
+    const preview = document.getElementById('preview');
+    const previewImg = document.getElementById('previewImg');
+    const fileInfo = document.getElementById('fileInfo');
+    let imageBase64 = null;
+
+    imageFile.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      
+      if (!file) {
+        preview.style.display = 'none';
+        return;
+      }
+
+      // Kiểm tra size
+      if (file.size > 5 * 1024 * 1024) {
+        alert('❌ Ảnh quá lớn! Chọn ảnh < 5MB');
+        imageFile.value = '';
+        return;
+      }
+
+      // Đọc file
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        imageBase64 = event.target.result;
+        previewImg.src = imageBase64;
+        preview.style.display = 'block';
+        
+        const sizeKB = (file.size / 1024).toFixed(2);
+        fileInfo.innerHTML = `
+          <strong>📁</strong> ${file.name}<br>
+          <strong>📏</strong> ${sizeKB} KB<br>
+          <strong>✅</strong> <span style="color: #28a745;">Đã chọn thành công!</span>
+        `;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Xử lý form submit
+    document.getElementById('uploadForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      if (!imageBase64) {
+        alert('❌ Vui lòng chọn ảnh!');
+        return;
+      }
+
+      const product = {
+        name: document.getElementById('name').value,
+        price: document.getElementById('price').value,
+        category: document.getElementById('category').value,
+        description: document.getElementById('description').value,
+        image: imageBase64,
+        createdAt: new Date().toLocaleString('vi-VN')
+      };
+
+      // Lưu vào localStorage
+      let products = JSON.parse(localStorage.getItem('demo_products') || '[]');
+      products.push(product);
+      localStorage.setItem('demo_products', JSON.stringify(products));
+
+      // Hiển thị kết quả
+      const resultDiv = document.getElementById('result');
+      const productDisplay = document.getElementById('productDisplay');
+      
+      productDisplay.innerHTML = `
+        <img src="${product.image}" alt="${product.name}">
+        <h3>${product.name}</h3>
+        <div class="price">${parseInt(product.price).toLocaleString('vi-VN')} ₭</div>
+        <p style="color: #666; margin: 10px 0;">${product.description}</p>
+        <div style="padding: 10px; background: #f8f9fa; border-radius: 8px; font-size: 0.9rem;">
+          <strong>📦 Danh mục:</strong> ${getCategoryName(product.category)}<br>
+          <strong>⏰ Thêm lúc:</strong> ${product.createdAt}<br>
+          <strong>💾 Đã lưu vào:</strong> LocalStorage<br>
+          <strong>📊 Tổng sản phẩm:</strong> ${products.length}
+        </div>
+      `;
+
+      document.getElementById('uploadForm').style.display = 'none';
+      resultDiv.style.display = 'block';
+      
+      document.getElementById('status').innerHTML = '✅ Thêm sản phẩm thành công!';
+      document.getElementById('status').style.background = '#d4edda';
+    });
+
+    function getCategoryName(cat) {
+      const names = {
+        food: '🍚 Đồ Ăn',
+        fashion: '👕 Thời Trang', 
+        medicine: '💊 Thuốc'
+      };
+      return names[cat] || cat;
+    }
+
+    // Hiển thị số sản phẩm đã lưu
+    window.addEventListener('load', function() {
+      const savedCount = JSON.parse(localStorage.getItem('demo_products') || '[]').length;
+      if (savedCount > 0) {
+        document.getElementById('status').innerHTML = `✅ Đã có ${savedCount} sản phẩm trong bộ nhớ!`;
+      }
+    });
+  </script>
+</body>
+</html>
