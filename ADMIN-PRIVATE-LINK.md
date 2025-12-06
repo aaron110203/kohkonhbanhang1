@@ -6,17 +6,17 @@
 
 **File Local:**
 ```
-kk-admin-secure-x7g9p2m5.html
+secure-admin-panel.html
 ```
 
 **Full Path:**
 ```
-file:///D:/làm%20web%20bằng%20đc/kk-admin-secure-x7g9p2m5.html
+file:///D:/làm%20web%20bằng%20đc/secure-admin-panel.html
 ```
 
 **Cloudflare Pages (Sau khi deploy):**
 ```
-https://kohkonhbanhang1.pages.dev/kk-admin-secure-x7g9p2m5
+https://kohkonhbanhang1.pages.dev/secure-admin-panel
 ```
 
 ---
@@ -51,7 +51,7 @@ Password: Admin@KohKong2025
 ### 1. LƯU BOOKMARK (QUAN TRỌNG!)
 
 **Chrome/Edge:**
-- Mở file `kk-admin-secure-x7g9p2m5.html`
+- Mở file `secure-admin-panel.html`
 - Nhấn `Ctrl + D`
 - Đặt tên: "🔐 Admin KohKong"
 - Lưu vào thư mục riêng
@@ -71,7 +71,7 @@ Password: Admin@KohKong2025
 
 **Cách 2: Gõ trực tiếp**
 - Mở trình duyệt
-- Gõ: `kk-admin-secure-x7g9p2m5.html`
+- Gõ: `secure-admin-panel.html`
 - Enter
 
 **Cách 3: Copy Link**
@@ -149,7 +149,7 @@ Công Khai (Ai cũng thấy):
 └── dashboard.html      ✅ Dashboard đại lý
 
 Riêng Tư (Chỉ bạn biết):
-├── kk-admin-secure-x7g9p2m5.html  🔐 LINK RIÊNG
+├── secure-admin-panel.html        🔐 LINK RIÊNG
 ├── admin-login.html               🔐 Admin login
 ├── admin.html                     🔐 Admin panel
 └── admin.js                       🔐 Admin logic
@@ -167,7 +167,7 @@ https://kohkonhbanhang1.pages.dev/products
 https://kohkonhbanhang1.pages.dev/login
 
 Riêng Tư (BOOKMARK NÀY):
-https://kohkonhbanhang1.pages.dev/kk-admin-secure-x7g9p2m5
+https://kohkonhbanhang1.pages.dev/secure-admin-panel
 ```
 
 ### GitHub Pages:
@@ -176,7 +176,7 @@ Công Khai:
 https://taphoakohkong.live
 
 Riêng Tư (BOOKMARK NÀY):
-https://taphoakohkong.live/kk-admin-secure-x7g9p2m5
+https://taphoakohkong.live/secure-admin-panel
 ```
 
 ---
@@ -186,7 +186,7 @@ https://taphoakohkong.live/kk-admin-secure-x7g9p2m5
 ```
 Bạn
   ↓
-🔐 kk-admin-secure-x7g9p2m5.html (Link riêng)
+🔐 secure-admin-panel.html (Link riêng)
   ↓
 🔐 admin-login.html (Đăng nhập)
   ↓
@@ -211,12 +211,12 @@ Người khác
 
 ## 📊 SO SÁNH
 
-| Tính năng | admin-hub.html | kk-admin-secure-x7g9p2m5.html |
-|-----------|----------------|-------------------------------|
+| Tính năng | admin-hub.html | secure-admin-panel.html |
+|-----------|----------------|-------------------------|
 | Hiển thị menu | ✅ Có | ❌ Không |
 | Hiển thị footer | ✅ Có | ❌ Không |
 | Public link | ✅ Ai cũng thấy | ❌ Riêng tư |
-| Dễ đoán | ✅ Dễ | ❌ Rất khó |
+| Dễ đoán | ✅ Dễ | ❌ Khó |
 | Bảo mật | ⚠️ Trung bình | ✅ Cao |
 | Khuyên dùng | ❌ Không | ✅ Có |
 
@@ -248,9 +248,9 @@ Người khác
 
 1. **Đổi tên file ngay:**
    ```
-   kk-admin-secure-x7g9p2m5.html
+   secure-admin-panel.html
    →
-   admin-secret-new-xyz789abc.html
+   my-private-admin-xyz123.html
    ```
 
 2. **Đổi password:**
