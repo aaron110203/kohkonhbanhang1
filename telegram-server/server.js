@@ -1113,6 +1113,50 @@ app.post('/api/unblock-ip', (req, res) => {
   }
 });
 
+// POST: Chặn IP thủ công
+app.post('/api/block-ip', (req, res) => {
+  try {
+    const { ip, username, reason } = req.body;
+
+    if (!ip) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'IP là bắt buộc' 
+      });
+    }
+
+    // Kiểm tra xem IP đã bị chặn chưa
+    const alreadyBlocked = blockedIPs.find(blocked => blocked.ip === ip);
+    if (alreadyBlocked) {
+      return res.json({
+        success: true,
+        message: 'IP đã bị chặn từ trước'
+      });
+    }
+
+    // Thêm vào danh sách chặn
+    blockedIPs.push({
+      ip,
+      username: username || 'Unknown',
+      date: new Date().toISOString(),
+      reason: reason || 'Blocked by admin manually'
+    });
+
+    console.log(`🚫 Blocked IP manually: ${ip} (${username})`);
+
+    res.json({
+      success: true,
+      message: 'IP đã bị chặn'
+    });
+  } catch (error) {
+    console.error('Error blocking IP:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Internal server error' 
+    });
+  }
+});
+
 // POST: Đăng xuất agent (xóa session)
 app.post('/api/agents/logout', (req, res) => {
   try {

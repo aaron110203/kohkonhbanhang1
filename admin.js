@@ -84,7 +84,7 @@ function renderAgentsTable() {
   if (allAgents.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="8" style="text-align: center; padding: 40px; color: #999;">
+        <td colspan="10" style="text-align: center; padding: 40px; color: #999;">
           Chưa có đại lý nào đăng ký
         </td>
       </tr>
@@ -115,6 +115,7 @@ function renderAgentsTable() {
         <td><strong>${agent.fullname}</strong></td>
         <td>${agent.username}</td>
         <td>${agent.telegram || 'Chưa cập nhật'}</td>
+        <td><code style="background: #f5f5f5; padding: 5px 10px; border-radius: 3px; font-size: 0.85rem;">${agent.ip || 'N/A'}</code></td>
         <td>
           <span class="badge ${accountType === 'VIP' ? 'badge-vip' : 'badge-free'}">
             ${accountType === 'VIP' ? '👑 VIP' : '🆓 Thường'}
@@ -128,6 +129,31 @@ function renderAgentsTable() {
             </div>
           ` : ''}
         </td>
+        <td><strong>${productsCount}</strong></td>
+        <td style="font-size: 0.85rem;">${formatDate(agent.createdAt)}</td>
+        <td style="font-size: 0.85rem; color: #666;">${agent.lastLogin ? formatDateTime(agent.lastLogin) : 'Chưa đăng nhập'}</td>
+        <td style="white-space: nowrap;">
+          ${accountType === 'FREE' ? `
+            <button class="btn-upgrade" onclick="upgradeAgent('${agent.id}')">
+              👑 Nâng Cấp VIP
+            </button>
+          ` : `
+            <button class="btn-downgrade" onclick="downgradeAgent('${agent.id}')">
+              ⬇️ Hạ Xuống Thường
+            </button>
+          `}
+          <button class="btn-delete" onclick="deleteAgent('${agent.id}')">
+            🗑️ Xóa
+          </button>
+          <br><br>
+          <button class="btn-upgrade" onclick="blockAgentIP('${agent.id}', '${agent.ip}', '${agent.username}')" style="background: #f44336; margin-top: 5px;">
+            🚫 Chặn IP
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
         <td><strong>${productsCount}</strong></td>
         <td>${formatDate(agent.createdAt)}</td>
         <td>
@@ -276,6 +302,18 @@ function formatDate(dateString) {
   return date.toLocaleDateString('vi-VN');
 }
 
+function formatDateTime(dateString) {
+  if (!dateString) return 'N/A';
+  const date = new Date(dateString);
+  return date.toLocaleString('vi-VN', { 
+    year: 'numeric', 
+    month: '2-digit', 
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
 function logoutAdmin() {
   if (confirm('Đăng xuất Admin?')) {
     localStorage.removeItem('adminUser');
@@ -411,6 +449,36 @@ async function unblockIP(ip, username) {
       loadBlockedIPs();
     } else {
       throw new Error(data.error || 'Failed to unblock');
+    }
+  } catch (error) {
+    alert('❌ Lỗi: ' + error.message);
+  }
+}
+
+async function blockAgentIP(agentId, ip, username) {
+  if (!confirm(`⚠️ CHẶN IP của đại lý?\n\nUsername: ${username}\nIP: ${ip}\n\nĐại lý sẽ bị đăng xuất và không thể đăng ký/đăng nhập lại!`)) {
+    return;
+  }
+
+  try {
+    // Thêm vào danh sách chặn
+    const response = await fetch('https://kohkonhbanhang1.onrender.com/api/block-ip', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        ip, 
+        username,
+        reason: 'Blocked by admin manually'
+      })
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      alert('✅ Đã chặn IP!\n\nĐại lý sẽ bị đăng xuất tự động.');
+      loadBlockedIPs();
+    } else {
+      throw new Error(data.error || 'Failed to block');
     }
   } catch (error) {
     alert('❌ Lỗi: ' + error.message);
