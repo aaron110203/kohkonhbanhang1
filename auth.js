@@ -26,8 +26,10 @@ async function requestVerificationCode() {
   btn.textContent = 'Đang gửi...';
 
   try {
-    // Change this URL when deploy to production
-    const API_URL = 'http://localhost:3000';
+    // Production URL - automatically uses Render deployment
+    const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? 'http://localhost:3000'  // Development
+      : 'https://kohkonhbanhang1.onrender.com';  // Production
     
     const response = await fetch(`${API_URL}/api/verification/request`, {
       method: 'POST',
@@ -288,7 +290,10 @@ async function handleRegister(e) {
   if (verification && verification.length === 6) {
     // Verify with backend API
     try {
-      const API_URL = 'http://localhost:3000';
+      const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:3000'  // Development
+        : 'https://kohkonhbanhang1.onrender.com';  // Production
+        
       const verifyResponse = await fetch(`${API_URL}/api/verification/verify`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
