@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Hub - KohKong Bán Hàng</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .header p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .card-icon {
+      font-size: 5rem;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .card-description {
+      color: #666;
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 15px 40px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.1rem;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-admin {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-admin:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-dashboard {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+    }
+
+    .btn-dashboard:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 20px rgba(245, 87, 108, 0.4);
+    }
+
+    .btn-home {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+    }
+
+    .btn-home:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 20px rgba(79, 172, 254, 0.4);
+    }
+
+    .info-box {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 30px;
+      margin-top: 30px;
+    }
+
+    .info-box h3 {
+      color: #667eea;
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+    }
+
+    .info-box ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .info-box li {
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+      color: #555;
+    }
+
+    .info-box li:last-child {
+      border-bottom: none;
+    }
+
+    .info-box li strong {
+      color: #333;
+    }
+
+    .credentials-box {
+      background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 20px 0;
+      border-left: 5px solid #fdcb6e;
+    }
+
+    .credentials-box h4 {
+      margin-bottom: 10px;
+      color: #2d3436;
+    }
+
+    .credentials-box code {
+      background: rgba(255, 255, 255, 0.8);
+      padding: 5px 15px;
+      border-radius: 5px;
+      display: inline-block;
+      margin: 5px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 1.1rem;
+      color: #2d3436;
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .back-link a {
+      color: white;
+      text-decoration: none;
+      font-size: 1.1rem;
+      opacity: 0.9;
+      transition: opacity 0.3s;
+    }
+
+    .back-link a:hover {
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2rem;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🛡️ Admin Hub</h1>
+      <p>Trung tâm quản trị KohKong Bán Hàng</p>
+    </div>
+
+    <div class="cards-grid">
+      <!-- Admin Panel Card -->
+      <div class="card" onclick="window.location.href='admin-login.html'">
+        <div class="card-icon">🛡️</div>
+        <h2 class="card-title">Admin Panel</h2>
+        <p class="card-description">
+          Quản lý đại lý, nâng cấp VIP, theo dõi quota và sản phẩm
+        </p>
+        <a href="admin-login.html" class="btn btn-admin">Đăng Nhập Admin</a>
+      </div>
+
+      <!-- Agent Dashboard Card -->
+      <div class="card" onclick="window.location.href='dashboard.html'">
+        <div class="card-icon">👤</div>
+        <h2 class="card-title">Đại Lý Dashboard</h2>
+        <p class="card-description">
+          Quản lý sản phẩm của bạn, upload ảnh và theo dõi bán hàng
+        </p>
+        <a href="dashboard.html" class="btn btn-dashboard">Vào Dashboard</a>
+      </div>
+
+      <!-- Website Card -->
+      <div class="card" onclick="window.location.href='index.html'">
+        <div class="card-icon">🏠</div>
+        <h2 class="card-title">Trang Chủ</h2>
+        <p class="card-description">
+          Xem tất cả sản phẩm, danh mục và đặt hàng
+        </p>
+        <a href="index.html" class="btn btn-home">Về Trang Chủ</a>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <h3>📋 Thông Tin Đăng Nhập</h3>
+      
+      <div class="credentials-box">
+        <h4>🛡️ Admin Panel:</h4>
+        <div>
+          <strong>Username:</strong> <code>admin</code><br>
+          <strong>Password:</strong> <code>Admin@KohKong2025</code>
+        </div>
+      </div>
+
+      <h3 style="margin-top: 30px;">🎯 Chức Năng Admin Panel</h3>
+      <ul>
+        <li><strong>✅ Quản lý đại lý:</strong> Xem danh sách tất cả đại lý đã đăng ký</li>
+        <li><strong>👑 Nâng cấp VIP:</strong> 1 click nâng đại lý lên VIP (không giới hạn sản phẩm)</li>
+        <li><strong>⬇️ Hạ cấp:</strong> Đưa VIP về Thường (5 sản phẩm/ngày)</li>
+        <li><strong>🗑️ Xóa đại lý:</strong> Xóa đại lý và toàn bộ sản phẩm</li>
+        <li><strong>📊 Thống kê:</strong> Xem tổng đại lý, VIP, sản phẩm</li>
+        <li><strong>📈 Theo dõi quota:</strong> Biết đại lý nào đã đăng bao nhiêu sản phẩm hôm nay</li>
+      </ul>
+
+      <h3 style="margin-top: 30px;">🔐 Phân Cấp Tài Khoản</h3>
+      <ul>
+        <li><strong>🆓 FREE (Thường):</strong> Giới hạn 5 sản phẩm/ngày, reset hằng ngày</li>
+        <li><strong>👑 VIP:</strong> KHÔNG GIỚI HẠN sản phẩm, badge vàng đặc biệt</li>
+      </ul>
+    </div>
+
+    <div class="back-link">
+      <a href="index.html">← Quay lại Trang Chủ</a>
+    </div>
+  </div>
+
+  <script>
+    // Check if user is logged in as admin
+    const adminUser = localStorage.getItem('adminUser') || sessionStorage.getItem('adminUser');
+    if (adminUser) {
+      // Show quick access button
+      const quickAccess = document.createElement('div');
+      quickAccess.style.cssText = `
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px 30px;
+        border-radius: 50px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 1.1rem;
+        z-index: 1000;
+      `;
+      quickAccess.innerHTML = '🛡️ Vào Admin Panel';
+      quickAccess.onclick = () => window.location.href = 'admin.html';
+      document.body.appendChild(quickAccess);
+    }
+  </script>
+</body>
+</html>
