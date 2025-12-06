@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kiểm Tra Bộ Nhớ & Debug</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Courier New', monospace;
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: #252526;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    h1 {
+      color: #4ec9b0;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #4ec9b0;
+      padding-bottom: 10px;
+    }
+    h2 {
+      color: #dcdcaa;
+      margin-top: 30px;
+      margin-bottom: 15px;
+    }
+    .info-box {
+      background: #1e1e1e;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 4px solid #4ec9b0;
+    }
+    .error-box {
+      background: #1e1e1e;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 4px solid #f48771;
+    }
+    .warning-box {
+      background: #1e1e1e;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 4px solid #dcdcaa;
+    }
+    pre {
+      background: #1e1e1e;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    .stat {
+      display: inline-block;
+      margin-right: 20px;
+      padding: 10px 15px;
+      background: #2d2d30;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+    .stat-label {
+      color: #858585;
+      font-size: 0.85rem;
+    }
+    .stat-value {
+      color: #4ec9b0;
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+    button {
+      background: #0e639c;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #1177bb;
+    }
+    button.danger {
+      background: #f48771;
+    }
+    button.danger:hover {
+      background: #ff6b6b;
+    }
+    .success {
+      color: #4ec9b0;
+    }
+    .error {
+      color: #f48771;
+    }
+    .warning {
+      color: #dcdcaa;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 Kiểm Tra Hệ Thống & Bộ Nhớ</h1>
+    
+    <div id="storage-info"></div>
+    <div id="data-info"></div>
+    <div id="error-info"></div>
+    
+    <h2>🛠️ Công Cụ Debug</h2>
+    <button onclick="testAddProduct()">✅ Test Thêm Sản Phẩm</button>
+    <button onclick="viewAllData()">📊 Xem Tất Cả Dữ Liệu</button>
+    <button onclick="checkQuota()">💾 Kiểm Tra Dung Lượng</button>
+    <button onclick="fixData()">🔧 Sửa Dữ Liệu</button>
+    <button class="danger" onclick="clearAll()">🗑️ Xóa Tất Cả</button>
+    
+    <div id="output"></div>
+  </div>
+
+  <script>
+    const output = document.getElementById('output');
+    const storageInfo = document.getElementById('storage-info');
+    const dataInfo = document.getElementById('data-info');
+    const errorInfo = document.getElementById('error-info');
+
+    // Check storage on load
+    window.addEventListener('load', function() {
+      checkStorage();
+      checkCurrentUser();
+      checkAgents();
+    });
+
+    function checkStorage() {
+      try {
+        // Calculate storage usage
+        let totalSize = 0;
+        let items = {};
+        
+        for (let key in localStorage) {
+          if (localStorage.hasOwnProperty(key)) {
+            const size = localStorage.getItem(key).length;
+            totalSize += size;
+            items[key] = size;
+          }
+        }
+
+        const totalMB = (totalSize / (1024 * 1024)).toFixed(2);
+        const totalKB = (totalSize / 1024).toFixed(2);
+        const limit = 5; // Most browsers: 5-10MB
+        const percentage = ((totalSize / (limit * 1024 * 1024)) * 100).toFixed(1);
+
+        let html = '<h2>💾 Thông Tin Bộ Nhớ</h2>';
+        html += '<div class="stat"><div class="stat-label">Dung lượng sử dụng</div><div class="stat-value">' + totalKB + ' KB</div></div>';
+        html += '<div class="stat"><div class="stat-label">Dung lượng (MB)</div><div class="stat-value">' + totalMB + ' MB</div></div>';
+        html += '<div class="stat"><div class="stat-label">Tỷ lệ sử dụng</div><div class="stat-value">' + percentage + '%</div></div>';
+        html += '<div class="stat"><div class="stat-label">Số items</div><div class="stat-value">' + Object.keys(items).length + '</div></div>';
+
+        if (percentage > 80) {
+          html += '<div class="error-box">⚠️ <strong>CẢNH BÁO:</strong> Bộ nhớ gần đầy! Hãy xóa dữ liệu không cần thiết.</div>';
+        } else if (percentage > 50) {
+          html += '<div class="warning-box">⚠️ Bộ nhớ đã sử dụng hơn 50%</div>';
+        } else {
+          html += '<div class="info-box">✅ Bộ nhớ còn đủ dung lượng</div>';
+        }
+
+        html += '<h2>📦 Chi Tiết Từng Item</h2><pre>';
+        for (let key in items) {
+          const sizeKB = (items[key] / 1024).toFixed(2);
+          html += key + ': ' + sizeKB + ' KB\n';
+        }
+        html += '</pre>';
+
+        storageInfo.innerHTML = html;
+      } catch (error) {
+        storageInfo.innerHTML = '<div class="error-box">❌ Lỗi kiểm tra bộ nhớ: ' + error.message + '</div>';
+      }
+    }
+
+    function checkCurrentUser() {
+      const currentUser = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
+      let html = '<h2>👤 Người Dùng Hiện Tại</h2>';
+      
+      if (currentUser) {
+        try {
+          const user = JSON.parse(currentUser);
+          html += '<div class="info-box">';
+          html += '<strong class="success">✅ Đã đăng nhập</strong><br>';
+          html += 'Username: <strong>' + user.username + '</strong><br>';
+          html += 'Họ tên: <strong>' + user.fullname + '</strong><br>';
+          html += 'Telegram: <strong>' + (user.telegram || 'N/A') + '</strong><br>';
+          html += 'ID: <strong>' + user.id + '</strong>';
+          html += '</div>';
+          html += '<pre>' + JSON.stringify(user, null, 2) + '</pre>';
+        } catch (e) {
+          html += '<div class="error-box">❌ Lỗi parse currentUser: ' + e.message + '</div>';
+        }
+      } else {
+        html += '<div class="warning-box">⚠️ Chưa đăng nhập</div>';
+      }
+      
+      dataInfo.innerHTML = html;
+    }
+
+    function checkAgents() {
+      const agents = JSON.parse(localStorage.getItem('agents')) || [];
+      let html = '<h2>👥 Danh Sách Đại Lý</h2>';
+      
+      html += '<div class="stat"><div class="stat-label">Tổng đại lý</div><div class="stat-value">' + agents.length + '</div></div>';
+      
+      let totalProducts = 0;
+      agents.forEach(agent => {
+        if (agent.products) {
+          totalProducts += agent.products.length;
+        }
+      });
+      
+      html += '<div class="stat"><div class="stat-label">Tổng sản phẩm</div><div class="stat-value">' + totalProducts + '</div></div>';
+      
+      html += '<h3>Chi Tiết Đại Lý:</h3>';
+      agents.forEach((agent, index) => {
+        html += '<div class="info-box">';
+        html += '<strong>' + (index + 1) + '. ' + agent.fullname + '</strong> (@' + agent.username + ')<br>';
+        html += 'Telegram: ' + (agent.telegram || 'N/A') + '<br>';
+        html += 'Sản phẩm: <strong>' + (agent.products ? agent.products.length : 0) + '</strong>';
+        html += '</div>';
+      });
+      
+      html += '<h3>Raw Data:</h3>';
+      html += '<pre>' + JSON.stringify(agents, null, 2) + '</pre>';
+      
+      dataInfo.innerHTML += html;
+    }
+
+    function testAddProduct() {
+      try {
+        const currentUserStr = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
+        
+        if (!currentUserStr) {
+          output.innerHTML = '<div class="error-box">❌ Chưa đăng nhập! Vui lòng đăng nhập trước.</div>';
+          return;
+        }
+
+        const currentUser = JSON.parse(currentUserStr);
+        const agents = JSON.parse(localStorage.getItem('agents')) || [];
+        const agentIndex = agents.findIndex(a => a.username === currentUser.username);
+
+        if (agentIndex === -1) {
+          output.innerHTML = '<div class="error-box">❌ Không tìm thấy agent trong danh sách!</div>';
+          return;
+        }
+
+        // Create test product with small base64 image (1x1 pixel)
+        const testImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+        
+        const testProduct = {
+          id: 'test_' + Date.now(),
+          name: 'Test Product ' + new Date().getHours() + ':' + new Date().getMinutes(),
+          price: 10000,
+          category: 'food',
+          icon: '🍚',
+          description: 'Sản phẩm test tự động',
+          telegram: currentUser.telegram,
+          imageUrl: testImage,
+          agentId: currentUser.id,
+          agentName: currentUser.fullname,
+          agentTelegram: currentUser.telegram,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+
+        if (!agents[agentIndex].products) {
+          agents[agentIndex].products = [];
+        }
+        
+        agents[agentIndex].products.push(testProduct);
+        localStorage.setItem('agents', JSON.stringify(agents));
+
+        output.innerHTML = '<div class="info-box"><strong class="success">✅ TEST THÀNH CÔNG!</strong><br><br>';
+        output.innerHTML += 'Đã thêm sản phẩm: <strong>' + testProduct.name + '</strong><br>';
+        output.innerHTML += 'Giá: <strong>' + testProduct.price.toLocaleString() + ' ₭</strong><br>';
+        output.innerHTML += 'Tổng sản phẩm của bạn: <strong>' + agents[agentIndex].products.length + '</strong><br><br>';
+        output.innerHTML += '<pre>' + JSON.stringify(testProduct, null, 2) + '</pre>';
+        output.innerHTML += '</div>';
+
+        // Reload checks
+        setTimeout(() => {
+          checkStorage();
+          checkAgents();
+        }, 500);
+
+      } catch (error) {
+        output.innerHTML = '<div class="error-box">❌ LỖI: ' + error.message + '<br><br><pre>' + error.stack + '</pre></div>';
+      }
+    }
+
+    function viewAllData() {
+      let html = '<h2>📊 Tất Cả Dữ Liệu LocalStorage</h2>';
+      html += '<pre>';
+      
+      for (let key in localStorage) {
+        if (localStorage.hasOwnProperty(key)) {
+          html += '\n=== ' + key + ' ===\n';
+          try {
+            const data = JSON.parse(localStorage.getItem(key));
+            html += JSON.stringify(data, null, 2);
+          } catch {
+            html += localStorage.getItem(key);
+          }
+          html += '\n';
+        }
+      }
+      
+      html += '</pre>';
+      output.innerHTML = html;
+    }
+
+    function checkQuota() {
+      if ('storage' in navigator && 'estimate' in navigator.storage) {
+        navigator.storage.estimate().then(estimate => {
+          const used = (estimate.usage / (1024 * 1024)).toFixed(2);
+          const quota = (estimate.quota / (1024 * 1024)).toFixed(2);
+          const percent = ((estimate.usage / estimate.quota) * 100).toFixed(1);
+          
+          output.innerHTML = '<div class="info-box">';
+          output.innerHTML += '<h3>💾 Storage Quota API</h3>';
+          output.innerHTML += 'Đã dùng: <strong>' + used + ' MB</strong><br>';
+          output.innerHTML += 'Tổng quota: <strong>' + quota + ' MB</strong><br>';
+          output.innerHTML += 'Tỷ lệ: <strong>' + percent + '%</strong>';
+          output.innerHTML += '</div>';
+        });
+      } else {
+        output.innerHTML = '<div class="warning-box">⚠️ Trình duyệt không hỗ trợ Storage Quota API</div>';
+      }
+    }
+
+    function fixData() {
+      try {
+        const agents = JSON.parse(localStorage.getItem('agents')) || [];
+        let fixed = 0;
+        
+        agents.forEach(agent => {
+          if (!agent.products) {
+            agent.products = [];
+            fixed++;
+          }
+        });
+        
+        localStorage.setItem('agents', JSON.stringify(agents));
+        
+        output.innerHTML = '<div class="info-box">✅ Đã sửa ' + fixed + ' agent(s)</div>';
+        checkAgents();
+      } catch (error) {
+        output.innerHTML = '<div class="error-box">❌ Lỗi: ' + error.message + '</div>';
+      }
+    }
+
+    function clearAll() {
+      if (confirm('⚠️ XÓA TẤT CẢ DỮ LIỆU?\n\nĐiều này sẽ xóa:\n- Tất cả đại lý\n- Tất cả sản phẩm\n- Thông tin đăng nhập\n\nBạn có chắc chắn?')) {
+        localStorage.clear();
+        sessionStorage.clear();
+        output.innerHTML = '<div class="info-box">✅ Đã xóa tất cả dữ liệu!</div>';
+        setTimeout(() => {
+          location.reload();
+        }, 1000);
+      }
+    }
+  </script>
+</body>
+</html>

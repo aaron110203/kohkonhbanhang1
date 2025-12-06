@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Upload Ảnh</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      max-width: 600px;
+      width: 100%;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #555;
+    }
+    input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      border: 2px dashed #667eea;
+      border-radius: 10px;
+      background: #f8f9fa;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    input[type="file"]:hover {
+      border-color: #764ba2;
+      background: #fff;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 1rem;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    .preview-box {
+      margin-top: 20px;
+      padding: 20px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      background: #f8f9fa;
+      display: none;
+    }
+    .preview-box img {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 10px;
+      display: block;
+      margin: 0 auto;
+    }
+    .preview-info {
+      margin-top: 10px;
+      padding: 10px;
+      background: white;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: transform 0.2s;
+    }
+    button:hover {
+      transform: scale(1.02);
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .success {
+      background: #d4edda;
+      border: 2px solid #28a745;
+      color: #155724;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      display: none;
+    }
+    .error {
+      background: #f8d7da;
+      border: 2px solid #dc3545;
+      color: #721c24;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🖼️ Test Upload Ảnh Sản Phẩm</h1>
+    
+    <form id="uploadForm">
+      <div class="form-group">
+        <label>📝 Tên Sản Phẩm</label>
+        <input type="text" id="product-name" placeholder="Ví dụ: Gạo Thơm ST25" required>
+      </div>
+
+      <div class="form-group">
+        <label>💰 Giá (₭)</label>
+        <input type="number" id="product-price" placeholder="45000" required>
+      </div>
+
+      <div class="form-group">
+        <label>📱 Telegram Liên Hệ</label>
+        <input type="text" id="product-telegram" placeholder="@ADSaaron99" value="@ADSaaron99">
+      </div>
+
+      <div class="form-group">
+        <label>📸 Chọn Ảnh Sản Phẩm</label>
+        <input type="file" id="product-image" accept="image/*" required>
+        <small style="color: #666; display: block; margin-top: 5px;">
+          Chọn ảnh JPG, PNG hoặc GIF (tối đa 5MB)
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>📄 Mô Tả / Chất Lượng</label>
+        <textarea id="product-description" rows="3" placeholder="Gạo thơm cao cấp, chất lượng A1..."></textarea>
+      </div>
+
+      <div class="preview-box" id="preview-box">
+        <h3 style="margin-bottom: 10px; color: #333;">👁️ Xem Trước:</h3>
+        <img id="preview-img" alt="Preview">
+        <div class="preview-info" id="preview-info"></div>
+      </div>
+
+      <button type="submit">💾 Lưu Sản Phẩm</button>
+    </form>
+
+    <div class="success" id="success-msg"></div>
+    <div class="error" id="error-msg"></div>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById('product-image');
+    const previewBox = document.getElementById('preview-box');
+    const previewImg = document.getElementById('preview-img');
+    const previewInfo = document.getElementById('preview-info');
+    const form = document.getElementById('uploadForm');
+    const successMsg = document.getElementById('success-msg');
+    const errorMsg = document.getElementById('error-msg');
+
+    let imageBase64 = null;
+
+    // Preview image when selected
+    fileInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      
+      if (!file) {
+        previewBox.style.display = 'none';
+        return;
+      }
+
+      // Check file size (5MB max)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('⚠️ Ảnh quá lớn! Vui lòng chọn ảnh nhỏ hơn 5MB');
+        fileInput.value = '';
+        previewBox.style.display = 'none';
+        return;
+      }
+
+      // Check file type
+      if (!file.type.startsWith('image/')) {
+        alert('⚠️ Vui lòng chọn file ảnh (JPG, PNG, GIF)');
+        fileInput.value = '';
+        previewBox.style.display = 'none';
+        return;
+      }
+
+      // Read and preview
+      const reader = new FileReader();
+      
+      reader.onload = function(event) {
+        imageBase64 = event.target.result;
+        previewImg.src = imageBase64;
+        previewBox.style.display = 'block';
+        
+        // Show file info
+        const sizeKB = (file.size / 1024).toFixed(2);
+        const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+        
+        previewInfo.innerHTML = `
+          <strong>📁 Tên file:</strong> ${file.name}<br>
+          <strong>📏 Kích thước:</strong> ${sizeKB} KB (${sizeMB} MB)<br>
+          <strong>🎨 Loại:</strong> ${file.type}<br>
+          <strong>✅ Trạng thái:</strong> <span style="color: #28a745; font-weight: bold;">Đã chọn thành công!</span>
+        `;
+      };
+      
+      reader.onerror = function() {
+        alert('❌ Lỗi khi đọc file!');
+        previewBox.style.display = 'none';
+      };
+      
+      reader.readAsDataURL(file);
+    });
+
+    // Handle form submit
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const productName = document.getElementById('product-name').value.trim();
+      const productPrice = document.getElementById('product-price').value;
+      const productTelegram = document.getElementById('product-telegram').value.trim();
+      const productDescription = document.getElementById('product-description').value.trim();
+      
+      if (!imageBase64) {
+        showError('❌ Vui lòng chọn ảnh sản phẩm!');
+        return;
+      }
+
+      const product = {
+        id: 'test_' + Date.now(),
+        name: productName,
+        price: parseFloat(productPrice),
+        telegram: productTelegram,
+        description: productDescription,
+        imageUrl: imageBase64,
+        createdAt: new Date().toISOString()
+      };
+
+      // Save to localStorage
+      try {
+        let products = JSON.parse(localStorage.getItem('test_products')) || [];
+        products.push(product);
+        localStorage.setItem('test_products', JSON.stringify(products));
+        
+        showSuccess(`
+          ✅ <strong>LƯU THÀNH CÔNG!</strong><br><br>
+          📦 Sản phẩm: ${productName}<br>
+          💰 Giá: ${formatPrice(productPrice)} ₭<br>
+          📱 Telegram: ${productTelegram}<br>
+          📸 Ảnh đã được lưu dưới dạng Base64<br>
+          💾 Kích thước Base64: ${(imageBase64.length / 1024).toFixed(2)} KB<br><br>
+          <strong>Tổng số sản phẩm test:</strong> ${products.length}
+        `);
+        
+        // Reset form after 2 seconds
+        setTimeout(() => {
+          form.reset();
+          previewBox.style.display = 'none';
+          imageBase64 = null;
+          successMsg.style.display = 'none';
+        }, 3000);
+        
+      } catch (error) {
+        console.error('Error saving:', error);
+        showError('❌ Lỗi khi lưu sản phẩm: ' + error.message);
+      }
+    });
+
+    function showSuccess(message) {
+      successMsg.innerHTML = message;
+      successMsg.style.display = 'block';
+      errorMsg.style.display = 'none';
+    }
+
+    function showError(message) {
+      errorMsg.innerHTML = message;
+      errorMsg.style.display = 'block';
+      successMsg.style.display = 'none';
+    }
+
+    function formatPrice(price) {
+      return new Intl.NumberFormat('vi-VN').format(price);
+    }
+
+    // Show current test products
+    window.addEventListener('load', function() {
+      const testProducts = JSON.parse(localStorage.getItem('test_products')) || [];
+      if (testProducts.length > 0) {
+        console.log('📦 Sản phẩm test đã lưu:', testProducts);
+        console.log(`💾 Tổng: ${testProducts.length} sản phẩm`);
+      }
+    });
+  </script>
+</body>
+</html>

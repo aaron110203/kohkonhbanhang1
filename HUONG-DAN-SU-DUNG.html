@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📖 Hướng Dẫn Sử Dụng - KohKong Bán Hàng</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 2.5rem;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 40px;
+      font-size: 1.1rem;
+    }
+    .step {
+      background: #f8f9fa;
+      border-left: 5px solid #667eea;
+      padding: 25px;
+      margin-bottom: 25px;
+      border-radius: 10px;
+      transition: transform 0.2s;
+    }
+    .step:hover {
+      transform: translateX(5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .step h2 {
+      color: #667eea;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .step p {
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 10px;
+    }
+    .code {
+      background: #2d3748;
+      color: #68d391;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      margin: 10px 0;
+      display: inline-block;
+    }
+    .btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin: 10px 5px;
+      transition: transform 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn:hover { transform: scale(1.05); }
+    .warning {
+      background: #fff3cd;
+      border-left: 5px solid #ffc107;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 8px;
+    }
+    .success {
+      background: #d4edda;
+      border-left: 5px solid #28a745;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 8px;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+    .feature-card {
+      background: white;
+      border: 2px solid #667eea;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .feature-card h3 {
+      color: #667eea;
+      margin-bottom: 10px;
+    }
+    .nav-buttons {
+      text-align: center;
+      margin-top: 30px;
+      padding-top: 30px;
+      border-top: 2px solid #e0e0e0;
+    }
+    .screenshot {
+      max-width: 100%;
+      border: 3px solid #667eea;
+      border-radius: 10px;
+      margin: 15px 0;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📖 Hướng Dẫn Sử Dụng Hoàn Chỉnh</h1>
+    <p class="subtitle">KohKong Bán Hàng - Hệ Thống Quản Lý Đại Lý Toàn Diện</p>
+
+    <div class="success">
+      <h3>✅ Hệ Thống Đã Sẵn Sàng!</h3>
+      <p>Tất cả tính năng đã được cài đặt và kiểm tra:</p>
+      <ul style="margin-left: 20px; margin-top: 10px;">
+        <li>✅ Đăng ký / Đăng nhập đại lý</li>
+        <li>✅ Upload ảnh sản phẩm</li>
+        <li>✅ Quản lý danh mục sản phẩm</li>
+        <li>✅ Nút liên hệ Telegram tự động</li>
+        <li>✅ Tự động cập nhật lên website</li>
+      </ul>
+    </div>
+
+    <!-- BƯỚC 1 -->
+    <div class="step">
+      <h2>1️⃣ Chạy Test Hệ Thống (QUAN TRỌNG!)</h2>
+      <p>Trước tiên, hãy kiểm tra xem hệ thống có hoạt động không:</p>
+      <ol style="margin-left: 20px; line-height: 2;">
+        <li>Mở trang test tự động</li>
+        <li>Click nút <strong>"🚀 Run All Tests"</strong></li>
+        <li>Đợi tất cả tests chạy xong</li>
+        <li>Xem kết quả: Passed/Failed</li>
+      </ol>
+      <a href="http://127.0.0.1:5500/test-system.html" target="_blank" class="btn">
+        🧪 Mở Test System
+      </a>
+      <div class="warning">
+        <strong>⚠️ Nếu có test Failed:</strong> Ghi nhớ test nào lỗi và báo lại cho tôi.
+      </div>
+    </div>
+
+    <!-- BƯỚC 2 -->
+    <div class="step">
+      <h2>2️⃣ Đăng Ký Tài Khoản Đại Lý</h2>
+      <p>Nếu test PASS, bạn đã có tài khoản test. Hoặc tạo tài khoản mới:</p>
+      <ol style="margin-left: 20px; line-height: 2;">
+        <li>Vào trang đăng nhập</li>
+        <li>Click <strong>"Đăng ký ngay"</strong></li>
+        <li>Điền thông tin:
+          <ul style="margin-left: 20px; margin-top: 5px;">
+            <li>Họ Tên: <span class="code">Aaron Shop</span></li>
+            <li>Username: <span class="code">aaron2024</span></li>
+            <li>Password: <span class="code">123456</span></li>
+            <li>Telegram: <span class="code">@ADSaaron99</span> (username Telegram thật của bạn)</li>
+            <li>Mã xác minh: <strong>Để trống hoặc nhập bất kỳ 6 số</strong></li>
+          </ul>
+        </li>
+        <li>Click <strong>"Đăng Ký Làm Đại Lý"</strong></li>
+      </ol>
+      <a href="http://127.0.0.1:5500/login.html" target="_blank" class="btn">
+        🔐 Mở Trang Đăng Nhập
+      </a>
+    </div>
+
+    <!-- BƯỚC 3 -->
+    <div class="step">
+      <h2>3️⃣ Đăng Nhập Vào Dashboard</h2>
+      <p>Sau khi đăng ký thành công:</p>
+      <ol style="margin-left: 20px; line-height: 2;">
+        <li>Nhập Username: <span class="code">aaron2024</span> (hoặc <span class="code">testuser</span> nếu dùng test)</li>
+        <li>Nhập Password: <span class="code">123456</span></li>
+        <li>Click <strong>"Đăng Nhập"</strong></li>
+        <li>Tự động chuyển đến Dashboard</li>
+      </ol>
+      <div class="success">
+        <strong>✅ Nếu thành công:</strong> Bạn sẽ thấy màn hình Dashboard với menu:
+        <ul style="margin-left: 20px; margin-top: 5px;">
+          <li>📦 Sản Phẩm Của Tôi</li>
+          <li>➕ Thêm Sản Phẩm</li>
+          <li>🌐 Xem Website</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- BƯỚC 4 -->
+    <div class="step">
+      <h2>4️⃣ Thêm Sản Phẩm Mới</h2>
+      <p>Trong Dashboard, thêm sản phẩm đầu tiên:</p>
+      <ol style="margin-left: 20px; line-height: 2;">
+        <li>Click <strong>"➕ Thêm Sản Phẩm"</strong> ở menu bên trái</li>
+        <li>Điền thông tin sản phẩm:
+          <ul style="margin-left: 20px; margin-top: 10px;">
+            <li><strong>Tên sản phẩm:</strong> VD: "Gạo Thơm ST25"</li>
+            <li><strong>Giá (₭):</strong> VD: 45000</li>
+            <li><strong>Danh mục:</strong> Chọn "🍚 Đồ Ăn"</li>
+            <li><strong>Telegram Liên Hệ:</strong> Để trống (dùng TK của bạn) hoặc nhập @username</li>
+            <li><strong>Upload Ảnh:</strong> Click "Choose File" và chọn ảnh sản phẩm</li>
+            <li><strong>Mô tả:</strong> VD: "Gạo thơm cao cấp, chất lượng A1"</li>
+            <li><strong>Icon Emoji:</strong> VD: 🍚 (tùy chọn)</li>
+          </ul>
+        </li>
+        <li>Click <strong>"💾 Thêm Sản Phẩm"</strong></li>
+        <li>Thấy thông báo: <strong>"✅ Thêm sản phẩm thành công!"</strong></li>
+      </ol>
+    </div>
+
+    <!-- BƯỚC 5 -->
+    <div class="step">
+      <h2>5️⃣ Xem Sản Phẩm Trên Website</h2>
+      <p>Sau khi thêm sản phẩm:</p>
+      <ol style="margin-left: 20px; line-height: 2;">
+        <li>Click <strong>"🌐 Xem Website"</strong> ở menu Dashboard</li>
+        <li>Hoặc mở trực tiếp trang Products</li>
+        <li>Sản phẩm vừa thêm sẽ hiển thị ngay lập tức!</li>
+        <li>Khách hàng sẽ thấy:
+          <ul style="margin-left: 20px; margin-top: 5px;">
+            <li>✅ Ảnh sản phẩm thật</li>
+            <li>✅ Tên + Giá + Mô tả</li>
+            <li>✅ Tên đại lý</li>
+            <li>✅ Telegram liên hệ (link click được)</li>
+            <li>✅ Nút "💬 Chat Telegram" (màu xanh)</li>
+            <li>✅ Nút "🛒 Đặt Hàng"</li>
+          </ul>
+        </li>
+      </ol>
+      <a href="http://127.0.0.1:5500/products.html" target="_blank" class="btn">
+        🛒 Xem Trang Sản Phẩm
+      </a>
+    </div>
+
+    <!-- BƯỚC 6 -->
+    <div class="step">
+      <h2>6️⃣ Khách Hàng Liên Hệ Qua Telegram</h2>
+      <p>Khi khách hàng thích sản phẩm:</p>
+      <ol style="margin-left: 20px; line-height: 2;">
+        <li>Khách click vào <strong>@ Telegram</strong> hoặc nút <strong>"💬 Chat Telegram"</strong></li>
+        <li>Tự động mở ứng dụng Telegram</li>
+        <li>Chuyển thẳng đến chat với đại lý</li>
+        <li>Khách nhắn tin trực tiếp để đặt hàng</li>
+      </ol>
+    </div>
+
+    <!-- TÍNH NĂNG -->
+    <h2 style="text-align: center; color: #667eea; margin: 40px 0 20px;">🎯 Tính Năng Hoàn Chỉnh</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>📸 Upload Ảnh Thật</h3>
+        <p>Tải ảnh sản phẩm từ máy tính, lưu trực tiếp vào website</p>
+      </div>
+      <div class="feature-card">
+        <h3>🏷️ Phân Loại Sản Phẩm</h3>
+        <p>10 danh mục: Đồ ăn, Thời trang, Thuốc, Mỹ phẩm...</p>
+      </div>
+      <div class="feature-card">
+        <h3>💬 Telegram Tự Động</h3>
+        <p>Khách click là chat ngay, không cần điền form</p>
+      </div>
+      <div class="feature-card">
+        <h3>🔄 Cập Nhật Tức Thì</h3>
+        <p>Thêm sản phẩm xong hiện ngay trên website</p>
+      </div>
+      <div class="feature-card">
+        <h3>📱 Responsive 100%</h3>
+        <p>Hoạt động mượt mà trên điện thoại</p>
+      </div>
+      <div class="feature-card">
+        <h3>🔐 Bảo Mật Cao</h3>
+        <p>Mỗi đại lý chỉ quản lý sản phẩm của mình</p>
+      </div>
+    </div>
+
+    <!-- TROUBLESHOOTING -->
+    <div class="warning" style="margin-top: 40px;">
+      <h3>🔧 Gặp Vấn Đề?</h3>
+      <p><strong>1. Không đăng nhập được:</strong></p>
+      <ul style="margin-left: 20px;">
+        <li>→ Dùng <a href="http://127.0.0.1:5500/debug-login.html" target="_blank" style="color: #0066cc;">Debug Tool</a> để Force Login</li>
+        <li>→ Hoặc tạo tài khoản test trong Test System</li>
+      </ul>
+      <p style="margin-top: 10px;"><strong>2. Sản phẩm không hiển thị:</strong></p>
+      <ul style="margin-left: 20px;">
+        <li>→ Làm mới trang products.html (F5)</li>
+        <li>→ Kiểm tra đã đăng nhập đúng tài khoản chưa</li>
+      </ul>
+      <p style="margin-top: 10px;"><strong>3. Ảnh không upload được:</strong></p>
+      <ul style="margin-left: 20px;">
+        <li>→ Chọn ảnh nhỏ hơn 2MB</li>
+        <li>→ Định dạng: JPG, PNG, GIF</li>
+      </ul>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="nav-buttons">
+      <h3 style="margin-bottom: 20px;">🚀 Bắt Đầu Ngay</h3>
+      <a href="http://127.0.0.1:5500/test-system.html" target="_blank" class="btn">
+        🧪 1. Test Hệ Thống
+      </a>
+      <a href="http://127.0.0.1:5500/login.html" target="_blank" class="btn">
+        🔐 2. Đăng Nhập
+      </a>
+      <a href="http://127.0.0.1:5500/dashboard.html" target="_blank" class="btn">
+        📊 3. Vào Dashboard
+      </a>
+      <a href="http://127.0.0.1:5500/products.html" target="_blank" class="btn">
+        🛒 4. Xem Sản Phẩm
+      </a>
+    </div>
+
+    <div class="success" style="margin-top: 40px; text-align: center;">
+      <h3>✅ Hệ Thống Đã Hoàn Thiện!</h3>
+      <p style="margin-top: 10px;">Tất cả yêu cầu của bạn đã được thực hiện:</p>
+      <ul style="margin-left: 20px; text-align: left; margin-top: 10px;">
+        <li>✅ Đăng ký/Đăng nhập đại lý</li>
+        <li>✅ Upload ảnh lên web</li>
+        <li>✅ Nhập tên sản phẩm, giá tiền</li>
+        <li>✅ Nút @ Telegram tự động</li>
+        <li>✅ Click chuyển về Telegram đại lý</li>
+        <li>✅ Chọn danh mục sản phẩm (Đồ ăn, v.v.)</li>
+        <li>✅ Nhập chất lượng & mô tả</li>
+        <li>✅ Điền thông tin liên hệ</li>
+        <li>✅ Tự động cập nhật lên taphoakohkong.live</li>
+      </ul>
+      <p style="margin-top: 20px; font-size: 1.2rem; font-weight: bold;">
+        🎉 Chúc bạn kinh doanh thành công!
+      </p>
+    </div>
+  </div>
+</body>
+</html>

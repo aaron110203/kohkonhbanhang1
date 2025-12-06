@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo Hoàn Chỉnh - Đăng Ký → Đăng Nhập → Upload Ảnh</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 2rem;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 40px;
+      font-size: 1.1rem;
+    }
+    .step {
+      background: #f8f9fa;
+      border-left: 5px solid #667eea;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      position: relative;
+    }
+    .step-number {
+      position: absolute;
+      top: -15px;
+      left: 20px;
+      background: #667eea;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    .step h2 {
+      color: #667eea;
+      margin-bottom: 15px;
+      margin-top: 10px;
+    }
+    .step p {
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 10px;
+    }
+    .code {
+      background: #2d3748;
+      color: #68d391;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
+      display: inline-block;
+      margin: 5px 0;
+    }
+    .btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin: 10px 5px;
+      transition: transform 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn:hover { transform: scale(1.05); }
+    .success {
+      background: #d4edda;
+      border-left: 5px solid #28a745;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 8px;
+      color: #155724;
+    }
+    .warning {
+      background: #fff3cd;
+      border-left: 5px solid #ffc107;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 8px;
+      color: #856404;
+    }
+    .screenshot {
+      max-width: 100%;
+      border: 3px solid #667eea;
+      border-radius: 10px;
+      margin: 15px 0;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    ol {
+      margin-left: 20px;
+      line-height: 2;
+    }
+    ol li {
+      margin-bottom: 10px;
+    }
+    .highlight {
+      background: #fff3cd;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    .nav-buttons {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 2px solid #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📋 DEMO HOÀN CHỈNH</h1>
+    <p class="subtitle">Từ Đăng Ký → Đăng Nhập → Upload Ảnh Sản Phẩm</p>
+
+    <div class="success">
+      <h3>✅ Code Đã Được Sửa!</h3>
+      <p>File đã chỉnh sửa:</p>
+      <ul style="margin-left: 20px; margin-top: 10px;">
+        <li><strong>dashboard.html</strong> - Đã xóa script lỗi <code>product-images.js</code></li>
+        <li><strong>dashboard.js</strong> - Đã thêm <code>addEventListener</code> cho file input</li>
+        <li><strong>auth.js</strong> - Đã sửa <code>getElementById('login-username')</code></li>
+      </ul>
+    </div>
+
+    <!-- BƯỚC 1: ĐĂNG KÝ -->
+    <div class="step">
+      <div class="step-number">1</div>
+      <h2>🔐 ĐĂNG KÝ TÀI KHOẢN</h2>
+      <p><strong>Mở trang:</strong> <a href="http://127.0.0.1:5500/login.html" target="_blank">login.html</a></p>
+      
+      <ol>
+        <li>Click <span class="highlight">"Đăng ký ngay"</span></li>
+        <li>Điền thông tin:
+          <ul style="margin-top: 10px;">
+            <li>Họ Tên: <span class="code">Aaron Shop</span></li>
+            <li>Username: <span class="code">aaron2024</span></li>
+            <li>Password: <span class="code">123456</span></li>
+            <li>Xác nhận password: <span class="code">123456</span></li>
+            <li>Telegram: <span class="code">@ADSaaron99</span></li>
+            <li>Mã xác minh: <strong>Để trống (hoặc nhập 123456)</strong></li>
+          </ul>
+        </li>
+        <li>Click <span class="highlight">"Đăng Ký Làm Đại Lý"</span></li>
+        <li>Thấy thông báo: <strong>"Đăng ký thành công!"</strong></li>
+      </ol>
+    </div>
+
+    <!-- BƯỚC 2: ĐĂNG NHẬP -->
+    <div class="step">
+      <div class="step-number">2</div>
+      <h2>🔓 ĐĂNG NHẬP VÀO DASHBOARD</h2>
+      <p><strong>Sau khi đăng ký xong, form tự động chuyển về đăng nhập</strong></p>
+      
+      <ol>
+        <li>Username đã được điền sẵn: <span class="code">aaron2024</span></li>
+        <li>Nhập Password: <span class="code">123456</span></li>
+        <li>Click <span class="highlight">"Đăng Nhập"</span></li>
+        <li><strong>Tự động chuyển đến Dashboard!</strong></li>
+      </ol>
+
+      <div class="warning">
+        <strong>⚠️ Nếu không tự động chuyển:</strong><br>
+        Vào thẳng <a href="http://127.0.0.1:5500/dashboard.html" target="_blank">dashboard.html</a>
+      </div>
+    </div>
+
+    <!-- BƯỚC 3: THÊM SẢN PHẨM -->
+    <div class="step">
+      <div class="step-number">3</div>
+      <h2>📸 UPLOAD ẢNH SẢN PHẨM</h2>
+      <p><strong>Trong Dashboard:</strong></p>
+      
+      <ol>
+        <li>Click menu bên trái: <span class="highlight">"➕ Thêm Sản Phẩm"</span></li>
+        <li>Form thêm sản phẩm xuất hiện</li>
+        <li>Điền thông tin:
+          <ul style="margin-top: 10px;">
+            <li><strong>Tên Sản Phẩm:</strong> <span class="code">Gạo Thơm ST25</span></li>
+            <li><strong>Giá (₭):</strong> <span class="code">45000</span></li>
+            <li><strong>Danh Mục:</strong> Chọn <span class="code">🍚 Đồ Ăn</span></li>
+            <li><strong>Telegram:</strong> Để trống (dùng @ADSaaron99 của bạn)</li>
+            <li><strong>Upload Ảnh:</strong> 👇 <strong>ĐÂY LÀ BƯỚC QUAN TRỌNG!</strong></li>
+          </ul>
+        </li>
+      </ol>
+
+      <div class="success" style="margin-top: 20px;">
+        <h4>🎯 CÁCH UPLOAD ẢNH (ĐÃ SỬA XỌG!):</h4>
+        <ol style="margin-top: 10px;">
+          <li>Click nút <strong>"Choose File"</strong></li>
+          <li>Chọn 1 ảnh từ máy tính (JPG, PNG, GIF - tối đa 5MB)</li>
+          <li><strong>Ngay lập tức bạn sẽ thấy:</strong>
+            <ul style="margin-top: 10px;">
+              <li>✅ Ảnh preview hiện ra bên dưới</li>
+              <li>✅ Thông tin file (tên, kích thước)</li>
+              <li>✅ Dòng chữ "Đã chọn thành công!"</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+
+      <ol start="4" style="margin-top: 20px;">
+        <li>Điền tiếp:
+          <ul>
+            <li><strong>Mô Tả:</strong> <span class="code">Gạo thơm cao cấp, chất lượng A1</span></li>
+            <li><strong>Icon:</strong> <span class="code">🍚</span></li>
+          </ul>
+        </li>
+        <li>Click <span class="highlight">"💾 Thêm Sản Phẩm"</span></li>
+        <li>Thấy thông báo: <strong>"✅ Thêm sản phẩm thành công!"</strong></li>
+      </ol>
+    </div>
+
+    <!-- BƯỚC 4: XEM KẾT QUẢ -->
+    <div class="step">
+      <div class="step-number">4</div>
+      <h2>🎉 XEM SẢN PHẨM TRÊN WEBSITE</h2>
+      
+      <ol>
+        <li>Trong Dashboard, click <span class="highlight">"📦 Sản Phẩm Của Tôi"</span></li>
+        <li>Thấy sản phẩm vừa thêm với ảnh thật!</li>
+        <li>Click <span class="highlight">"🌐 Xem Website"</span> hoặc mở <a href="http://127.0.0.1:5500/products.html" target="_blank">products.html</a></li>
+        <li>Sản phẩm hiện trên trang chủ với:
+          <ul>
+            <li>✅ Ảnh sản phẩm thật (đã upload)</li>
+            <li>✅ Tên, giá, mô tả</li>
+            <li>✅ Tên đại lý: <strong>Aaron Shop</strong></li>
+            <li>✅ Telegram: <strong>@ADSaaron99</strong> (link click được)</li>
+            <li>✅ Nút "💬 Chat Telegram" (màu xanh)</li>
+            <li>✅ Nút "🛒 Đặt Hàng"</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+
+    <!-- GIẢI THÍCH KỸ THUẬT -->
+    <div class="step" style="background: #e8f4f8;">
+      <div class="step-number" style="background: #0088cc;">?</div>
+      <h2>🔧 Đã Sửa Gì?</h2>
+      
+      <h3 style="color: #333; margin-top: 20px;">1. File <code>dashboard.html</code>:</h3>
+      <pre style="background: #2d3748; color: #68d391; padding: 15px; border-radius: 8px; overflow-x: auto;">
+&lt;!-- ĐÃ XÓA dòng này (gây lỗi): --&gt;
+&lt;script src="product-images.js"&gt;&lt;/script&gt;
+
+&lt;!-- ĐÃ SỬA input file: --&gt;
+&lt;input type="file" id="product-image" accept="image/*" required&gt;
+&lt;small&gt;Chọn ảnh JPG, PNG hoặc GIF (tối đa 5MB)&lt;/small&gt;
+&lt;div id="image-preview"&gt;...&lt;/div&gt;
+</pre>
+
+      <h3 style="color: #333; margin-top: 20px;">2. File <code>dashboard.js</code>:</h3>
+      <pre style="background: #2d3748; color: #68d391; padding: 15px; border-radius: 8px; overflow-x: auto;">
+// ĐÃ THÊM event listener khi trang load:
+document.addEventListener('DOMContentLoaded', function() {
+  const fileInput = document.getElementById('product-image');
+  fileInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    
+    // Kiểm tra kích thước (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('⚠️ Ảnh quá lớn!');
+      return;
+    }
+    
+    // Đọc và hiển thị preview
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      document.getElementById('preview-img').src = event.target.result;
+      document.getElementById('image-preview').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  });
+});
+</pre>
+
+      <h3 style="color: #333; margin-top: 20px;">3. File <code>auth.js</code>:</h3>
+      <pre style="background: #2d3748; color: #68d391; padding: 15px; border-radius: 8px; overflow-x: auto;">
+// ĐÃ SỬA từ:
+document.getElementById('username').value = username;
+
+// THÀNH:
+document.getElementById('login-username').value = username;
+</pre>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="nav-buttons">
+      <h3 style="margin-bottom: 20px;">🚀 BẮT ĐẦU NGAY BÂY GIỜ!</h3>
+      <a href="http://127.0.0.1:5500/login.html" target="_blank" class="btn">
+        1️⃣ Đăng Ký / Đăng Nhập
+      </a>
+      <a href="http://127.0.0.1:5500/dashboard.html" target="_blank" class="btn">
+        2️⃣ Vào Dashboard
+      </a>
+      <a href="http://127.0.0.1:5500/products.html" target="_blank" class="btn">
+        3️⃣ Xem Sản Phẩm
+      </a>
+      <a href="http://127.0.0.1:5500/check-storage.html" target="_blank" class="btn">
+        🔍 Debug Tool
+      </a>
+    </div>
+
+    <div class="success" style="margin-top: 40px; text-align: center;">
+      <h3>✅ TẤT CẢ CODE ĐÃ HOẠT ĐỘNG!</h3>
+      <p style="margin-top: 15px; font-size: 1.1rem;">
+        Hãy làm theo 4 bước trên.<br>
+        Nếu vẫn không thấy ảnh preview → Bấm <strong>F12</strong> và gửi lỗi Console cho tôi!
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Auto scroll to step on load
+    window.addEventListener('load', function() {
+      const hash = window.location.hash;
+      if (hash) {
+        const element = document.querySelector(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    });
+  </script>
+</body>
+</html>
