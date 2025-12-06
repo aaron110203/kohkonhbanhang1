@@ -33,7 +33,7 @@ Password: Admin@KohKong2025
 ## 🎯 ĐẶC ĐIỂM
 
 ### ✅ BẢO MẬT CỰC CAO:
-- **Tên file ngẫu nhiên**: `kk-admin-secure-x7g9p2m5.html` (khó đoán)
+- **Tên file ngẫu nhiên**: `secure-admin-panel.html` (khó đoán)
 - **Không có trên menu**: Không ai biết link này tồn tại
 - **Không có ở footer**: Hoàn toàn ẩn khỏi công chúng
 - **2 lớp bảo vệ**: Phải biết link + biết password
@@ -285,7 +285,7 @@ Người khác
 
 Nếu quên link hoặc mất bookmark:
 1. Vào thư mục code
-2. Tìm file: `kk-admin-secure-x7g9p2m5.html`
+2. Tìm file: `secure-admin-panel.html`
 3. Mở file
 4. Bookmark lại
 
