@@ -5,6 +5,12 @@ let currentUser = null;
 if (currentUserStr) {
   currentUser = JSON.parse(currentUserStr);
   document.getElementById('userName').textContent = `Xin chào, ${currentUser.fullname}`;
+  
+  // Display agent's telegram
+  const telegramDisplay = document.getElementById('agentTelegramDisplay');
+  if (telegramDisplay) {
+    telegramDisplay.textContent = currentUser.telegram || 'Chưa cập nhật';
+  }
 } else {
   window.location.href = 'login.html';
 }
@@ -49,6 +55,7 @@ function loadMyProducts() {
 
   grid.innerHTML = agent.products.map(product => `
     <div class="product-card">
+      ${product.imageUrl ? `<img src="${product.imageUrl}" alt="${product.name}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 0.75rem;">` : ''}
       <div class="product-header">
         <span class="product-icon">${product.icon || '📦'}</span>
         <div class="product-actions">
@@ -63,7 +70,7 @@ function loadMyProducts() {
         ${product.description ? `<p class="product-description">${product.description}</p>` : ''}
         <div class="product-meta">
           <span>Tạo: ${formatDate(product.createdAt)}</span>
-          <span>ID: ${product.id.slice(0, 8)}</span>
+          <span>Telegram: ${product.telegram || 'N/A'}</span>
         </div>
       </div>
     </div>
@@ -80,9 +87,15 @@ function addProduct(e) {
   const icon = document.getElementById('product-icon').value.trim() || '📦';
   const description = document.getElementById('product-description').value.trim();
   const telegram = document.getElementById('product-telegram').value.trim() || currentUser.telegram || '';
+  const imageUrl = document.getElementById('selected-image-url').value;
 
   if (!name || !price || !category) {
     alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+    return;
+  }
+
+  if (!imageUrl) {
+    alert('Vui lòng chọn hình ảnh sản phẩm!');
     return;
   }
 
@@ -94,6 +107,7 @@ function addProduct(e) {
     icon,
     description,
     telegram,
+    imageUrl,
     agentId: currentUser.id,
     agentName: currentUser.fullname,
     createdAt: new Date().toISOString(),
@@ -276,3 +290,44 @@ function getCategoryName(category) {
 
 // Load products on page load
 loadMyProducts();
+
+// Load category images when category changes
+function loadCategoryImages(category) {
+  const gallerySection = document.getElementById('imageGallerySection');
+  const gallery = document.getElementById('imageGallery');
+  
+  if (!category) {
+    gallerySection.style.display = 'none';
+    return;
+  }
+
+  const images = getImagesByCategory(category);
+  
+  if (images.length === 0) {
+    gallerySection.style.display = 'none';
+    return;
+  }
+
+  gallerySection.style.display = 'block';
+  
+  gallery.innerHTML = images.map(img => `
+    <div class="image-item" data-url="${img.url}" onclick="selectImage('${img.url}', this)">
+      <img src="${img.url}" alt="${img.name}" loading="lazy">
+      <div class="image-item-name">${img.name}</div>
+      <div class="checkmark">✓</div>
+    </div>
+  `).join('');
+}
+
+// Select image
+function selectImage(url, element) {
+  // Remove previous selection
+  const allItems = document.querySelectorAll('.image-item');
+  allItems.forEach(item => item.classList.remove('selected'));
+  
+  // Add selection to clicked item
+  element.classList.add('selected');
+  
+  // Set hidden input value
+  document.getElementById('selected-image-url').value = url;
+}

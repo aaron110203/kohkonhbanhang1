@@ -11,17 +11,35 @@ function switchToLogin(e) {
   document.getElementById('loginForm').classList.remove('hidden');
 }
 
+// Request verification code from Telegram Bot
+function requestVerificationCode() {
+  const telegram = document.getElementById('reg-telegram').value.trim();
+  
+  if (!telegram || !telegram.startsWith('@')) {
+    alert('❌ Vui lòng nhập Telegram username hợp lệ (bắt đầu bằng @)!');
+    return;
+  }
+
+  // In production, this would call your backend API to send verification code via Telegram Bot
+  // For now, we'll generate a random 6-digit code for demo
+  const demoCode = Math.floor(100000 + Math.random() * 900000);
+  
+  alert(`📱 Demo Mode: Mã xác minh của bạn là: ${demoCode}\n\n(Trong production, mã này sẽ được gửi qua Telegram Bot @KohKongShopBot)`);
+  
+  // Store demo code temporarily
+  sessionStorage.setItem('demoVerificationCode', demoCode.toString());
+}
+
 // Handle Registration
 function handleRegister(e) {
   e.preventDefault();
   
   const fullname = document.getElementById('reg-fullname').value.trim();
-  const phone = document.getElementById('reg-phone').value.trim();
-  const email = document.getElementById('reg-email').value.trim();
   const username = document.getElementById('reg-username').value.trim();
   const password = document.getElementById('reg-password').value;
   const confirmPassword = document.getElementById('reg-confirm-password').value;
   const telegram = document.getElementById('reg-telegram').value.trim();
+  const verification = document.getElementById('reg-verification').value.trim();
   
   // Validate
   if (password !== confirmPassword) {
@@ -38,18 +56,36 @@ function handleRegister(e) {
     alert('❌ Tên đăng nhập phải có ít nhất 4 ký tự!');
     return;
   }
+
+  if (!telegram || !telegram.startsWith('@')) {
+    alert('❌ Telegram username phải bắt đầu bằng @!');
+    return;
+  }
+
+  // Optional verification check (demo mode)
+  const demoCode = sessionStorage.getItem('demoVerificationCode');
+  let isVerified = false;
+  
+  if (verification) {
+    if (demoCode && verification === demoCode) {
+      isVerified = true;
+    } else if (verification.length === 6) {
+      // Accept any 6-digit code for demo
+      isVerified = true;
+    }
+  }
   
   // Get existing users
   let users = JSON.parse(localStorage.getItem('agents')) || [];
   
-  // Check if username or email already exists
+  // Check if username already exists
   if (users.find(u => u.username === username)) {
     alert('❌ Tên đăng nhập đã tồn tại!');
     return;
   }
   
-  if (users.find(u => u.email === email)) {
-    alert('❌ Email đã được sử dụng!');
+  if (users.find(u => u.telegram === telegram)) {
+    alert('❌ Telegram username đã được đăng ký!');
     return;
   }
   
@@ -57,11 +93,10 @@ function handleRegister(e) {
   const newAgent = {
     id: Date.now(),
     fullname,
-    phone,
-    email,
     username,
-    password, // In production, this should be hashed
+    password,
     telegram,
+    verified: isVerified,
     role: 'agent',
     products: [],
     registeredAt: new Date().toISOString(),
@@ -71,26 +106,25 @@ function handleRegister(e) {
   users.push(newAgent);
   localStorage.setItem('agents', JSON.stringify(users));
   
-  alert('✅ Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.');
+  // Clear demo code
+  sessionStorage.removeItem('demoVerificationCode');
   
-  // Switch to login form and pre-fill username
+  alert('✅ Đăng ký thành công! Vui lòng đăng nhập.');
+  
+  // Switch to login form
   switchToLogin(e);
-  document.getElementById('login-username').value = username;
-  document.getElementById('login-password').focus();
+  
+  // Pre-fill username
+  document.getElementById('username').value = username;
 }
 
 // Handle Login
 function handleLogin(e) {
   e.preventDefault();
   
-  const username = document.getElementById('login-username').value.trim();
-  const password = document.getElementById('login-password').value;
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
   const rememberMe = document.getElementById('remember-me').checked;
-  
-  if (!username || !password) {
-    alert('❌ Vui lòng nhập đầy đủ thông tin!');
-    return;
-  }
   
   // Get users
   const users = JSON.parse(localStorage.getItem('agents')) || [];
@@ -104,27 +138,25 @@ function handleLogin(e) {
   }
   
   if (!user.isActive) {
-    alert('❌ Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.');
+    alert('❌ Tài khoản của bạn đã bị vô hiệu hóa!');
     return;
   }
   
-  // Create session
-  const session = {
+  // Save user session
+  const userSession = {
     id: user.id,
-    username: user.username,
     fullname: user.fullname,
-    email: user.email,
-    phone: user.phone,
+    username: user.username,
     telegram: user.telegram,
+    verified: user.verified,
     role: user.role,
     loginAt: new Date().toISOString()
   };
   
-  // Save session
   if (rememberMe) {
-    localStorage.setItem('currentUser', JSON.stringify(session));
+    localStorage.setItem('currentUser', JSON.stringify(userSession));
   } else {
-    sessionStorage.setItem('currentUser', JSON.stringify(session));
+    sessionStorage.setItem('currentUser', JSON.stringify(userSession));
   }
   
   alert('✅ Đăng nhập thành công!');
@@ -134,11 +166,10 @@ function handleLogin(e) {
 }
 
 // Check if already logged in
-window.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
   const currentUser = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
   
   if (currentUser) {
-    // Already logged in, redirect to dashboard
     window.location.href = 'dashboard.html';
   }
 });

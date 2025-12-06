@@ -58,16 +58,6 @@
           </div>
 
           <div class="form-group">
-            <label>Số Điện Thoại</label>
-            <input type="tel" id="reg-phone" placeholder="Nhập số điện thoại" required pattern="[0-9]{9,11}">
-          </div>
-
-          <div class="form-group">
-            <label>Email</label>
-            <input type="email" id="reg-email" placeholder="Nhập email" required>
-          </div>
-
-          <div class="form-group">
             <label>Tên Đăng Nhập</label>
             <input type="text" id="reg-username" placeholder="Chọn tên đăng nhập" required minlength="4">
           </div>
@@ -83,8 +73,23 @@
           </div>
 
           <div class="form-group">
-            <label>Telegram Username (không bắt buộc)</label>
-            <input type="text" id="reg-telegram" placeholder="@username">
+            <label>Telegram Username *</label>
+            <input type="text" id="reg-telegram" placeholder="@username" required pattern="@.*">
+            <small style="color: #666; font-size: 0.85rem;">Nhập username Telegram của bạn (bắt đầu bằng @)</small>
+          </div>
+
+          <div class="telegram-notice" style="margin: 1rem 0; padding: 1rem; background: #fff3cd; border-radius: 8px; font-size: 0.9rem;">
+            <strong>📱 Bước xác minh Telegram:</strong><br>
+            1. Mở Telegram và tìm bot: <strong id="botNameDisplay">@KohKongShopBot</strong><br>
+            2. Gửi tin nhắn: <strong>/start</strong><br>
+            3. Bot sẽ gửi mã xác minh 6 số<br>
+            4. Nhập mã vào ô bên dưới
+          </div>
+
+          <div class="form-group">
+            <label>Mã Xác Minh Telegram (6 số)</label>
+            <input type="text" id="reg-verification" placeholder="Nhập mã từ bot" maxlength="6" pattern="[0-9]{6}">
+            <button type="button" class="btn-verify" onclick="requestVerificationCode()" style="margin-top: 0.5rem; background: #0088cc; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">Gửi Yêu Cầu Mã</button>
           </div>
 
           <button type="submit" class="btn-submit">Đăng Ký Làm Đại Lý</button>

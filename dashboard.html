@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quản Lý Sản Phẩm - KohKong</title>
   <link rel="stylesheet" href="dashboard.css">
+  <script src="product-images.js"></script>
 </head>
 <body>
   <script>
@@ -83,7 +84,7 @@
           <div class="form-row">
             <div class="form-group">
               <label>Danh Mục *</label>
-              <select id="product-category" required>
+              <select id="product-category" required onchange="loadCategoryImages(this.value)">
                 <option value="">-- Chọn danh mục --</option>
                 <option value="food">🍚 Đồ Ăn</option>
                 <option value="fashion">👕 Thời Trang</option>
@@ -104,6 +105,25 @@
             </div>
           </div>
 
+          <!-- Image Gallery Section -->
+          <div class="form-group" id="imageGallerySection" style="display: none;">
+            <label>Chọn Hình Ảnh Sản Phẩm *</label>
+            <div class="image-gallery" id="imageGallery">
+              <!-- Images will be loaded here -->
+            </div>
+            <input type="hidden" id="selected-image-url">
+          </div>
+
+          <div class="form-group">
+            <label>Tên Sản Phẩm *</label>
+            <input type="text" id="product-name" placeholder="Ví dụ: Gạo Thơm" required>
+          </div>
+
+          <div class="form-group">
+            <label>Giá (₭) *</label>
+            <input type="number" id="product-price" placeholder="Ví dụ: 25000" required min="0">
+          </div>
+
           <div class="form-group">
             <label>Mô Tả Sản Phẩm</label>
             <textarea id="product-description" rows="3" placeholder="Mô tả chi tiết về sản phẩm..."></textarea>
@@ -111,8 +131,8 @@
 
           <div class="form-group">
             <label>Link Telegram (không bắt buộc)</label>
-            <input type="url" id="product-telegram" placeholder="https://t.me/username">
-            <small>Để trống sẽ dùng Telegram của bạn</small>
+            <input type="text" id="product-telegram" placeholder="@username hoặc https://t.me/username">
+            <small>Để trống sẽ dùng Telegram của bạn: <strong id="agentTelegramDisplay"></strong></small>
           </div>
 
           <div class="form-actions">

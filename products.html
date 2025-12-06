@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sản Phẩm - KohKong Bán Hàng</title>
+  <link rel="stylesheet" href="products.css">
+  <script src="product-images.js"></script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="logo">
+        <span class="logo-icon">🏪</span>
+        <h1>KohKong Shop</h1>
+      </div>
+      <nav>
+        <a href="index.html">Trang Chủ</a>
+        <a href="products.html" class="active">Sản Phẩm</a>
+        <a href="login.html">Đăng Nhập</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-container">
+    <div class="container">
+      <h2 class="page-title">Danh Sách Sản Phẩm</h2>
+
+      <!-- Filter Section -->
+      <div class="filter-section">
+        <div class="filter-group">
+          <label>Danh Mục:</label>
+          <select id="categoryFilter" onchange="filterProducts()">
+            <option value="">Tất cả</option>
+            <option value="food">🍚 Đồ Ăn</option>
+            <option value="drinks">🥤 Đồ Uống</option>
+            <option value="fruits">🍎 Trái Cây</option>
+            <option value="cosmetics">💄 Mỹ Phẩm</option>
+            <option value="personal">🧴 Chăm Sóc</option>
+            <option value="fashion">👕 Thời Trang</option>
+            <option value="electronics">📱 Điện Tử</option>
+            <option value="medicine">💊 Thuốc</option>
+            <option value="grocery">🛒 Tạp Hóa</option>
+            <option value="home">🏠 Gia Dụng</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>Tìm kiếm:</label>
+          <input type="text" id="searchInput" placeholder="Tìm sản phẩm..." oninput="filterProducts()">
+        </div>
+
+        <div class="product-count">
+          Có <strong id="productCount">0</strong> sản phẩm
+        </div>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="products-grid" id="productsGrid">
+        <p class="empty-state">Đang tải sản phẩm...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Order Modal -->
+  <div class="modal" id="orderModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Đặt Hàng</h3>
+        <button class="close-btn" onclick="closeOrderModal()">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="product-preview" id="productPreview">
+          <!-- Product details will be inserted here -->
+        </div>
+
+        <form class="order-form" onsubmit="submitOrder(event)">
+          <div class="form-group">
+            <label>Họ Tên *</label>
+            <input type="text" id="customer-name" placeholder="Nhập họ tên" required>
+          </div>
+
+          <div class="form-group">
+            <label>Số Điện Thoại *</label>
+            <input type="tel" id="customer-phone" placeholder="Nhập số điện thoại" required pattern="[0-9]{9,11}">
+          </div>
+
+          <div class="form-group">
+            <label>Địa Chỉ Giao Hàng *</label>
+            <textarea id="customer-address" rows="2" placeholder="Nhập địa chỉ giao hàng" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Số Lượng *</label>
+            <input type="number" id="order-quantity" placeholder="Số lượng" min="1" value="1" required oninput="updateTotal()">
+          </div>
+
+          <div class="form-group">
+            <label>Ghi Chú</label>
+            <textarea id="order-note" rows="2" placeholder="Ghi chú thêm (không bắt buộc)"></textarea>
+          </div>
+
+          <div class="order-total">
+            Tổng tiền: <strong id="orderTotal">0 ₭</strong>
+          </div>
+
+          <button type="submit" class="btn-submit">Xác Nhận Đặt Hàng</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="products.js"></script>
+</body>
+</html>
