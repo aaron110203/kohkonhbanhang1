@@ -23,6 +23,11 @@ const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
 app.use(cors());
 app.use(bodyParser.json());
 
+// ==================== GLOBAL DATABASE (In-Memory) ====================
+// Thay localStorage bằng database chung trên server
+let globalProducts = []; // Tất cả sản phẩm từ mọi đại lý
+let globalAgents = [];   // Tất cả đại lý đã đăng ký
+
 // ==================== IMAGE UPLOAD SETUP ====================
 
 // Tạo thư mục uploads nếu chưa có
@@ -783,6 +788,178 @@ app.post('/api/telegram/notify', async (req, res) => {
   } catch (error) {
     console.error('Error sending Telegram notification:', error);
     res.status(500).json({ error: 'Failed to send notification' });
+  }
+});
+
+// ==================== GLOBAL PRODUCTS API ====================
+// GET: Lấy tất cả sản phẩm (cho mọi người dùng)
+app.get('/api/products', (req, res) => {
+  res.json({
+    success: true,
+    products: globalProducts,
+    total: globalProducts.length
+  });
+});
+
+// POST: Thêm sản phẩm mới (từ dashboard)
+app.post('/api/products', (req, res) => {
+  try {
+    const product = req.body;
+    
+    if (!product.name || !product.price) {
+      return res.status(400).json({ error: 'Name and price are required' });
+    }
+
+    // Thêm vào database
+    globalProducts.push(product);
+    
+    console.log(`✅ New product added: ${product.name} by ${product.agentName}`);
+    
+    res.json({
+      success: true,
+      message: 'Product added successfully',
+      product: product,
+      total: globalProducts.length
+    });
+  } catch (error) {
+    console.error('Error adding product:', error);
+    res.status(500).json({ error: 'Failed to add product' });
+  }
+});
+
+// DELETE: Xóa sản phẩm
+app.delete('/api/products/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const index = globalProducts.findIndex(p => p.id === id);
+    
+    if (index === -1) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+    
+    const deleted = globalProducts.splice(index, 1)[0];
+    
+    res.json({
+      success: true,
+      message: 'Product deleted successfully',
+      product: deleted
+    });
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    res.status(500).json({ error: 'Failed to delete product' });
+  }
+});
+
+// PUT: Cập nhật sản phẩm
+app.put('/api/products/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+    const index = globalProducts.findIndex(p => p.id === id);
+    
+    if (index === -1) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+    
+    globalProducts[index] = { ...globalProducts[index], ...updates };
+    
+    res.json({
+      success: true,
+      message: 'Product updated successfully',
+      product: globalProducts[index]
+    });
+  } catch (error) {
+    console.error('Error updating product:', error);
+    res.status(500).json({ error: 'Failed to update product' });
+  }
+});
+
+// ==================== GLOBAL AGENTS API ====================
+// GET: Lấy tất cả đại lý
+app.get('/api/agents', (req, res) => {
+  res.json({
+    success: true,
+    agents: globalAgents.map(a => ({
+      id: a.id,
+      username: a.username,
+      fullname: a.fullname,
+      telegram: a.telegram,
+      productsCount: a.products?.length || 0
+    })),
+    total: globalAgents.length
+  });
+});
+
+// POST: Đăng ký đại lý mới
+app.post('/api/agents/register', (req, res) => {
+  try {
+    const { username, password, fullname, telegram } = req.body;
+    
+    if (!username || !password || !fullname) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    // Kiểm tra username đã tồn tại
+    const exists = globalAgents.some(a => a.username === username);
+    if (exists) {
+      return res.status(400).json({ error: 'Username already exists' });
+    }
+
+    const newAgent = {
+      id: Date.now().toString(),
+      username,
+      password, // ⚠️ Trong production nên hash password
+      fullname,
+      telegram,
+      products: [],
+      createdAt: new Date().toISOString()
+    };
+
+    globalAgents.push(newAgent);
+
+    res.json({
+      success: true,
+      message: 'Agent registered successfully',
+      agent: {
+        id: newAgent.id,
+        username: newAgent.username,
+        fullname: newAgent.fullname,
+        telegram: newAgent.telegram
+      }
+    });
+  } catch (error) {
+    console.error('Error registering agent:', error);
+    res.status(500).json({ error: 'Failed to register agent' });
+  }
+});
+
+// POST: Đăng nhập
+app.post('/api/agents/login', (req, res) => {
+  try {
+    const { username, password } = req.body;
+    
+    const agent = globalAgents.find(a => 
+      a.username === username && a.password === password
+    );
+
+    if (!agent) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    res.json({
+      success: true,
+      message: 'Login successful',
+      agent: {
+        id: agent.id,
+        username: agent.username,
+        fullname: agent.fullname,
+        telegram: agent.telegram,
+        products: agent.products
+      }
+    });
+  } catch (error) {
+    console.error('Error logging in:', error);
+    res.status(500).json({ error: 'Failed to login' });
   }
 });
 

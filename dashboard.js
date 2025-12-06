@@ -244,39 +244,49 @@ async function addProduct(e) {
       updatedAt: new Date().toISOString()
     };
 
-    // Get agents from localStorage
+    // 🌐 LƯU VÀO SERVER (GLOBAL DATABASE) - Đồng bộ toàn cầu
+    submitBtn.textContent = '🌐 Đang đồng bộ lên server...';
+    
+    const saveResponse = await fetch('https://kohkonhbanhang1.onrender.com/api/products', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(product)
+    });
+
+    if (!saveResponse.ok) {
+      throw new Error('Không thể lưu sản phẩm lên server!');
+    }
+
+    const saveResult = await saveResponse.json();
+    console.log('✅ Đã lưu lên server:', saveResult);
+
+    // Backup vào localStorage (fallback)
     const agents = JSON.parse(localStorage.getItem('agents')) || [];
     const agentIndex = agents.findIndex(a => a.username === currentUser.username);
 
-    if (agentIndex === -1) {
-      alert('❌ Không tìm thấy tài khoản!');
-      return;
+    if (agentIndex !== -1) {
+      if (!agents[agentIndex].products) {
+        agents[agentIndex].products = [];
+      }
+      agents[agentIndex].products.push(product);
+      localStorage.setItem('agents', JSON.stringify(agents));
+
+      currentUser.products = agents[agentIndex].products;
+      if (localStorage.getItem('currentUser')) {
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+      } else {
+        sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+      }
     }
 
-    // Add product to agent's products
-    if (!agents[agentIndex].products) {
-      agents[agentIndex].products = [];
-    }
-    agents[agentIndex].products.push(product);
-
-    // Save back to localStorage
-    localStorage.setItem('agents', JSON.stringify(agents));
-
-    // Update current user
-    currentUser.products = agents[agentIndex].products;
-    if (localStorage.getItem('currentUser')) {
-      localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    } else {
-      sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
-    }
-
-    // ✅ LƯU VÀO PRODUCTS CHUNG (để web chính đọc được)
+    // Lưu vào products chung (backup)
     const allProducts = JSON.parse(localStorage.getItem('products')) || [];
     allProducts.push(product);
     localStorage.setItem('products', JSON.stringify(allProducts));
-    console.log('✅ Đã lưu vào products chung:', allProducts.length, 'sản phẩm');
 
-    // 📱 GỬI THÔNG BÁO TELEGRAM (không tự động đăng)
+    // 📱 GỬI THÔNG BÁO TELEGRAM
     submitBtn.textContent = '📱 Đang gửi thông báo...';
     await sendTelegramNotification(product);
 
@@ -284,7 +294,8 @@ async function addProduct(e) {
           (uploadMethod === 'server' ? 
             '📤 Ảnh đã upload lên server: ' + imageUrl : 
             '💾 Ảnh đã lưu Base64 vào LocalStorage') + 
-          '\n\n📱 Sản phẩm đã hiển thị trên website taphoakohkong.live' +
+          '\n\n🌐 Sản phẩm đã đồng bộ toàn cầu!' +
+          '\n📱 Mọi người trên thế giới đều có thể xem!' +
           '\n📢 Đã gửi thông báo đến Telegram Bot!');
 
     // Reset form
@@ -295,7 +306,7 @@ async function addProduct(e) {
     showSection('products');
   } catch (error) {
     console.error('Error adding product:', error);
-    alert('❌ Có lỗi xảy ra khi thêm sản phẩm!');
+    alert('❌ Có lỗi xảy ra khi thêm sản phẩm: ' + error.message);
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = originalText;

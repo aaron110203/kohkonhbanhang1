@@ -1,0 +1,8 @@
+# Cloudflare Pages Redirects - Remove .html extension
+/login         /login.html         200
+/dashboard     /dashboard.html     200
+/products      /products.html      200
+/               /index.html         200
+
+# API proxy to Render.com server
+/api/*         https://kohkonhbanhang1.onrender.com/api/:splat  200
