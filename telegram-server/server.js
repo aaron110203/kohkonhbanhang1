@@ -57,14 +57,19 @@ bot.onText(/\/start/, (msg) => {
     `✅ CHÀO MỪNG ĐẾN VỚI KOHKONG SHOP BOT!\n\n` +
     `👤 Username: ${username}\n` +
     `🆔 Chat ID: ${chatId}\n\n` +
-    `📋 HƯỚNG DẪN ĐĂNG KÝ ĐẠI LÝ:\n\n` +
-    `1️⃣ Truy cập website để đăng ký\n` +
-    `2️⃣ Nhập username Telegram: ${username}\n` +
-    `3️⃣ Bấm "Gửi Yêu Cầu Mã" trên web\n` +
-    `4️⃣ Quay lại đây gửi lệnh /getcode để nhận mã\n` +
-    `5️⃣ Nhập mã vào website để hoàn tất\n\n` +
+    `🛒 BẠN LÀ KHÁCH HÀNG?\n` +
+    `• Truy cập website: https://taphoakohkong.live/products.html\n` +
+    `• Bấm nút "Kết Nối Bot Ngay"\n` +
+    `• Nhập username: ${username}\n` +
+    `• Khi đặt hàng, bạn sẽ nhận thông báo tại đây!\n\n` +
+    `👔 BẠN LÀ ĐẠI LÝ?\n` +
+    `1️⃣ Vào https://taphoakohkong.live/login.html\n` +
+    `2️⃣ Đăng ký với username: ${username}\n` +
+    `3️⃣ Bấm "Gửi Yêu Cầu Mã"\n` +
+    `4️⃣ Gửi /getcode để nhận mã xác minh\n` +
+    `5️⃣ Hoàn tất đăng ký\n\n` +
     `📱 LỆNH CỦA BOT:\n` +
-    `/getcode - Lấy mã xác minh\n` +
+    `/getcode - Lấy mã xác minh (cho đại lý)\n` +
     `/stat - Xem trạng thái tài khoản\n` +
     `/myinfo - Xem thông tin của bạn\n\n` +
     `🌐 Website: https://taphoakohkong.live`,
@@ -72,8 +77,8 @@ bot.onText(/\/start/, (msg) => {
       reply_markup: {
         inline_keyboard: [
           [
-            { text: '🌐 Mở Website', url: 'https://taphoakohkong.live' },
-            { text: '📱 Đăng Ký', url: 'https://taphoakohkong.live/login.html' }
+            { text: '🛒 Đặt Hàng', url: 'https://taphoakohkong.live/products.html' },
+            { text: '👔 Đăng Ký Đại Lý', url: 'https://taphoakohkong.live/login.html' }
           ]
         ]
       }

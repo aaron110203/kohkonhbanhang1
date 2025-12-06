@@ -3,9 +3,13 @@ let allProducts = [];
 let filteredProducts = [];
 let currentProduct = null;
 
+// Check if user connected to Telegram Bot
+let userTelegram = localStorage.getItem('userTelegram') || null;
+
 // Load products on page load
 document.addEventListener('DOMContentLoaded', () => {
   loadAllProducts();
+  checkTelegramConnection();
 });
 
 function loadAllProducts() {
@@ -132,10 +136,25 @@ async function submitOrder(e) {
   };
 
   // Send order notification to agent via Telegram
-  const success = await sendTelegramNotification(order);
+  const agentNotified = await sendTelegramNotification(order, currentProduct.agentTelegram);
+  
+  // Send order confirmation to customer if connected
+  if (userTelegram) {
+    await sendCustomerNotification(order, userTelegram);
+  }
 
-  if (success) {
-    alert(`✅ Đặt hàng thành công!\n\nĐại lý sẽ liên hệ với bạn qua Telegram trong thời gian sớm nhất.\n\nTelegram đại lý: ${currentProduct.agentTelegram}`);
+  if (agentNotified) {
+    let successMessage = `✅ ĐẶT HÀNG THÀNH CÔNG!\n\n`;
+    successMessage += `Đại lý sẽ liên hệ với bạn qua Telegram trong thời gian sớm nhất.\n\n`;
+    successMessage += `Telegram đại lý: ${currentProduct.agentTelegram}`;
+    
+    if (userTelegram) {
+      successMessage += `\n\n📱 Bạn sẽ nhận thông báo xác nhận tại Telegram: ${userTelegram}`;
+    } else {
+      successMessage += `\n\n💡 Kết nối Telegram Bot để nhận thông báo đơn hàng!`;
+    }
+    
+    alert(successMessage);
     
     // Reset form
     e.target.reset();
@@ -145,7 +164,50 @@ async function submitOrder(e) {
   }
 }
 
-async function sendTelegramNotification(order) {
+async function sendCustomerNotification(order, customerTelegram) {
+  const message = `
+✅ XÁC NHẬN ĐƠN HÀNG
+
+Cảm ơn bạn đã đặt hàng tại KohKong Shop!
+
+📦 Sản phẩm: ${order.product.name}
+💰 Giá: ${formatPrice(order.product.price)} ₭
+🔢 Số lượng: ${order.quantity}
+💵 Tổng tiền: ${formatPrice(order.total)} ₭
+
+👤 Tên: ${order.customer.name}
+📱 SĐT: ${order.customer.phone}
+📍 Địa chỉ: ${order.customer.address}
+${order.note ? `📝 Ghi chú: ${order.note}` : ''}
+
+🤝 Đại lý: ${order.product.agentName}
+📲 Telegram đại lý: ${order.product.agentTelegram}
+
+⏰ ${new Date(order.createdAt).toLocaleString('vi-VN')}
+
+📞 Đại lý sẽ liên hệ với bạn sớm nhất!
+`;
+
+  try {
+    const API_URL = 'http://localhost:3000';
+    
+    await fetch(`${API_URL}/api/telegram/notify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        telegram: customerTelegram,
+        message: message
+      })
+    });
+    
+    return true;
+  } catch (error) {
+    console.error('Error sending customer notification:', error);
+    return false;
+  }
+}
+
+async function sendTelegramNotification(order, agentTelegram) {
   // Send message to agent's Telegram via Bot API
   const message = `
 🛒 ĐƠN HÀNG MỚI!
@@ -171,7 +233,7 @@ ${order.note ? `📝 Ghi chú: ${order.note}` : ''}
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        telegram: order.product.agentTelegram,
+        telegram: agentTelegram,
         message: message
       })
     });
@@ -217,4 +279,95 @@ window.onclick = function(event) {
   if (event.target === modal) {
     closeOrderModal();
   }
-};
+}
+
+// ==================== TELEGRAM BOT CONNECTION ====================
+
+function checkTelegramConnection() {
+  const banner = document.getElementById('telegramBanner');
+  const userTelegram = localStorage.getItem('userTelegram');
+  
+  if (userTelegram) {
+    // User already connected
+    banner.classList.add('connected');
+    banner.innerHTML = `
+      <div class="banner-content">
+        <span class="banner-icon">✅</span>
+        <div class="banner-text">
+          <h3>🎉 Đã Kết Nối Telegram Bot!</h3>
+          <p>Bạn sẽ nhận thông báo đơn hàng tại Telegram: <strong>${userTelegram}</strong></p>
+        </div>
+        <button class="connect-bot-btn" onclick="disconnectTelegramBot()">
+          Ngắt Kết Nối
+        </button>
+      </div>
+    `;
+  }
+}
+
+function connectTelegramBot() {
+  const username = prompt(
+    '📱 KẾT NỐI TELEGRAM BOT\n\n' +
+    'Để nhận thông báo đơn hàng, vui lòng:\n\n' +
+    '1. Mở Telegram\n' +
+    '2. Tìm: @KohKongShopBot_bot\n' +
+    '3. Gửi: /start\n' +
+    '4. Nhập username Telegram của bạn bên dưới:\n\n' +
+    'Username (ví dụ: @yourname):'
+  );
+
+  if (!username) return;
+
+  if (!username.startsWith('@')) {
+    alert('❌ Username phải bắt đầu bằng @\n\nVí dụ: @yourname');
+    return;
+  }
+
+  // Save to localStorage
+  localStorage.setItem('userTelegram', username);
+  userTelegram = username;
+
+  // Update banner
+  checkTelegramConnection();
+
+  alert(
+    '✅ KẾT NỐI THÀNH CÔNG!\n\n' +
+    `Telegram: ${username}\n\n` +
+    '📱 Bây giờ bạn sẽ nhận thông báo đơn hàng tại Telegram!\n\n' +
+    '💡 Đảm bảo bạn đã gửi /start cho @KohKongShopBot_bot'
+  );
+}
+
+function disconnectTelegramBot() {
+  if (!confirm('Bạn có chắc muốn ngắt kết nối Telegram Bot?\n\nBạn sẽ không nhận được thông báo đơn hàng nữa.')) {
+    return;
+  }
+
+  localStorage.removeItem('userTelegram');
+  userTelegram = null;
+
+  // Reset banner
+  const banner = document.getElementById('telegramBanner');
+  banner.classList.remove('connected');
+  banner.innerHTML = `
+    <div class="banner-content">
+      <span class="banner-icon">🤖</span>
+      <div class="banner-text">
+        <h3>📱 Đặt Hàng Qua Telegram</h3>
+        <p>Khách hàng của bạn có thể đặt hàng trực tiếp qua Telegram Bot. Bạn sẽ nhận thông báo ngay lập tức và xử lý đơn hàng nhanh chóng!</p>
+        <div class="banner-features">
+          ✅ Nhận đơn hàng tức thì
+          ✅ Xác nhận đơn tự động
+          ✅ Chat trực tiếp với khách
+          ✅ Theo dõi trạng thái đơn
+        </div>
+      </div>
+      <button class="connect-bot-btn" onclick="connectTelegramBot()">
+        Kết Nối Bot Ngay
+      </button>
+    </div>
+  `;
+
+  alert('✅ Đã ngắt kết nối Telegram Bot!');
+}
+
