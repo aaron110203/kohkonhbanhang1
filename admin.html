@@ -207,5 +207,21 @@
   </div>
 
   <script src="admin.js"></script>
+  <script src="sample-products.js"></script>
+  <script>
+    // Add button to load sample products
+    window.addEventListener('DOMContentLoaded', () => {
+      const header = document.querySelector('.admin-header');
+      const loadSampleBtn = document.createElement('button');
+      loadSampleBtn.textContent = '📦 Thêm 15 Sản Phẩm Mẫu';
+      loadSampleBtn.style.cssText = 'background: #4CAF50; color: white; border: none; padding: 12px 24px; border-radius: 5px; cursor: pointer; margin-top: 10px; font-weight: bold; font-size: 1rem;';
+      loadSampleBtn.onclick = () => {
+        if (confirm('Bạn có chắc muốn thêm 15 sản phẩm mẫu vào website?')) {
+          loadSampleProducts();
+        }
+      };
+      header.appendChild(loadSampleBtn);
+    });
+  </script>
 </body>
 </html>

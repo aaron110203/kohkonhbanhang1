@@ -76,7 +76,7 @@ function renderProducts() {
       <div class="product-body">
         <span class="product-category-badge">${getCategoryName(product.category)}</span>
         <h3 class="product-name">${product.name}</h3>
-        <div class="product-price">${formatPrice(product.price)} ₭</div>
+        <div class="product-price">${formatPrice(product.price)}</div>
         ${product.description ? `<p class="product-description">${product.description}</p>` : ''}
         <div class="product-agent">
           👤 Đại lý: <strong>${product.agentName}</strong>
@@ -125,7 +125,7 @@ function openOrderModal(product) {
   preview.innerHTML = `
     ${product.imageUrl ? `<img src="${product.imageUrl}" alt="${product.name}">` : ''}
     <h4>${product.name}</h4>
-    <p class="price">${formatPrice(product.price)} ₭</p>
+    <p class="price">${formatPrice(product.price)}</p>
     <p style="color: #666; font-size: 0.9rem;">Đại lý: ${product.agentName}</p>
   `;
 
@@ -145,7 +145,7 @@ function updateTotal() {
   const quantity = parseInt(document.getElementById('order-quantity').value) || 1;
   const total = currentProduct.price * quantity;
   
-  document.getElementById('orderTotal').textContent = `${formatPrice(total)} ₭`;
+  document.getElementById('orderTotal').textContent = formatPrice(total);
 }
 
 async function submitOrder(e) {
@@ -293,7 +293,7 @@ ${order.note ? `📝 Ghi chú: ${order.note}` : ''}
 }
 
 function formatPrice(price) {
-  return price.toLocaleString('vi-VN');
+  return '$' + parseFloat(price).toFixed(2);
 }
 
 function getCategoryName(category) {
