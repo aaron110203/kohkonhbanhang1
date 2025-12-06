@@ -62,21 +62,30 @@ bot.onText(/\/start/, (msg) => {
     const remainingMinutes = Math.ceil(remainingMs / 60000);
     
     bot.sendMessage(chatId, 
-      `🔐 MÃ XÁC MINH KOHKONG SHOP\n\n` +
-      `👤 Username: ${username}\n` +
-      `🔢 Mã của bạn: *${codeData.code}*\n\n` +
-      `⏰ Còn hiệu lực: ${remainingMinutes} phút\n\n` +
-      `📝 HƯỚNG DẪN:\n` +
-      `1. Copy mã trên\n` +
-      `2. Quay lại trang đăng ký\n` +
-      `3. Nhập mã vào ô "Mã Xác Minh"\n` +
-      `4. Hoàn tất đăng ký\n\n` +
-      `⚠️ Không chia sẻ mã này với ai!`,
+      `🎉 CHÀO MỪNG BẠN TRỞ LẠI!\n\n` +
+      `✅ Bạn có mã xác minh đang chờ!\n\n` +
+      `🔐 MÃ XÁC MINH KOHKONG SHOP\n` +
+      `━━━━━━━━━━━━━━━━━━━━\n` +
+      `👤 Username: \`${username}\`\n` +
+      `🔢 MÃ CỦA BẠN: *${codeData.code}*\n` +
+      `⏰ Còn hiệu lực: ${remainingMinutes} phút\n` +
+      `━━━━━━━━━━━━━━━━━━━━\n\n` +
+      `📝 HƯỚNG DẪN ĐĂNG KÝ:\n` +
+      `1️⃣ Copy mã *${codeData.code}* ở trên\n` +
+      `2️⃣ Quay lại trang đăng ký\n` +
+      `3️⃣ Nhập username: \`${username}\`\n` +
+      `4️⃣ Dán mã vào ô "Mã Xác Minh"\n` +
+      `5️⃣ Bấm "Đăng Ký Làm Đại Lý"\n\n` +
+      `⚠️ LƯU Ý QUAN TRỌNG:\n` +
+      `• Username trong form PHẢI là: \`${username}\`\n` +
+      `• Không chia sẻ mã này với ai!\n` +
+      `• Nếu hết hạn, bấm "Gửi Yêu Cầu Mã" lại`,
       { 
         parse_mode: 'Markdown',
         reply_markup: {
           inline_keyboard: [
-            [{ text: '📱 Quay Lại Trang Đăng Ký', url: 'https://taphoakohkong.live/login.html' }]
+            [{ text: '📱 Quay Lại Trang Đăng Ký', url: 'https://taphoakohkong.live/login.html' }],
+            [{ text: '📋 Copy Username', callback_data: `copy_${username}` }]
           ]
         }
       }
@@ -87,30 +96,38 @@ bot.onText(/\/start/, (msg) => {
     // No code or expired - send welcome message
     bot.sendMessage(chatId, 
       `✅ CHÀO MỪNG ĐẾN VỚI KOHKONG SHOP BOT!\n\n` +
-      `👤 Username: ${username}\n` +
-      `🆔 Chat ID: ${chatId}\n\n` +
+      `━━━━━━━━━━━━━━━━━━━━\n` +
+      `👤 Telegram Username: \`${username}\`\n` +
+      `🆔 Chat ID: \`${chatId}\`\n` +
+      `━━━━━━━━━━━━━━━━━━━━\n\n` +
+      `⚠️ QUAN TRỌNG - GHI NHỚ USERNAME:\n` +
+      `Khi đăng ký đại lý, bạn PHẢI nhập:\n` +
+      `→ Telegram: \`${username}\`\n\n` +
       `🛒 BẠN LÀ KHÁCH HÀNG?\n` +
-      `• Truy cập website: https://taphoakohkong.live/products.html\n` +
-      `• Bấm nút "Kết Nối Bot Ngay"\n` +
-      `• Nhập username: ${username}\n` +
-      `• Khi đặt hàng, bạn sẽ nhận thông báo tại đây!\n\n` +
+      `1️⃣ Vào: taphoakohkong.live/products.html\n` +
+      `2️⃣ Bấm "Kết Nối Bot Ngay"\n` +
+      `3️⃣ Nhập username: \`${username}\`\n` +
+      `4️⃣ Nhận thông báo đơn hàng tự động!\n\n` +
       `👔 BẠN LÀ ĐẠI LÝ?\n` +
-      `1️⃣ Vào https://taphoakohkong.live/login.html\n` +
-      `2️⃣ Đăng ký với username: ${username}\n` +
+      `1️⃣ Vào: taphoakohkong.live/login.html\n` +
+      `2️⃣ Điền form, ô Telegram nhập: \`${username}\`\n` +
       `3️⃣ Bấm "Gửi Yêu Cầu Mã"\n` +
-      `4️⃣ Quay lại đây - mã sẽ tự động hiện\n` +
-      `5️⃣ Hoàn tất đăng ký\n\n` +
+      `4️⃣ Quay lại bot - mã sẽ TỰ ĐỘNG gửi!\n` +
+      `5️⃣ Copy mã → Hoàn tất đăng ký\n\n` +
       `📱 LỆNH CỦA BOT:\n` +
       `/getcode - Lấy mã xác minh (nếu có)\n` +
       `/stat - Xem trạng thái tài khoản\n` +
-      `/myinfo - Xem thông tin của bạn\n\n` +
-      `🌐 Website: https://taphoakohkong.live`,
+      `/myinfo - Xem thông tin của bạn`,
       {
+        parse_mode: 'Markdown',
         reply_markup: {
           inline_keyboard: [
             [
               { text: '🛒 Đặt Hàng', url: 'https://taphoakohkong.live/products.html' },
               { text: '👔 Đăng Ký Đại Lý', url: 'https://taphoakohkong.live/login.html' }
+            ],
+            [
+              { text: `📋 Copy Username: ${username}`, callback_data: `copy_${username}` }
             ]
           ]
         }
@@ -379,16 +396,22 @@ app.post('/api/verification/request', async (req, res) => {
 
   // Send code immediately to user via Telegram
   bot.sendMessage(chatId, 
-    `🔐 MÃ XÁC MINH KOHKONG SHOP\n\n` +
-    `👤 Username: ${telegram}\n` +
-    `🔢 Mã của bạn: *${code}*\n\n` +
-    `⏰ Mã có hiệu lực trong 10 phút\n\n` +
-    `📝 HƯỚNG DẪN:\n` +
-    `1. Copy mã trên\n` +
-    `2. Quay lại trang đăng ký\n` +
-    `3. Nhập mã vào ô "Mã Xác Minh"\n` +
-    `4. Hoàn tất đăng ký\n\n` +
-    `⚠️ Không chia sẻ mã này với ai!`,
+    `🔐 MÃ XÁC MINH KOHKONG SHOP\n` +
+    `━━━━━━━━━━━━━━━━━━━━\n` +
+    `👤 Username: \`${telegram}\`\n` +
+    `🔢 MÃ CỦA BẠN: *${code}*\n` +
+    `⏰ Hiệu lực: 10 phút\n` +
+    `━━━━━━━━━━━━━━━━━━━━\n\n` +
+    `📝 HƯỚNG DẪN ĐĂNG KÝ:\n` +
+    `1️⃣ Copy mã *${code}* ở trên\n` +
+    `2️⃣ Quay lại trang đăng ký\n` +
+    `3️⃣ Kiểm tra username: \`${telegram}\`\n` +
+    `4️⃣ Dán mã vào ô "Mã Xác Minh"\n` +
+    `5️⃣ Bấm "Đăng Ký Làm Đại Lý"\n\n` +
+    `⚠️ LƯU Ý:\n` +
+    `• Username trong form PHẢI là: \`${telegram}\`\n` +
+    `• Không chia sẻ mã với ai!\n` +
+    `• Nếu không thấy mã, gửi /getcode`,
     { 
       parse_mode: 'Markdown',
       reply_markup: {
