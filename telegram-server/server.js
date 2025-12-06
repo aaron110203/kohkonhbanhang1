@@ -27,6 +27,7 @@ app.use(bodyParser.json());
 // Thay localStorage bằng database chung trên server
 let globalProducts = []; // Tất cả sản phẩm từ mọi đại lý
 let globalAgents = [];   // Tất cả đại lý đã đăng ký
+let blockedIPs = [];     // Danh sách IP bị chặn
 
 // ==================== IMAGE UPLOAD SETUP ====================
 
@@ -893,7 +894,23 @@ app.get('/api/agents', (req, res) => {
 // POST: Đăng ký đại lý mới
 app.post('/api/agents/register', (req, res) => {
   try {
-    const { username, password, fullname, telegram } = req.body;
+    const { username, password, fullname, telegram, id, accountType, createdAt, products } = req.body;
+    const clientIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.ip;
+    
+    console.log('📝 Register request from IP:', clientIP);
+    
+    // Kiểm tra IP bị chặn
+    const isBlocked = blockedIPs.some(blocked => 
+      blocked.ip === clientIP || blocked.username === username
+    );
+    
+    if (isBlocked) {
+      console.log('❌ Blocked IP/Username:', clientIP, username);
+      return res.status(403).json({ 
+        error: 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ Admin để mở khóa.',
+        blocked: true
+      });
+    }
     
     if (!username || !password || !fullname) {
       return res.status(400).json({ error: 'Missing required fields' });
@@ -906,16 +923,20 @@ app.post('/api/agents/register', (req, res) => {
     }
 
     const newAgent = {
-      id: Date.now().toString(),
+      id: id || Date.now().toString(),
       username,
       password, // ⚠️ Trong production nên hash password
       fullname,
       telegram,
-      products: [],
-      createdAt: new Date().toISOString()
+      accountType: accountType || 'FREE',
+      products: products || [],
+      createdAt: createdAt || new Date().toISOString(),
+      ip: clientIP
     };
 
     globalAgents.push(newAgent);
+    
+    console.log('✅ Agent registered:', username, 'IP:', clientIP);
 
     res.json({
       success: true,
@@ -924,7 +945,8 @@ app.post('/api/agents/register', (req, res) => {
         id: newAgent.id,
         username: newAgent.username,
         fullname: newAgent.fullname,
-        telegram: newAgent.telegram
+        telegram: newAgent.telegram,
+        accountType: newAgent.accountType
       }
     });
   } catch (error) {
@@ -937,6 +959,19 @@ app.post('/api/agents/register', (req, res) => {
 app.post('/api/agents/login', (req, res) => {
   try {
     const { username, password } = req.body;
+    const clientIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.ip;
+    
+    // Kiểm tra IP bị chặn
+    const isBlocked = blockedIPs.some(blocked => 
+      blocked.ip === clientIP || blocked.username === username
+    );
+    
+    if (isBlocked) {
+      return res.status(403).json({ 
+        error: 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ Admin.',
+        blocked: true
+      });
+    }
     
     const agent = globalAgents.find(a => 
       a.username === username && a.password === password
@@ -945,6 +980,10 @@ app.post('/api/agents/login', (req, res) => {
     if (!agent) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
+    
+    // Cập nhật IP mới nhất
+    agent.ip = clientIP;
+    agent.lastLogin = new Date().toISOString();
 
     res.json({
       success: true,
@@ -1001,11 +1040,12 @@ app.put('/api/agents/:id/upgrade', (req, res) => {
   }
 });
 
-// DELETE: Delete agent
+// DELETE: Delete agent và chặn IP
 app.delete('/api/agents/:id', (req, res) => {
   try {
     const { id } = req.params;
-    const index = globalAgents.findIndex(a => a.id === id);
+    const agentId = isNaN(id) ? id : parseInt(id);
+    const index = globalAgents.findIndex(a => a.id == agentId || a.id === id);
     
     if (index === -1) {
       return res.status(404).json({ error: 'Agent not found' });
@@ -1013,17 +1053,78 @@ app.delete('/api/agents/:id', (req, res) => {
     
     const deleted = globalAgents.splice(index, 1)[0];
     
+    // Chặn IP và username
+    blockedIPs.push({
+      ip: deleted.ip,
+      username: deleted.username,
+      blockedAt: new Date().toISOString(),
+      reason: 'Deleted by admin'
+    });
+    
+    console.log('🚫 Blocked IP:', deleted.ip, 'Username:', deleted.username);
+    
     // Also delete agent's products
-    globalProducts = globalProducts.filter(p => p.agentId !== id);
+    globalProducts = globalProducts.filter(p => p.agentId != agentId && p.agentId !== id);
     
     res.json({
       success: true,
-      message: 'Agent deleted successfully',
+      message: 'Agent deleted and IP blocked',
       agent: deleted
     });
   } catch (error) {
     console.error('Error deleting agent:', error);
     res.status(500).json({ error: 'Failed to delete agent' });
+  }
+});
+
+// GET: Lấy danh sách IP bị chặn
+app.get('/api/blocked-ips', (req, res) => {
+  res.json({
+    success: true,
+    blockedIPs: blockedIPs,
+    total: blockedIPs.length
+  });
+});
+
+// POST: Mở khóa IP
+app.post('/api/unblock-ip', (req, res) => {
+  try {
+    const { ip, username } = req.body;
+    
+    const beforeCount = blockedIPs.length;
+    blockedIPs = blockedIPs.filter(blocked => 
+      blocked.ip !== ip && blocked.username !== username
+    );
+    const afterCount = blockedIPs.length;
+    
+    if (beforeCount === afterCount) {
+      return res.status(404).json({ error: 'IP/Username not found in blocked list' });
+    }
+    
+    console.log('✅ Unblocked:', ip || username);
+    
+    res.json({
+      success: true,
+      message: 'IP/Username unblocked successfully'
+    });
+  } catch (error) {
+    console.error('Error unblocking IP:', error);
+    res.status(500).json({ error: 'Failed to unblock IP' });
+  }
+});
+
+// POST: Đăng xuất agent (xóa session)
+app.post('/api/agents/logout', (req, res) => {
+  try {
+    const { agentId } = req.body;
+    
+    res.json({
+      success: true,
+      message: 'Logged out successfully',
+      shouldRedirect: true
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to logout' });
   }
 });
 

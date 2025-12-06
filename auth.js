@@ -21,12 +21,18 @@ async function syncAgentToServer(agent) {
       })
     });
     
-    if (response.ok) {
-      console.log('✅ Agent synced to server:', agent.username);
-      return true;
-    } else {
-      throw new Error('Server response not OK');
+    const data = await response.json();
+    
+    if (!response.ok) {
+      // Kiểm tra nếu bị chặn
+      if (data.blocked || response.status === 403) {
+        throw new Error(data.error || 'Tài khoản bị khóa');
+      }
+      throw new Error(data.error || 'Server response not OK');
     }
+    
+    console.log('✅ Agent synced to server:', agent.username);
+    return true;
   } catch (error) {
     console.error('❌ Failed to sync agent to server:', error);
     throw error;
@@ -394,6 +400,16 @@ async function handleRegister(e) {
     document.getElementById('login-username').value = username;
   }).catch(error => {
     console.error('Server sync failed:', error);
+    
+    // Kiểm tra nếu IP bị chặn
+    if (error.message && error.message.includes('khóa')) {
+      alert('❌ ' + error.message);
+      // Xóa khỏi localStorage
+      users = users.filter(u => u.username !== username);
+      localStorage.setItem('agents', JSON.stringify(users));
+      return;
+    }
+    
     alert('✅ Đăng ký thành công (lưu local)!\n\n🆓 Tài khoản Thường: 5 sản phẩm/ngày\n\nVui lòng đăng nhập.');
     
     switchToLogin(e);

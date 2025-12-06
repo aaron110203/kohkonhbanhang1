@@ -8,16 +8,40 @@ if (currentUserStr) {
   // Fetch latest user data from server to get updated accountType
   (async () => {
     try {
+      // Kiểm tra account vẫn tồn tại trên server
+      const checkResponse = await fetch('https://kohkonhbanhang1.onrender.com/api/agents');
+      if (checkResponse.ok) {
+        const data = await checkResponse.json();
+        const serverAgent = data.agents.find(a => a.id == currentUser.id || a.username === currentUser.username);
+        
+        if (!serverAgent) {
+          // Account đã bị xóa
+          alert('⚠️ Tài khoản của bạn đã bị Admin xóa!\n\nBạn sẽ được chuyển về trang đăng nhập.');
+          localStorage.removeItem('currentUser');
+          sessionStorage.removeItem('currentUser');
+          window.location.href = 'login.html';
+          return;
+        }
+        
+        // Cập nhật accountType từ server
+        if (serverAgent.accountType) {
+          currentUser.accountType = serverAgent.accountType;
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        }
+      }
+      
+      // Fallback: check localStorage
       const agents = JSON.parse(localStorage.getItem('agents')) || [];
       const localAgent = agents.find(a => a.id === currentUser.id);
       
       if (localAgent && localAgent.accountType) {
         currentUser.accountType = localAgent.accountType;
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
-        updateUserDisplay();
       }
+      
+      updateUserDisplay();
     } catch (error) {
-      console.log('Could not fetch updated user data');
+      console.log('Could not fetch updated user data:', error);
     }
   })();
   

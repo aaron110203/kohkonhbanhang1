@@ -2,12 +2,17 @@
 
 let allAgents = [];
 let allProducts = [];
+let blockedIPs = [];
 
 // Load data on page load
 document.addEventListener('DOMContentLoaded', () => {
   loadAdminData();
+  loadBlockedIPs();
   // Auto refresh every 10 seconds
-  setInterval(loadAdminData, 10000);
+  setInterval(() => {
+    loadAdminData();
+    loadBlockedIPs();
+  }, 10000);
 });
 
 async function loadAdminData() {
@@ -39,6 +44,20 @@ async function loadAdminData() {
   updateStats();
   renderAgentsTable();
   renderProductsTable();
+}
+
+async function loadBlockedIPs() {
+  try {
+    const response = await fetch('https://kohkonhbanhang1.onrender.com/api/blocked-ips');
+    if (response.ok) {
+      const data = await response.json();
+      blockedIPs = data.blockedIPs || [];
+    }
+  } catch (error) {
+    console.warn('Could not load blocked IPs:', error);
+  }
+  
+  renderBlockedIPsTable();
 }
 
 function updateStats() {
@@ -217,7 +236,7 @@ async function downgradeAgent(agentId) {
 }
 
 async function deleteAgent(agentId) {
-  if (!confirm('⚠️ XÓA ĐẠI LÝ?\n\nTất cả sản phẩm của đại lý này cũng sẽ bị xóa!')) {
+  if (!confirm('⚠️ XÓA ĐẠI LÝ?\n\nTất cả sản phẩm của đại lý này cũng sẽ bị xóa!\nIP sẽ bị CHẶN vĩnh viễn!')) {
     return;
   }
 
@@ -226,23 +245,29 @@ async function deleteAgent(agentId) {
       method: 'DELETE'
     });
 
-    if (response.ok) {
-      alert('✅ Đã xóa đại lý!');
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      // Xóa khỏi localStorage
+      const agents = JSON.parse(localStorage.getItem('agents')) || [];
+      const newAgents = agents.filter(a => a.id != agentId);
+      localStorage.setItem('agents', JSON.stringify(newAgents));
+      
+      // Xóa sản phẩm của agent
+      const products = JSON.parse(localStorage.getItem('products')) || [];
+      const newProducts = products.filter(p => p.agentId != agentId);
+      localStorage.setItem('products', JSON.stringify(newProducts));
+      
+      alert('✅ Đã xóa đại lý và chặn IP!\n\nĐại lý sẽ bị đăng xuất tự động.');
+      loadAdminData();
+      loadBlockedIPs();
+    } else {
+      throw new Error(data.error || 'Failed to delete');
     }
   } catch (error) {
-    const agents = JSON.parse(localStorage.getItem('agents')) || [];
-    const newAgents = agents.filter(a => a.id !== agentId);
-    localStorage.setItem('agents', JSON.stringify(newAgents));
-    
-    // Delete agent's products
-    const products = JSON.parse(localStorage.getItem('products')) || [];
-    const newProducts = products.filter(p => p.agentId !== agentId);
-    localStorage.setItem('products', JSON.stringify(newProducts));
-    
-    alert('✅ Đã xóa đại lý!');
+    console.error('Delete error:', error);
+    alert('❌ Lỗi khi xóa đại lý: ' + error.message);
   }
-
-  loadAdminData();
 }
 
 function formatDate(dateString) {
@@ -335,6 +360,60 @@ async function deleteProduct(productId) {
     
     alert('✅ Đã xóa sản phẩm!');
     loadAdminData();
+  }
+}
+
+function renderBlockedIPsTable() {
+  const tbody = document.getElementById('blockedIPsTableBody');
+  
+  if (!blockedIPs || blockedIPs.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5" style="text-align: center; padding: 40px; color: #999;">
+          Không có IP nào bị chặn
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = blockedIPs.map(blocked => `
+    <tr>
+      <td><code style="background: #f5f5f5; padding: 5px 10px; border-radius: 3px;">${blocked.ip || 'N/A'}</code></td>
+      <td><strong>${blocked.username}</strong></td>
+      <td>${formatDate(blocked.blockedAt)}</td>
+      <td>${blocked.reason || 'N/A'}</td>
+      <td>
+        <button class="btn-upgrade" onclick="unblockIP('${blocked.ip}', '${blocked.username}')" style="background: #4CAF50;">
+          🔓 Mở Khóa
+        </button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function unblockIP(ip, username) {
+  if (!confirm(`Mở khóa IP cho ${username}?\n\nIP: ${ip}\n\nĐại lý sẽ có thể đăng ký lại.`)) {
+    return;
+  }
+
+  try {
+    const response = await fetch('https://kohkonhbanhang1.onrender.com/api/unblock-ip', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ip, username })
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      alert('✅ Đã mở khóa IP!');
+      loadBlockedIPs();
+    } else {
+      throw new Error(data.error || 'Failed to unblock');
+    }
+  } catch (error) {
+    alert('❌ Lỗi: ' + error.message);
   }
 }
 
