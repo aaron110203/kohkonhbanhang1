@@ -2,6 +2,9 @@ const express = require('express');
 const TelegramBot = require('node-telegram-bot-api');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
 // Telegram Bot Token
 const TELEGRAM_BOT_TOKEN = '8222381044:AAGKWavqin310ESw4XE5DsywlyTgIllGU2c';
@@ -19,6 +22,49 @@ const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
+
+// ==================== IMAGE UPLOAD SETUP ====================
+
+// Tạo thư mục uploads nếu chưa có
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir);
+  console.log('📁 Đã tạo thư mục uploads/');
+}
+
+// Cấu hình Multer để lưu ảnh
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    // Tạo tên file unique: timestamp + tên gốc
+    const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname);
+    cb(null, uniqueName);
+  }
+});
+
+// Kiểm tra loại file
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = /jpeg|jpg|png|gif|webp/;
+  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = allowedTypes.test(file.mimetype);
+  
+  if (mimetype && extname) {
+    return cb(null, true);
+  } else {
+    cb(new Error('Chỉ chấp nhận ảnh (JPG, PNG, GIF, WEBP)!'));
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // Giới hạn 5MB
+  fileFilter: fileFilter
+});
+
+// Serve static files từ thư mục uploads
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Store verification codes (username -> {code, expiresAt, chatId})
 const verificationCodes = new Map();
@@ -575,6 +621,116 @@ app.post('/api/telegram/notify', async (req, res) => {
   }
 });
 
+// ==================== IMAGE UPLOAD API ====================
+
+// API: Upload ảnh sản phẩm
+app.post('/api/upload/image', upload.single('image'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        error: 'Chưa chọn ảnh!'
+      });
+    }
+
+    // URL của ảnh đã upload
+    const imageUrl = `/uploads/${req.file.filename}`;
+    const fullUrl = `${req.protocol}://${req.get('host')}${imageUrl}`;
+
+    console.log(`✅ Ảnh đã upload: ${req.file.filename} (${(req.file.size / 1024).toFixed(2)} KB)`);
+
+    res.json({
+      success: true,
+      message: 'Ảnh đã tải lên thành công!',
+      imageUrl: imageUrl,
+      fullUrl: fullUrl,
+      filename: req.file.filename,
+      size: req.file.size,
+      mimetype: req.file.mimetype
+    });
+
+  } catch (error) {
+    console.error('❌ Error uploading image:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// API: Xóa ảnh
+app.delete('/api/upload/image/:filename', (req, res) => {
+  try {
+    const { filename } = req.params;
+    const filePath = path.join(__dirname, 'uploads', filename);
+
+    // Kiểm tra file có tồn tại không
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({
+        success: false,
+        error: 'File không tồn tại!'
+      });
+    }
+
+    // Xóa file
+    fs.unlinkSync(filePath);
+    console.log(`🗑️ Đã xóa ảnh: ${filename}`);
+
+    res.json({
+      success: true,
+      message: 'Đã xóa ảnh thành công!'
+    });
+
+  } catch (error) {
+    console.error('❌ Error deleting image:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// API: Lấy danh sách ảnh đã upload
+app.get('/api/upload/images', (req, res) => {
+  try {
+    const uploadsDir = path.join(__dirname, 'uploads');
+    
+    if (!fs.existsSync(uploadsDir)) {
+      return res.json({
+        success: true,
+        images: []
+      });
+    }
+
+    const files = fs.readdirSync(uploadsDir);
+    const images = files.map(file => {
+      const filePath = path.join(uploadsDir, file);
+      const stats = fs.statSync(filePath);
+      
+      return {
+        filename: file,
+        url: `/uploads/${file}`,
+        fullUrl: `${req.protocol}://${req.get('host')}/uploads/${file}`,
+        size: stats.size,
+        createdAt: stats.birthtime
+      };
+    });
+
+    res.json({
+      success: true,
+      total: images.length,
+      images: images
+    });
+
+  } catch (error) {
+    console.error('❌ Error listing images:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
 // Health check
 app.get('/', (req, res) => {
   res.json({ 
@@ -590,7 +746,10 @@ app.get('/', (req, res) => {
     endpoints: {
       verification_request: 'POST /api/verification/request',
       verification_verify: 'POST /api/verification/verify',
-      telegram_notify: 'POST /api/telegram/notify'
+      telegram_notify: 'POST /api/telegram/notify',
+      upload_image: 'POST /api/upload/image',
+      delete_image: 'DELETE /api/upload/image/:filename',
+      list_images: 'GET /api/upload/images'
     }
   });
 });
@@ -608,6 +767,10 @@ app.listen(PORT, () => {
   console.log(`   POST /api/verification/request - Tạo mã xác minh`);
   console.log(`   POST /api/verification/verify - Xác minh mã`);
   console.log(`   POST /api/telegram/notify - Gửi thông báo đơn hàng`);
+  console.log(`   POST /api/upload/image - Upload ảnh sản phẩm`);
+  console.log(`   DELETE /api/upload/image/:filename - Xóa ảnh`);
+  console.log(`   GET /api/upload/images - Danh sách ảnh`);
+  console.log(`\n📁 Uploads folder: ${path.join(__dirname, 'uploads')}`);
 });
 
 // Handle bot errors

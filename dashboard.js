@@ -165,6 +165,9 @@ async function addProduct(e) {
   const telegramInput = document.getElementById('product-telegram').value.trim();
   const telegram = telegramInput || currentUser.telegram || '';
   const imageFile = document.getElementById('product-image').files[0];
+  
+  // Lấy phương thức upload đã chọn
+  const uploadMethod = document.querySelector('input[name="upload-method"]:checked').value;
 
   if (!name || !price || !category) {
     alert('❌ Vui lòng điền đầy đủ thông tin bắt buộc!');
@@ -183,8 +186,35 @@ async function addProduct(e) {
   submitBtn.textContent = '⏳ Đang lưu...';
 
   try {
-    // Convert image to Base64
-    const imageUrl = await imageToBase64(imageFile);
+    let imageUrl;
+    
+    if (uploadMethod === 'server') {
+      // UPLOAD LÊN SERVER
+      submitBtn.textContent = '📤 Đang upload ảnh...';
+      
+      const formData = new FormData();
+      formData.append('image', imageFile);
+      
+      const uploadResponse = await fetch('https://kohkonhbanhang1.onrender.com/api/upload/image', {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (!uploadResponse.ok) {
+        throw new Error('Upload ảnh thất bại!');
+      }
+      
+      const uploadResult = await uploadResponse.json();
+      imageUrl = uploadResult.fullUrl; // URL đầy đủ từ server
+      
+      console.log('✅ Ảnh đã upload lên server:', imageUrl);
+      
+    } else {
+      // LƯU BASE64 (LocalStorage)
+      submitBtn.textContent = '💾 Đang chuyển đổi ảnh...';
+      imageUrl = await imageToBase64(imageFile);
+      console.log('✅ Ảnh đã chuyển Base64');
+    }
 
     const product = {
       id: generateId(),
@@ -194,7 +224,8 @@ async function addProduct(e) {
       icon,
       description,
       telegram,
-      imageUrl, // Base64 image
+      imageUrl, // URL từ server hoặc Base64
+      uploadMethod, // Lưu thông tin phương thức upload
       agentId: currentUser.id,
       agentName: currentUser.fullname,
       agentTelegram: currentUser.telegram,
@@ -228,7 +259,11 @@ async function addProduct(e) {
       sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
     }
 
-    alert('✅ Thêm sản phẩm thành công!\n\n📱 Sản phẩm đã được cập nhật lên website taphoakohkong.live');
+    alert('✅ Thêm sản phẩm thành công!\n\n' + 
+          (uploadMethod === 'server' ? 
+            '📤 Ảnh đã upload lên server: ' + imageUrl : 
+            '💾 Ảnh đã lưu Base64 vào LocalStorage') + 
+          '\n\n📱 Sản phẩm đã được cập nhật lên website taphoakohkong.live');
 
     // Reset form
     e.target.reset();

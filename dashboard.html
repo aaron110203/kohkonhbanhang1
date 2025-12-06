@@ -107,6 +107,16 @@
 
           <div class="form-group">
             <label>Upload Ảnh Sản Phẩm *</label>
+            <div style="margin-bottom: 10px;">
+              <label style="display: inline-block; margin-right: 20px;">
+                <input type="radio" name="upload-method" value="server" checked> 
+                <span style="color: #667eea; font-weight: 600;">📤 Upload lên Server (Khuyến nghị)</span>
+              </label>
+              <label style="display: inline-block;">
+                <input type="radio" name="upload-method" value="base64"> 
+                <span style="color: #666;">💾 Lưu Base64 (LocalStorage)</span>
+              </label>
+            </div>
             <input type="file" id="product-image" accept="image/*" required>
             <small style="color: #666; display: block; margin-top: 5px;">Chọn ảnh JPG, PNG hoặc GIF (tối đa 5MB)</small>
             <div id="image-preview" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; display: none;">

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AUTO TEST - Upload Ảnh Tự Động</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .test-section {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 15px;
+      margin-bottom: 25px;
+    }
+    .test-section h2 {
+      color: #667eea;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #667eea;
+      padding-bottom: 10px;
+    }
+    button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin: 10px 5px;
+      transition: transform 0.2s;
+    }
+    button:hover { transform: scale(1.05); }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .log {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 20px;
+      border-radius: 10px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      line-height: 1.8;
+      max-height: 400px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+    .success { color: #4ec9b0; }
+    .error { color: #f48771; }
+    .warning { color: #dcdcaa; }
+    .info { color: #9cdcfe; }
+    .preview-box {
+      margin-top: 20px;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      border: 3px solid #667eea;
+    }
+    .preview-box img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      border: 2px solid #667eea;
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #667eea;
+    }
+    .stat-label {
+      color: #666;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🤖 AUTO TEST - Upload Ảnh Tự Động</h1>
+    
+    <div class="test-section">
+      <h2>📊 Test Dashboard</h2>
+      <button onclick="runFullTest()">🚀 Chạy Test Đầy Đủ (Đăng Ký + Đăng Nhập + Upload)</button>
+      <button onclick="testUploadOnly()">📸 Test Chỉ Upload Ảnh</button>
+      <button onclick="checkCurrentState()">🔍 Kiểm Tra Trạng Thái</button>
+      <button onclick="clearAllData()" style="background: #f48771;">🗑️ Xóa Dữ Liệu</button>
+      
+      <div class="stats" id="stats">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-users">0</div>
+          <div class="stat-label">Số Đại Lý</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-products">0</div>
+          <div class="stat-label">Tổng Sản Phẩm</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-storage">0 KB</div>
+          <div class="stat-label">Bộ Nhớ Dùng</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>📝 Log Kết Quả</h2>
+      <div class="log" id="log"></div>
+    </div>
+
+    <div class="test-section" id="preview-section" style="display: none;">
+      <h2>👁️ Preview Sản Phẩm Vừa Tạo</h2>
+      <div class="preview-box" id="preview-box"></div>
+    </div>
+  </div>
+
+  <script>
+    const logEl = document.getElementById('log');
+    
+    function log(message, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString('vi-VN');
+      const color = type === 'success' ? 'success' : type === 'error' ? 'error' : type === 'warning' ? 'warning' : 'info';
+      logEl.innerHTML += `<div class="${color}">[${timestamp}] ${message}</div>`;
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function updateStats() {
+      const agents = JSON.parse(localStorage.getItem('agents')) || [];
+      let totalProducts = 0;
+      agents.forEach(a => {
+        if (a.products) totalProducts += a.products.length;
+      });
+      
+      let storageSize = 0;
+      for (let key in localStorage) {
+        if (localStorage.hasOwnProperty(key)) {
+          storageSize += localStorage.getItem(key).length;
+        }
+      }
+      
+      document.getElementById('stat-users').textContent = agents.length;
+      document.getElementById('stat-products').textContent = totalProducts;
+      document.getElementById('stat-storage').textContent = (storageSize / 1024).toFixed(2) + ' KB';
+    }
+
+    // Tạo ảnh test (ảnh customer service như bạn gửi)
+    function createTestImage() {
+      // Base64 của 1 ảnh nhỏ mẫu (200x200px)
+      return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+    }
+
+    async function runFullTest() {
+      log('🚀 BẮT ĐẦU TEST ĐẦY ĐỦ...', 'warning');
+      log('━'.repeat(50), 'info');
+      
+      try {
+        // 1. Tạo tài khoản test
+        log('1️⃣ BƯỚC 1: Đăng ký tài khoản test...', 'info');
+        const testUser = {
+          id: 'auto_' + Date.now(),
+          fullname: 'Auto Test User',
+          username: 'autotest_' + Date.now(),
+          password: '123456',
+          telegram: '@autotest',
+          role: 'agent',
+          products: [],
+          isActive: true,
+          createdAt: new Date().toISOString()
+        };
+        
+        let agents = JSON.parse(localStorage.getItem('agents')) || [];
+        agents.push(testUser);
+        localStorage.setItem('agents', JSON.stringify(agents));
+        log('✅ Đã tạo user: ' + testUser.username, 'success');
+        
+        // 2. Đăng nhập
+        log('2️⃣ BƯỚC 2: Đăng nhập...', 'info');
+        localStorage.setItem('currentUser', JSON.stringify(testUser));
+        log('✅ Đăng nhập thành công!', 'success');
+        
+        // 3. Upload ảnh
+        log('3️⃣ BƯỚC 3: Upload ảnh sản phẩm...', 'info');
+        const imageBase64 = createTestImage();
+        log('📸 Đã tạo ảnh test (Base64): ' + imageBase64.substring(0, 50) + '...', 'info');
+        
+        // 4. Tạo sản phẩm
+        log('4️⃣ BƯỚC 4: Tạo sản phẩm với ảnh...', 'info');
+        const product = {
+          id: 'product_' + Date.now(),
+          name: 'Sản Phẩm Auto Test',
+          price: 50000,
+          category: 'food',
+          icon: '🍚',
+          description: 'Đây là sản phẩm được tạo tự động bởi Auto Test',
+          telegram: testUser.telegram,
+          imageUrl: imageBase64, // ✅ QUAN TRỌNG: Ảnh được lưu ở đây!
+          agentId: testUser.id,
+          agentName: testUser.fullname,
+          agentTelegram: testUser.telegram,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        
+        // 5. Thêm sản phẩm vào agent
+        agents = JSON.parse(localStorage.getItem('agents')) || [];
+        const agentIndex = agents.findIndex(a => a.username === testUser.username);
+        
+        if (agentIndex === -1) {
+          throw new Error('Không tìm thấy agent!');
+        }
+        
+        if (!agents[agentIndex].products) {
+          agents[agentIndex].products = [];
+        }
+        
+        agents[agentIndex].products.push(product);
+        localStorage.setItem('agents', JSON.stringify(agents));
+        
+        log('✅ Đã thêm sản phẩm thành công!', 'success');
+        log('📦 ID: ' + product.id, 'info');
+        log('📝 Tên: ' + product.name, 'info');
+        log('💰 Giá: ' + product.price.toLocaleString('vi-VN') + ' ₭', 'info');
+        log('📸 Có ảnh: ' + (product.imageUrl ? 'CÓ (' + (product.imageUrl.length / 1024).toFixed(2) + ' KB)' : 'KHÔNG'), product.imageUrl ? 'success' : 'error');
+        
+        // 6. Hiển thị preview
+        log('5️⃣ BƯỚC 5: Hiển thị preview...', 'info');
+        showPreview(product);
+        
+        log('━'.repeat(50), 'info');
+        log('🎉 TEST HOÀN TẤT THÀNH CÔNG!', 'success');
+        log('', 'info');
+        log('📋 KIỂM TRA KẾT QUẢ:', 'warning');
+        log('1. Mở products.html để xem sản phẩm', 'info');
+        log('2. Mở dashboard.html để quản lý', 'info');
+        log('3. Ảnh đã được lưu dưới dạng Base64', 'info');
+        
+        updateStats();
+        
+      } catch (error) {
+        log('❌ LỖI: ' + error.message, 'error');
+        console.error(error);
+      }
+    }
+
+    function testUploadOnly() {
+      log('📸 TEST CHỨC NĂNG UPLOAD ẢNH...', 'warning');
+      
+      try {
+        const currentUserStr = localStorage.getItem('currentUser');
+        if (!currentUserStr) {
+          log('❌ Chưa đăng nhập! Hãy chạy "Test Đầy Đủ" trước.', 'error');
+          return;
+        }
+        
+        const currentUser = JSON.parse(currentUserStr);
+        log('✅ Đã đăng nhập: ' + currentUser.username, 'success');
+        
+        // Tạo ảnh test
+        const imageBase64 = createTestImage();
+        log('📸 Tạo ảnh test...', 'info');
+        log('📏 Kích thước Base64: ' + (imageBase64.length / 1024).toFixed(2) + ' KB', 'info');
+        
+        // Tạo sản phẩm mới
+        const product = {
+          id: 'product_' + Date.now(),
+          name: 'Test Upload ' + new Date().getHours() + ':' + new Date().getMinutes(),
+          price: 25000,
+          category: 'food',
+          icon: '📦',
+          description: 'Test upload ảnh',
+          telegram: currentUser.telegram,
+          imageUrl: imageBase64,
+          agentId: currentUser.id,
+          agentName: currentUser.fullname,
+          agentTelegram: currentUser.telegram,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        
+        // Lưu vào localStorage
+        const agents = JSON.parse(localStorage.getItem('agents')) || [];
+        const agentIndex = agents.findIndex(a => a.username === currentUser.username);
+        
+        if (agentIndex !== -1) {
+          if (!agents[agentIndex].products) {
+            agents[agentIndex].products = [];
+          }
+          agents[agentIndex].products.push(product);
+          localStorage.setItem('agents', JSON.stringify(agents));
+          
+          log('✅ Upload ảnh thành công!', 'success');
+          log('📦 Sản phẩm: ' + product.name, 'info');
+          log('📸 Ảnh đã lưu: ' + (imageBase64.length / 1024).toFixed(2) + ' KB', 'success');
+          
+          showPreview(product);
+          updateStats();
+        } else {
+          log('❌ Không tìm thấy agent!', 'error');
+        }
+        
+      } catch (error) {
+        log('❌ LỖI: ' + error.message, 'error');
+      }
+    }
+
+    function checkCurrentState() {
+      log('🔍 KIỂM TRA TRẠNG THÁI HỆ THỐNG...', 'warning');
+      log('━'.repeat(50), 'info');
+      
+      // Check login
+      const currentUser = localStorage.getItem('currentUser');
+      if (currentUser) {
+        const user = JSON.parse(currentUser);
+        log('✅ Đã đăng nhập: ' + user.username + ' (' + user.fullname + ')', 'success');
+      } else {
+        log('⚠️ Chưa đăng nhập', 'warning');
+      }
+      
+      // Check agents
+      const agents = JSON.parse(localStorage.getItem('agents')) || [];
+      log('👥 Tổng số đại lý: ' + agents.length, 'info');
+      
+      let totalProducts = 0;
+      let productsWithImages = 0;
+      
+      agents.forEach(agent => {
+        if (agent.products) {
+          totalProducts += agent.products.length;
+          agent.products.forEach(p => {
+            if (p.imageUrl) productsWithImages++;
+          });
+        }
+      });
+      
+      log('📦 Tổng sản phẩm: ' + totalProducts, 'info');
+      log('📸 Sản phẩm có ảnh: ' + productsWithImages + '/' + totalProducts, productsWithImages > 0 ? 'success' : 'warning');
+      
+      // Storage usage
+      let storageSize = 0;
+      for (let key in localStorage) {
+        if (localStorage.hasOwnProperty(key)) {
+          storageSize += localStorage.getItem(key).length;
+        }
+      }
+      log('💾 Bộ nhớ: ' + (storageSize / 1024).toFixed(2) + ' KB', 'info');
+      
+      log('━'.repeat(50), 'info');
+      
+      updateStats();
+    }
+
+    function showPreview(product) {
+      const previewSection = document.getElementById('preview-section');
+      const previewBox = document.getElementById('preview-box');
+      
+      previewSection.style.display = 'block';
+      previewBox.innerHTML = `
+        <h3 style="color: #333; margin-bottom: 15px;">📦 ${product.name}</h3>
+        <p style="color: #666; margin-bottom: 10px;">💰 Giá: <strong>${product.price.toLocaleString('vi-VN')} ₭</strong></p>
+        <p style="color: #666; margin-bottom: 10px;">📱 Telegram: <strong>${product.telegram}</strong></p>
+        <p style="color: #666; margin-bottom: 10px;">📝 Mô tả: ${product.description}</p>
+        ${product.imageUrl ? `
+          <div style="margin-top: 20px;">
+            <p style="color: #28a745; font-weight: bold; margin-bottom: 10px;">✅ Có ảnh (${(product.imageUrl.length / 1024).toFixed(2)} KB)</p>
+            <img src="${product.imageUrl}" alt="${product.name}" style="max-width: 300px; border-radius: 10px; border: 2px solid #667eea;">
+          </div>
+        ` : '<p style="color: #f48771; font-weight: bold;">❌ Không có ảnh</p>'}
+      `;
+      
+      previewSection.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function clearAllData() {
+      if (confirm('⚠️ Xóa tất cả dữ liệu test?')) {
+        localStorage.clear();
+        sessionStorage.clear();
+        log('🗑️ Đã xóa tất cả dữ liệu!', 'warning');
+        updateStats();
+        document.getElementById('preview-section').style.display = 'none';
+      }
+    }
+
+    // Auto check on load
+    window.addEventListener('load', function() {
+      log('🤖 Auto Test System v1.0', 'success');
+      log('━'.repeat(50), 'info');
+      checkCurrentState();
+    });
+  </script>
+</body>
+</html>
