@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Panel - KohKong</title>
   <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="mobile-responsive.css">
   <style>
     .admin-header {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -136,6 +137,107 @@
       font-size: 0.85rem;
       color: #666;
       margin-top: 5px;
+    }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 1024px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .admin-header h1 {
+        font-size: 1.5rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stat-card {
+        padding: 15px;
+      }
+
+      .agents-table {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      table {
+        min-width: 800px;
+        font-size: 0.85rem;
+      }
+
+      th, td {
+        padding: 8px;
+        white-space: nowrap;
+      }
+
+      .btn-upgrade, .btn-downgrade, .btn-delete {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+        margin: 2px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .admin-header {
+        padding: 15px;
+      }
+
+      .admin-header h1 {
+        font-size: 1.2rem;
+      }
+
+      .stat-card h3 {
+        font-size: 0.9rem;
+      }
+
+      .stat-card p {
+        font-size: 1.5rem;
+      }
+
+      table {
+        font-size: 0.75rem;
+        min-width: 1000px;
+      }
+
+      th, td {
+        padding: 6px;
+      }
+
+      .btn-logout {
+        width: 100%;
+        margin: 10px 0;
+      }
+
+      /* Scroll hint for tables */
+      .agents-table::after {
+        content: '← Vuốt ngang để xem thêm →';
+        display: block;
+        text-align: center;
+        color: #999;
+        font-size: 0.8rem;
+        padding: 10px;
+        background: #f5f5f5;
+        border-radius: 0 0 10px 10px;
+      }
+    }
+
+    /* Touch-friendly buttons on mobile */
+    @media (hover: none) {
+      .btn-upgrade, .btn-downgrade, .btn-delete {
+        min-height: 44px;
+        min-width: 44px;
+      }
+    }
+
+    /* Landscape mode optimization */
+    @media (max-width: 896px) and (orientation: landscape) {
+      .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
     }
   </style>
 </head>
