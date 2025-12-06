@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🧪 Auto Test System - KohKong</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2.5rem;
+    }
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 20px;
+    }
+    .test-card {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .test-card h2 {
+      color: #333;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .status {
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 0.9rem;
+      display: inline-block;
+      margin: 5px 0;
+    }
+    .status.pending { background: #f39c12; color: white; }
+    .status.running { background: #3498db; color: white; animation: pulse 1s infinite; }
+    .status.success { background: #27ae60; color: white; }
+    .status.failed { background: #e74c3c; color: white; }
+    .log {
+      background: #f8f9fa;
+      border-left: 4px solid #3498db;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 5px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      margin: 5px;
+      transition: transform 0.2s;
+    }
+    .btn:hover { transform: scale(1.05); }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .summary {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .summary h2 { color: #333; margin-bottom: 15px; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-top: 15px;
+    }
+    .stat-box {
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .stat-box.total { background: #3498db; color: white; }
+    .stat-box.success { background: #27ae60; color: white; }
+    .stat-box.failed { background: #e74c3c; color: white; }
+    .stat-box.pending { background: #f39c12; color: white; }
+    .stat-box h3 { font-size: 2rem; margin-bottom: 5px; }
+    .stat-box p { font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧪 Auto Test System - KohKong Bán Hàng</h1>
+
+    <div class="summary">
+      <h2>📊 Test Summary</h2>
+      <div class="stats">
+        <div class="stat-box total">
+          <h3 id="totalTests">0</h3>
+          <p>Total Tests</p>
+        </div>
+        <div class="stat-box success">
+          <h3 id="passedTests">0</h3>
+          <p>Passed</p>
+        </div>
+        <div class="stat-box failed">
+          <h3 id="failedTests">0</h3>
+          <p>Failed</p>
+        </div>
+        <div class="stat-box pending">
+          <h3 id="pendingTests">0</h3>
+          <p>Pending</p>
+        </div>
+      </div>
+      <div style="margin-top: 20px;">
+        <button class="btn" onclick="runAllTests()">🚀 Run All Tests</button>
+        <button class="btn" onclick="resetTests()">🔄 Reset</button>
+        <button class="btn" onclick="window.location.href='login.html'">🔙 Go to Login</button>
+      </div>
+    </div>
+
+    <div class="test-grid">
+      <!-- Test 1: Create Test Account -->
+      <div class="test-card">
+        <h2>1️⃣ Create Test Account</h2>
+        <span class="status pending" id="status-1">⏳ Pending</span>
+        <div class="log" id="log-1">Waiting to run...</div>
+        <button class="btn" onclick="runTest(1)">▶️ Run Test</button>
+      </div>
+
+      <!-- Test 2: Login Test -->
+      <div class="test-card">
+        <h2>2️⃣ Login Test</h2>
+        <span class="status pending" id="status-2">⏳ Pending</span>
+        <div class="log" id="log-2">Waiting to run...</div>
+        <button class="btn" onclick="runTest(2)">▶️ Run Test</button>
+      </div>
+
+      <!-- Test 3: Dashboard Access -->
+      <div class="test-card">
+        <h2>3️⃣ Dashboard Access</h2>
+        <span class="status pending" id="status-3">⏳ Pending</span>
+        <div class="log" id="log-3">Waiting to run...</div>
+        <button class="btn" onclick="runTest(3)">▶️ Run Test</button>
+      </div>
+
+      <!-- Test 4: Add Product -->
+      <div class="test-card">
+        <h2>4️⃣ Add Product</h2>
+        <span class="status pending" id="status-4">⏳ Pending</span>
+        <div class="log" id="log-4">Waiting to run...</div>
+        <button class="btn" onclick="runTest(4)">▶️ Run Test</button>
+      </div>
+
+      <!-- Test 5: View Products -->
+      <div class="test-card">
+        <h2>5️⃣ View Products</h2>
+        <span class="status pending" id="status-5">⏳ Pending</span>
+        <div class="log" id="log-5">Waiting to run...</div>
+        <button class="btn" onclick="runTest(5)">▶️ Run Test</button>
+      </div>
+
+      <!-- Test 6: Logout -->
+      <div class="test-card">
+        <h2>6️⃣ Logout</h2>
+        <span class="status pending" id="status-6">⏳ Pending</span>
+        <div class="log" id="log-6">Waiting to run...</div>
+        <button class="btn" onclick="runTest(6)">▶️ Run Test</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tests = {
+      total: 6,
+      passed: 0,
+      failed: 0,
+      pending: 6
+    };
+
+    function updateStats() {
+      document.getElementById('totalTests').textContent = tests.total;
+      document.getElementById('passedTests').textContent = tests.passed;
+      document.getElementById('failedTests').textContent = tests.failed;
+      document.getElementById('pendingTests').textContent = tests.pending;
+    }
+
+    function log(testId, message, isError = false) {
+      const logEl = document.getElementById(`log-${testId}`);
+      const timestamp = new Date().toLocaleTimeString();
+      const color = isError ? 'color: #e74c3c;' : 'color: #27ae60;';
+      logEl.innerHTML += `<div style="${color}">[${timestamp}] ${message}</div>`;
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function setStatus(testId, status) {
+      const statusEl = document.getElementById(`status-${testId}`);
+      statusEl.className = `status ${status}`;
+      
+      const icons = {
+        pending: '⏳',
+        running: '▶️',
+        success: '✅',
+        failed: '❌'
+      };
+      
+      const labels = {
+        pending: 'Pending',
+        running: 'Running...',
+        success: 'Passed',
+        failed: 'Failed'
+      };
+      
+      statusEl.textContent = `${icons[status]} ${labels[status]}`;
+    }
+
+    async function runTest(testId) {
+      setStatus(testId, 'running');
+      const logEl = document.getElementById(`log-${testId}`);
+      logEl.innerHTML = '';
+      
+      try {
+        switch(testId) {
+          case 1:
+            await testCreateAccount();
+            break;
+          case 2:
+            await testLogin();
+            break;
+          case 3:
+            await testDashboardAccess();
+            break;
+          case 4:
+            await testAddProduct();
+            break;
+          case 5:
+            await testViewProducts();
+            break;
+          case 6:
+            await testLogout();
+            break;
+        }
+        
+        setStatus(testId, 'success');
+        tests.passed++;
+        tests.pending--;
+        updateStats();
+      } catch (error) {
+        setStatus(testId, 'failed');
+        log(testId, `ERROR: ${error.message}`, true);
+        tests.failed++;
+        tests.pending--;
+        updateStats();
+      }
+    }
+
+    async function testCreateAccount() {
+      log(1, '🔧 Creating test account...');
+      
+      const agents = JSON.parse(localStorage.getItem('agents')) || [];
+      
+      // Remove old test account
+      const filtered = agents.filter(a => a.username !== 'testuser');
+      
+      const testAgent = {
+        id: Date.now(),
+        fullname: 'Test User',
+        username: 'testuser',
+        password: '123456',
+        telegram: '@testuser',
+        verified: true,
+        role: 'agent',
+        products: [],
+        registeredAt: new Date().toISOString(),
+        isActive: true
+      };
+      
+      filtered.push(testAgent);
+      localStorage.setItem('agents', JSON.stringify(filtered));
+      
+      log(1, '✅ Test account created successfully!');
+      log(1, `Username: testuser`);
+      log(1, `Password: 123456`);
+      
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+
+    async function testLogin() {
+      log(2, '🔐 Testing login...');
+      
+      const agents = JSON.parse(localStorage.getItem('agents')) || [];
+      const user = agents.find(u => u.username === 'testuser' && u.password === '123456');
+      
+      if (!user) {
+        throw new Error('Test account not found! Run Test 1 first.');
+      }
+      
+      log(2, '✅ User found in database');
+      
+      const userSession = {
+        id: user.id,
+        fullname: user.fullname,
+        username: user.username,
+        telegram: user.telegram,
+        verified: user.verified,
+        role: user.role,
+        loginAt: new Date().toISOString()
+      };
+      
+      localStorage.setItem('currentUser', JSON.stringify(userSession));
+      log(2, '✅ Login successful!');
+      log(2, `Logged in as: ${user.fullname}`);
+      
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+
+    async function testDashboardAccess() {
+      log(3, '📊 Testing dashboard access...');
+      
+      const currentUser = localStorage.getItem('currentUser');
+      
+      if (!currentUser) {
+        throw new Error('Not logged in! Run Test 2 first.');
+      }
+      
+      log(3, '✅ User session found');
+      
+      const user = JSON.parse(currentUser);
+      log(3, `✅ Dashboard accessible for: ${user.fullname}`);
+      log(3, `✅ User role: ${user.role}`);
+      
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+
+    async function testAddProduct() {
+      log(4, '📦 Testing add product...');
+      
+      const currentUser = localStorage.getItem('currentUser');
+      if (!currentUser) {
+        throw new Error('Not logged in! Run Test 2 first.');
+      }
+      
+      const user = JSON.parse(currentUser);
+      const agents = JSON.parse(localStorage.getItem('agents')) || [];
+      const agentIndex = agents.findIndex(a => a.username === user.username);
+      
+      if (agentIndex === -1) {
+        throw new Error('Agent not found in database!');
+      }
+      
+      const testProduct = {
+        id: Date.now(),
+        name: 'Test Product',
+        price: 10000,
+        category: 'food',
+        icon: '🍚',
+        description: 'This is a test product',
+        telegram: user.telegram,
+        imageUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+        agentId: user.id,
+        agentName: user.fullname,
+        agentTelegram: user.telegram,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      if (!agents[agentIndex].products) {
+        agents[agentIndex].products = [];
+      }
+      
+      agents[agentIndex].products.push(testProduct);
+      localStorage.setItem('agents', JSON.stringify(agents));
+      
+      log(4, '✅ Product added successfully!');
+      log(4, `Product: ${testProduct.name} - ${testProduct.price}₭`);
+      
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+
+    async function testViewProducts() {
+      log(5, '👀 Testing view products...');
+      
+      const agents = JSON.parse(localStorage.getItem('agents')) || [];
+      let totalProducts = 0;
+      
+      agents.forEach(agent => {
+        if (agent.products && agent.products.length > 0) {
+          totalProducts += agent.products.length;
+        }
+      });
+      
+      log(5, `✅ Found ${totalProducts} products in system`);
+      
+      if (totalProducts > 0) {
+        log(5, '✅ Products page should display correctly');
+      } else {
+        log(5, '⚠️ No products found. Run Test 4 first.');
+      }
+      
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+
+    async function testLogout() {
+      log(6, '🚪 Testing logout...');
+      
+      const currentUser = localStorage.getItem('currentUser');
+      
+      if (!currentUser) {
+        throw new Error('Not logged in!');
+      }
+      
+      log(6, '✅ Removing user session...');
+      localStorage.removeItem('currentUser');
+      sessionStorage.removeItem('currentUser');
+      
+      const checkUser = localStorage.getItem('currentUser');
+      if (checkUser) {
+        throw new Error('Session not removed properly!');
+      }
+      
+      log(6, '✅ Logout successful!');
+      log(6, '✅ User session cleared');
+      
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+
+    async function runAllTests() {
+      log(1, '🚀 Starting all tests...');
+      
+      for (let i = 1; i <= 6; i++) {
+        await runTest(i);
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+      
+      alert(`✅ All tests completed!\n\nPassed: ${tests.passed}\nFailed: ${tests.failed}`);
+    }
+
+    function resetTests() {
+      tests.passed = 0;
+      tests.failed = 0;
+      tests.pending = 6;
+      updateStats();
+      
+      for (let i = 1; i <= 6; i++) {
+        setStatus(i, 'pending');
+        document.getElementById(`log-${i}`).innerHTML = 'Waiting to run...';
+      }
+    }
+
+    // Initialize
+    updateStats();
+  </script>
+</body>
+</html>

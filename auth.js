@@ -359,8 +359,8 @@ async function handleRegister(e) {
 function handleLogin(e) {
   e.preventDefault();
   
-  const username = document.getElementById('username').value.trim();
-  const password = document.getElementById('password').value;
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value;
   const rememberMe = document.getElementById('remember-me').checked;
   
   // Get users

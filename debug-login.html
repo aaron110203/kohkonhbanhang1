@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debug Login - KohKong</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .debug-box {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 { color: #333; }
+    h2 { color: #666; margin-top: 0; }
+    pre {
+      background: #f8f8f8;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+      border: 1px solid #ddd;
+    }
+    .btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      margin: 5px;
+    }
+    .btn:hover { transform: scale(1.05); }
+    .success { color: #27ae60; font-weight: bold; }
+    .error { color: #e74c3c; font-weight: bold; }
+    input {
+      padding: 10px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      width: 300px;
+      margin: 10px 0;
+    }
+    .form-group { margin: 15px 0; }
+  </style>
+</head>
+<body>
+  <h1>🔧 Debug Login System</h1>
+
+  <div class="debug-box">
+    <h2>📊 Trạng Thái Hệ Thống</h2>
+    <p><strong>Số lượng đại lý:</strong> <span id="agentCount">0</span></p>
+    <p><strong>Danh sách đại lý:</strong></p>
+    <pre id="agentList">Đang tải...</pre>
+  </div>
+
+  <div class="debug-box">
+    <h2>🔑 Đăng Nhập Thủ Công</h2>
+    <div class="form-group">
+      <label>Username:</label><br>
+      <input type="text" id="debugUsername" placeholder="Nhập username">
+    </div>
+    <div class="form-group">
+      <label>Password:</label><br>
+      <input type="password" id="debugPassword" placeholder="Nhập password">
+    </div>
+    <button class="btn" onclick="debugLogin()">🚀 Đăng Nhập</button>
+    <button class="btn" onclick="forceLogin()">⚡ Force Login (Bỏ qua password)</button>
+    <p id="loginResult"></p>
+  </div>
+
+  <div class="debug-box">
+    <h2>🛠️ Công Cụ</h2>
+    <button class="btn" onclick="createTestAgent()">➕ Tạo Tài Khoản Test</button>
+    <button class="btn" onclick="clearAllData()">🗑️ Xóa Tất Cả Dữ Liệu</button>
+    <button class="btn" onclick="location.reload()">🔄 Làm Mới</button>
+    <button class="btn" onclick="goToDashboard()">📊 Vào Dashboard</button>
+    <button class="btn" onclick="window.location.href='login.html'">🔙 Về Trang Login</button>
+  </div>
+
+  <script>
+    function loadAgents() {
+      const agents = JSON.parse(localStorage.getItem('agents')) || [];
+      document.getElementById('agentCount').textContent = agents.length;
+      document.getElementById('agentList').textContent = JSON.stringify(agents, null, 2);
+    }
+
+    function debugLogin() {
+      const username = document.getElementById('debugUsername').value.trim();
+      const password = document.getElementById('debugPassword').value;
+      
+      const agents = JSON.parse(localStorage.getItem('agents')) || [];
+      const user = agents.find(u => u.username === username && u.password === password);
+      
+      const result = document.getElementById('loginResult');
+      
+      if (!user) {
+        result.innerHTML = '<span class="error">❌ Không tìm thấy user hoặc password sai!</span>';
+        return;
+      }
+      
+      const userSession = {
+        id: user.id,
+        fullname: user.fullname,
+        username: user.username,
+        telegram: user.telegram,
+        verified: user.verified,
+        role: user.role,
+        loginAt: new Date().toISOString()
+      };
+      
+      localStorage.setItem('currentUser', JSON.stringify(userSession));
+      result.innerHTML = '<span class="success">✅ Đăng nhập thành công!</span>';
+      
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 1000);
+    }
+
+    function forceLogin() {
+      const username = document.getElementById('debugUsername').value.trim();
+      const agents = JSON.parse(localStorage.getItem('agents')) || [];
+      const user = agents.find(u => u.username === username);
+      
+      const result = document.getElementById('loginResult');
+      
+      if (!user) {
+        result.innerHTML = '<span class="error">❌ Không tìm thấy username: ' + username + '</span>';
+        return;
+      }
+      
+      const userSession = {
+        id: user.id,
+        fullname: user.fullname,
+        username: user.username,
+        telegram: user.telegram,
+        verified: user.verified,
+        role: user.role,
+        loginAt: new Date().toISOString()
+      };
+      
+      localStorage.setItem('currentUser', JSON.stringify(userSession));
+      result.innerHTML = '<span class="success">✅ Force login thành công!</span>';
+      
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 1000);
+    }
+
+    function createTestAgent() {
+      const agents = JSON.parse(localStorage.getItem('agents')) || [];
+      
+      const testAgent = {
+        id: Date.now(),
+        fullname: 'Test Agent',
+        username: 'test',
+        password: '123456',
+        telegram: '@testuser',
+        verified: true,
+        role: 'agent',
+        products: [],
+        registeredAt: new Date().toISOString(),
+        isActive: true
+      };
+      
+      agents.push(testAgent);
+      localStorage.setItem('agents', JSON.stringify(agents));
+      
+      alert('✅ Đã tạo tài khoản test!\n\nUsername: test\nPassword: 123456');
+      loadAgents();
+    }
+
+    function clearAllData() {
+      if (confirm('⚠️ XÓA TẤT CẢ DỮ LIỆU?\n\nĐiều này sẽ xóa:\n• Tất cả tài khoản\n• Tất cả sản phẩm\n• Phiên đăng nhập\n\nBạn có chắc không?')) {
+        localStorage.clear();
+        sessionStorage.clear();
+        alert('✅ Đã xóa tất cả dữ liệu!');
+        location.reload();
+      }
+    }
+
+    function goToDashboard() {
+      const currentUser = localStorage.getItem('currentUser');
+      if (!currentUser) {
+        alert('❌ Bạn chưa đăng nhập!\n\nVui lòng đăng nhập hoặc force login trước.');
+        return;
+      }
+      window.location.href = 'dashboard.html';
+    }
+
+    // Load on page load
+    loadAgents();
+
+    // Auto refresh every 3 seconds
+    setInterval(loadAgents, 3000);
+  </script>
+</body>
+</html>
