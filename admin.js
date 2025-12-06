@@ -144,6 +144,8 @@ async function upgradeAgent(agentId) {
   }
 
   try {
+    console.log('Upgrading agent:', agentId);
+    
     // Update on server
     const response = await fetch(`https://kohkonhbanhang1.onrender.com/api/agents/${agentId}/upgrade`, {
       method: 'PUT',
@@ -151,26 +153,29 @@ async function upgradeAgent(agentId) {
       body: JSON.stringify({ accountType: 'VIP' })
     });
 
-    if (response.ok) {
+    const data = await response.json();
+    console.log('Server response:', data);
+
+    if (response.ok && data.success) {
+      // Also update localStorage
+      const agents = JSON.parse(localStorage.getItem('agents')) || [];
+      const agentIndex = agents.findIndex(a => a.id == agentId);
+      
+      if (agentIndex !== -1) {
+        agents[agentIndex].accountType = 'VIP';
+        agents[agentIndex].upgradedAt = new Date().toISOString();
+        localStorage.setItem('agents', JSON.stringify(agents));
+      }
+      
       alert('✅ Đã nâng cấp lên VIP!');
+      loadAdminData();
     } else {
-      throw new Error('Server error');
+      throw new Error(data.error || 'Server error');
     }
   } catch (error) {
-    console.warn('Updating localStorage:', error);
-    // Fallback to localStorage
-    const agents = JSON.parse(localStorage.getItem('agents')) || [];
-    const agentIndex = agents.findIndex(a => a.id === agentId);
-    
-    if (agentIndex !== -1) {
-      agents[agentIndex].accountType = 'VIP';
-      agents[agentIndex].upgradedAt = new Date().toISOString();
-      localStorage.setItem('agents', JSON.stringify(agents));
-      alert('✅ Đã nâng cấp lên VIP!');
-    }
+    console.error('Upgrade error:', error);
+    alert('❌ Lỗi: ' + error.message + '\n\nThử lại sau!');
   }
-
-  loadAdminData();
 }
 
 async function downgradeAgent(agentId) {
@@ -179,27 +184,36 @@ async function downgradeAgent(agentId) {
   }
 
   try {
+    console.log('Downgrading agent:', agentId);
+    
     const response = await fetch(`https://kohkonhbanhang1.onrender.com/api/agents/${agentId}/upgrade`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ accountType: 'FREE' })
     });
 
-    if (response.ok) {
+    const data = await response.json();
+    console.log('Server response:', data);
+
+    if (response.ok && data.success) {
+      // Also update localStorage
+      const agents = JSON.parse(localStorage.getItem('agents')) || [];
+      const agentIndex = agents.findIndex(a => a.id == agentId);
+      
+      if (agentIndex !== -1) {
+        agents[agentIndex].accountType = 'FREE';
+        localStorage.setItem('agents', JSON.stringify(agents));
+      }
+      
       alert('✅ Đã hạ xuống Thường!');
+      loadAdminData();
+    } else {
+      throw new Error(data.error || 'Server error');
     }
   } catch (error) {
-    const agents = JSON.parse(localStorage.getItem('agents')) || [];
-    const agentIndex = agents.findIndex(a => a.id === agentId);
-    
-    if (agentIndex !== -1) {
-      agents[agentIndex].accountType = 'FREE';
-      localStorage.setItem('agents', JSON.stringify(agents));
-      alert('✅ Đã hạ xuống Thường!');
-    }
+    console.error('Downgrade error:', error);
+    alert('❌ Lỗi: ' + error.message + '\n\nThử lại sau!');
   }
-
-  loadAdminData();
 }
 
 async function deleteAgent(agentId) {

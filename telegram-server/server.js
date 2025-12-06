@@ -970,14 +970,20 @@ app.put('/api/agents/:id/upgrade', (req, res) => {
     const { id } = req.params;
     const { accountType } = req.body;
     
-    const agent = globalAgents.find(a => a.id === id);
+    // Convert id to number if needed
+    const agentId = isNaN(id) ? id : parseInt(id);
+    
+    const agent = globalAgents.find(a => a.id == agentId || a.id === id);
     
     if (!agent) {
+      console.log('❌ Agent not found. ID:', id, 'Agents:', globalAgents.length);
       return res.status(404).json({ error: 'Agent not found' });
     }
     
     agent.accountType = accountType;
     agent.upgradedAt = new Date().toISOString();
+    
+    console.log(`✅ Agent upgraded: ${agent.fullname} → ${accountType}`);
     
     res.json({
       success: true,

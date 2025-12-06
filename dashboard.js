@@ -5,6 +5,34 @@ let currentUser = null;
 if (currentUserStr) {
   currentUser = JSON.parse(currentUserStr);
   
+  // Fetch latest user data from server to get updated accountType
+  (async () => {
+    try {
+      const agents = JSON.parse(localStorage.getItem('agents')) || [];
+      const localAgent = agents.find(a => a.id === currentUser.id);
+      
+      if (localAgent && localAgent.accountType) {
+        currentUser.accountType = localAgent.accountType;
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        updateUserDisplay();
+      }
+    } catch (error) {
+      console.log('Could not fetch updated user data');
+    }
+  })();
+  
+  updateUserDisplay();
+  
+  // Display agent's telegram
+  const telegramDisplay = document.getElementById('agentTelegramDisplay');
+  if (telegramDisplay) {
+    telegramDisplay.textContent = currentUser.telegram || 'Chưa cập nhật';
+  }
+} else {
+  window.location.href = 'login.html';
+}
+
+function updateUserDisplay() {
   // Set default accountType if not exists
   if (!currentUser.accountType) {
     currentUser.accountType = 'FREE';
@@ -14,15 +42,10 @@ if (currentUserStr) {
     '<span style="background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); color: #b8860b; padding: 3px 10px; border-radius: 15px; font-size: 0.85rem; margin-left: 10px;">👑 VIP</span>' : 
     '<span style="background: #e3f2fd; color: #1976d2; padding: 3px 10px; border-radius: 15px; font-size: 0.85rem; margin-left: 10px;">🆓 Thường</span>';
   
-  document.getElementById('userName').innerHTML = `Xin chào, ${currentUser.fullname} ${accountBadge}`;
-  
-  // Display agent's telegram
-  const telegramDisplay = document.getElementById('agentTelegramDisplay');
-  if (telegramDisplay) {
-    telegramDisplay.textContent = currentUser.telegram || 'Chưa cập nhật';
+  const userNameEl = document.getElementById('userName');
+  if (userNameEl) {
+    userNameEl.innerHTML = `Xin chào, ${currentUser.fullname} ${accountBadge}`;
   }
-} else {
-  window.location.href = 'login.html';
 }
 
 // Setup file input listener when page loads
