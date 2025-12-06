@@ -77,6 +77,21 @@ const verificationCodes = new Map();
 // Store user chat IDs (username -> chatId)
 const userChatIds = new Map();
 
+// Admin Telegram ID để nhận thông báo (Lấy bằng cách gửi /start cho bot)
+const ADMIN_TELEGRAM_ID = ADMIN_GROUP_ID; // Sử dụng group ID làm admin
+
+// Function to notify admin
+async function notifyAdmin(message) {
+  try {
+    if (ADMIN_TELEGRAM_ID) {
+      await bot.sendMessage(ADMIN_TELEGRAM_ID, message, { parse_mode: 'HTML' });
+      console.log('📨 Admin notification sent');
+    }
+  } catch (error) {
+    console.error('❌ Failed to notify admin:', error.message);
+  }
+}
+
 console.log('🤖 Telegram Bot đã khởi động!');
 
 // ==================== BOT COMMANDS ====================
