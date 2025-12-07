@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tạo OG Image - KohKong</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
+    
+    .preview {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    #ogImage {
+      width: 1200px;
+      height: 630px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-align: center;
+      padding: 60px;
+      box-sizing: border-box;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    #ogImage::before {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      top: -100px;
+      right: -100px;
+    }
+    
+    #ogImage::after {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+      bottom: -150px;
+      left: -150px;
+    }
+    
+    .og-content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .og-icon {
+      font-size: 120px;
+      margin-bottom: 30px;
+    }
+    
+    .og-title {
+      font-size: 72px;
+      font-weight: bold;
+      margin: 0 0 20px 0;
+      text-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .og-subtitle {
+      font-size: 36px;
+      margin: 0 0 30px 0;
+      opacity: 0.95;
+    }
+    
+    .og-description {
+      font-size: 28px;
+      max-width: 900px;
+      margin: 0 auto 40px;
+      line-height: 1.5;
+      opacity: 0.9;
+    }
+    
+    .og-url {
+      font-size: 32px;
+      background: rgba(255,255,255,0.2);
+      padding: 15px 40px;
+      border-radius: 50px;
+      backdrop-filter: blur(10px);
+      font-weight: bold;
+    }
+    
+    .download-btn {
+      margin-top: 20px;
+      padding: 15px 30px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    
+    .download-btn:hover {
+      background: #5568d3;
+    }
+    
+    .instructions {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-left: 4px solid #667eea;
+      border-radius: 5px;
+    }
+    
+    .instructions h3 {
+      margin-top: 0;
+      color: #667eea;
+    }
+    
+    .instructions ol {
+      margin: 10px 0;
+      padding-left: 20px;
+    }
+    
+    .instructions li {
+      margin: 8px 0;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="preview">
+    <h2 style="text-align: center; color: #667eea;">🎨 Open Graph Image Generator</h2>
+    
+    <div id="ogImage">
+      <div class="og-content">
+        <div class="og-icon">🏪</div>
+        <h1 class="og-title">KohKong Shop</h1>
+        <p class="og-subtitle">Nền Tảng Bán Hàng Online #1</p>
+        <p class="og-description">
+          Mua sắm online dễ dàng • Hàng nghìn sản phẩm chất lượng<br>
+          Giao hàng nhanh chóng • Giá cả hợp lý
+        </p>
+        <div class="og-url">taphoakohkong.live</div>
+      </div>
+    </div>
+    
+    <div style="text-align: center;">
+      <button class="download-btn" onclick="downloadImage()">⬇️ Tải Xuống Ảnh (1200x630px)</button>
+      <button class="download-btn" onclick="copyToClipboard()">📋 Copy Canvas</button>
+    </div>
+    
+    <div class="instructions">
+      <h3>📝 Hướng dẫn sử dụng:</h3>
+      <ol>
+        <li>Click nút "Tải Xuống Ảnh" để download file PNG</li>
+        <li>Upload ảnh lên thư mục root của website (cùng cấp với index.html)</li>
+        <li>Đổi tên file thành <code>og-image.jpg</code></li>
+        <li>Hoặc sử dụng dịch vụ như <a href="https://imgur.com" target="_blank">Imgur</a> để host ảnh</li>
+        <li>Update URL trong meta tags của các file HTML</li>
+      </ol>
+      
+      <h3>🔗 Meta tags cần thêm/cập nhật:</h3>
+      <pre style="background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;">
+&lt;!-- Open Graph / Facebook --&gt;
+&lt;meta property="og:image" content="https://taphoakohkong.live/og-image.jpg"&gt;
+&lt;meta property="og:image:width" content="1200"&gt;
+&lt;meta property="og:image:height" content="630"&gt;
+&lt;meta property="og:image:type" content="image/jpeg"&gt;
+
+&lt;!-- Twitter --&gt;
+&lt;meta name="twitter:image" content="https://taphoakohkong.live/og-image.jpg"&gt;
+&lt;meta name="twitter:card" content="summary_large_image"&gt;
+      </pre>
+    </div>
+  </div>
+
+  <script>
+    async function downloadImage() {
+      try {
+        // Tạo canvas
+        const canvas = document.createElement('canvas');
+        canvas.width = 1200;
+        canvas.height = 630;
+        const ctx = canvas.getContext('2d');
+        
+        // Background gradient
+        const gradient = ctx.createLinearGradient(0, 0, 1200, 630);
+        gradient.addColorStop(0, '#667eea');
+        gradient.addColorStop(1, '#764ba2');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 1200, 630);
+        
+        // Decorative circles
+        ctx.fillStyle = 'rgba(255,255,255,0.1)';
+        ctx.beginPath();
+        ctx.arc(1100, 100, 150, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.fillStyle = 'rgba(255,255,255,0.05)';
+        ctx.beginPath();
+        ctx.arc(100, 530, 200, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Icon
+        ctx.font = 'bold 120px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = 'white';
+        ctx.fillText('🏪', 600, 180);
+        
+        // Title
+        ctx.font = 'bold 72px Arial';
+        ctx.shadowColor = 'rgba(0,0,0,0.2)';
+        ctx.shadowBlur = 8;
+        ctx.shadowOffsetY = 4;
+        ctx.fillText('KohKong Shop', 600, 270);
+        
+        // Subtitle
+        ctx.font = '36px Arial';
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetY = 0;
+        ctx.fillStyle = 'rgba(255,255,255,0.95)';
+        ctx.fillText('Nền Tảng Bán Hàng Online #1', 600, 320);
+        
+        // Description line 1
+        ctx.font = '28px Arial';
+        ctx.fillStyle = 'rgba(255,255,255,0.9)';
+        ctx.fillText('Mua sắm online dễ dàng • Hàng nghìn sản phẩm chất lượng', 600, 380);
+        
+        // Description line 2
+        ctx.fillText('Giao hàng nhanh chóng • Giá cả hợp lý', 600, 420);
+        
+        // URL Box
+        ctx.fillStyle = 'rgba(255,255,255,0.2)';
+        ctx.beginPath();
+        ctx.roundRect(350, 460, 500, 70, 35);
+        ctx.fill();
+        
+        // URL Text
+        ctx.font = 'bold 32px Arial';
+        ctx.fillStyle = 'white';
+        ctx.fillText('taphoakohkong.live', 600, 505);
+        
+        // Download
+        canvas.toBlob((blob) => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'og-image-kohkong-shop.png';
+          a.click();
+          URL.revokeObjectURL(url);
+        }, 'image/png');
+        
+        alert('✅ Ảnh đã được tải xuống!\n\nLưu ý: Đổi tên file thành "og-image.jpg" và upload lên website.');
+      } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Lỗi khi tạo ảnh. Vui lòng thử lại.');
+      }
+    }
+    
+    async function copyToClipboard() {
+      try {
+        // Tạo canvas
+        const canvas = document.createElement('canvas');
+        canvas.width = 1200;
+        canvas.height = 630;
+        const ctx = canvas.getContext('2d');
+        
+        // Background gradient
+        const gradient = ctx.createLinearGradient(0, 0, 1200, 630);
+        gradient.addColorStop(0, '#667eea');
+        gradient.addColorStop(1, '#764ba2');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 1200, 630);
+        
+        // Decorative circles
+        ctx.fillStyle = 'rgba(255,255,255,0.1)';
+        ctx.beginPath();
+        ctx.arc(1100, 100, 150, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.fillStyle = 'rgba(255,255,255,0.05)';
+        ctx.beginPath();
+        ctx.arc(100, 530, 200, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Icon
+        ctx.font = 'bold 120px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = 'white';
+        ctx.fillText('🏪', 600, 180);
+        
+        // Title
+        ctx.font = 'bold 72px Arial';
+        ctx.shadowColor = 'rgba(0,0,0,0.2)';
+        ctx.shadowBlur = 8;
+        ctx.shadowOffsetY = 4;
+        ctx.fillText('KohKong Shop', 600, 270);
+        
+        // Subtitle
+        ctx.font = '36px Arial';
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetY = 0;
+        ctx.fillStyle = 'rgba(255,255,255,0.95)';
+        ctx.fillText('Nền Tảng Bán Hàng Online #1', 600, 320);
+        
+        // Description
+        ctx.font = '28px Arial';
+        ctx.fillStyle = 'rgba(255,255,255,0.9)';
+        ctx.fillText('Mua sắm online dễ dàng • Hàng nghìn sản phẩm chất lượng', 600, 380);
+        ctx.fillText('Giao hàng nhanh chóng • Giá cả hợp lý', 600, 420);
+        
+        // URL Box
+        ctx.fillStyle = 'rgba(255,255,255,0.2)';
+        ctx.beginPath();
+        ctx.roundRect(350, 460, 500, 70, 35);
+        ctx.fill();
+        
+        // URL Text
+        ctx.font = 'bold 32px Arial';
+        ctx.fillStyle = 'white';
+        ctx.fillText('taphoakohkong.live', 600, 505);
+        
+        // Copy to clipboard
+        canvas.toBlob(async (blob) => {
+          try {
+            await navigator.clipboard.write([
+              new ClipboardItem({ 'image/png': blob })
+            ]);
+            alert('✅ Ảnh đã được copy vào clipboard!\n\nBạn có thể paste (Ctrl+V) vào bất kỳ đâu.');
+          } catch (err) {
+            alert('❌ Trình duyệt không hỗ trợ copy ảnh vào clipboard.\n\nVui lòng dùng nút "Tải Xuống Ảnh" thay thế.');
+          }
+        }, 'image/png');
+      } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Lỗi khi copy ảnh.');
+      }
+    }
+  </script>
+</body>
+</html>

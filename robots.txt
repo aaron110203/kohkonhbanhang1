@@ -1,23 +1,60 @@
-# Allow all search engines to crawl everything
+# robots.txt for taphoakohkong.live
+# Updated: 2025-12-07
+
 User-agent: *
 Allow: /
+Allow: /products.html
+Allow: /login.html
+Allow: /index.html
+
+# Disallow admin and internal pages
+Disallow: /admin.html
+Disallow: /admin-login.html
+Disallow: /admin-hub.html
+Disallow: /dashboard.html
+Disallow: /test-*.html
+Disallow: /debug-*.html
+Disallow: /fix-*.html
+Disallow: /sync-*.html
+Disallow: /check-*.html
+Disallow: /DEMO-*.html
+Disallow: /UPLOAD-*.html
+Disallow: /secure-*.html
+Disallow: /auto-*.html
+Disallow: /create-*.html
+
+# Allow CSS and mobile styles
+Allow: /*.css$
 
 # Specific rules for major search engines
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 0
 
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Baiduspider
 Allow: /
+Crawl-delay: 1
 
 User-agent: YandexBot
 Allow: /
+Crawl-delay: 1
 
-# Disallow crawling of authentication pages
-User-agent: *
-Disallow: /dashboard.html
+# Social media crawlers
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: TelegramBot
+Allow: /
 
 # Sitemap location
 Sitemap: https://taphoakohkong.live/sitemap.xml
+
+# Crawl-delay for general bots
+Crawl-delay: 1
