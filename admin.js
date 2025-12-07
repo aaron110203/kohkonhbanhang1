@@ -130,7 +130,7 @@ function renderAgentsTable() {
           ` : ''}
         </td>
         <td><strong>${productsCount}</strong></td>
-        <td style="font-size: 0.85rem;">${formatDate(agent.createdAt)}</td>
+        <td style="font-size: 0.85rem;">${formatDate(agent.createdAt || agent.registeredAt)}</td>
         <td style="font-size: 0.85rem; color: #666;">${agent.lastLogin ? formatDateTime(agent.lastLogin) : 'Chưa đăng nhập'}</td>
         <td style="white-space: nowrap;">
           ${accountType === 'FREE' ? `
@@ -287,6 +287,7 @@ async function deleteAgent(agentId) {
     if (response.ok && data.success) {
       // Xóa khỏi localStorage
       const agents = JSON.parse(localStorage.getItem('agents')) || [];
+      const deletedAgent = agents.find(a => a.id == agentId);
       const newAgents = agents.filter(a => a.id != agentId);
       localStorage.setItem('agents', JSON.stringify(newAgents));
       
@@ -294,6 +295,13 @@ async function deleteAgent(agentId) {
       const products = JSON.parse(localStorage.getItem('products')) || [];
       const newProducts = products.filter(p => p.agentId != agentId);
       localStorage.setItem('products', JSON.stringify(newProducts));
+      
+      // Đá user ra nếu đang đăng nhập bằng cách xóa session
+      const currentUser = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || '{}');
+      if (currentUser.username === deletedAgent?.username) {
+        localStorage.removeItem('currentUser');
+        sessionStorage.removeItem('currentUser');
+      }
       
       alert(
         '✅ ĐÃ XÓA TÀI KHOẢN VÀ CHẶN IP!\n\n' +

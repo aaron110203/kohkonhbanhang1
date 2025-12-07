@@ -12,11 +12,13 @@ async function syncAgentToServer(agent) {
         username: agent.username,
         password: agent.password,
         telegram: agent.telegram,
+        ip: agent.ip || 'unknown',
         verified: agent.verified || false,
         role: agent.role || 'agent',
         accountType: agent.accountType || 'FREE',
         products: agent.products || [],
         createdAt: agent.createdAt || agent.registeredAt || new Date().toISOString(),
+        registeredAt: agent.registeredAt || agent.createdAt || new Date().toISOString(),
         isActive: agent.isActive !== false
       })
     });
@@ -370,19 +372,31 @@ async function handleRegister(e) {
     return;
   }
   
+  // Lấy IP của người dùng
+  let userIP = 'unknown';
+  try {
+    const ipResponse = await fetch('https://api.ipify.org?format=json');
+    const ipData = await ipResponse.json();
+    userIP = ipData.ip;
+  } catch (error) {
+    console.warn('Could not fetch IP:', error);
+  }
+
   // Create new agent account
+  const currentTime = new Date().toISOString();
   const newAgent = {
     id: Date.now(),
     fullname,
     username,
     password,
     telegram,
+    ip: userIP,
     verified: isVerified,
     role: 'agent',
     accountType: 'FREE', // Mặc định là FREE (5 sản phẩm/ngày)
     products: [],
-    registeredAt: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
+    registeredAt: currentTime,
+    createdAt: currentTime,
     isActive: true
   };
   
@@ -454,6 +468,23 @@ async function handleLogin(e) {
       // Xóa localStorage
       localStorage.removeItem('currentAgent');
       localStorage.removeItem('currentUser');
+      sessionStorage.removeItem('currentAgent');
+      sessionStorage.removeItem('currentUser');
+      return;
+    }
+
+    // KIỂM TRA TÀI KHOẢN BỊ XÓA
+    if (response.status === 404 || data.error === 'Agent not found') {
+      alert(
+        '❌ TÀI KHOẢN KHÔNG TỒN TẠI!\n\n' +
+        'Tài khoản của bạn đã bị Admin xóa.\n' +
+        'Vui lòng liên hệ Admin để được hỗ trợ.'
+      );
+      // Xóa localStorage
+      localStorage.removeItem('currentAgent');
+      localStorage.removeItem('currentUser');
+      sessionStorage.removeItem('currentAgent');
+      sessionStorage.removeItem('currentUser');
       return;
     }
 

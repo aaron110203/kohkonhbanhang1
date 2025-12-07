@@ -993,7 +993,20 @@ app.post('/api/agents/login', (req, res) => {
     );
 
     if (!agent) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      // Kiểm tra xem username có tồn tại không
+      const userExists = globalAgents.some(a => a.username === username);
+      
+      if (!userExists) {
+        return res.status(404).json({ 
+          error: 'Agent not found',
+          message: 'Tài khoản không tồn tại hoặc đã bị xóa'
+        });
+      }
+      
+      return res.status(401).json({ 
+        error: 'Invalid credentials',
+        message: 'Mật khẩu không đúng'
+      });
     }
     
     // Cập nhật IP mới nhất
@@ -1056,7 +1069,7 @@ app.put('/api/agents/:id/upgrade', (req, res) => {
 });
 
 // DELETE: Delete agent và chặn IP
-app.delete('/api/agents/:id', (req, res) => {
+app.delete('/api/agents/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const agentId = isNaN(id) ? id : parseInt(id);
@@ -1072,11 +1085,27 @@ app.delete('/api/agents/:id', (req, res) => {
     blockedIPs.push({
       ip: deleted.ip,
       username: deleted.username,
+      fullname: deleted.fullname,
       blockedAt: new Date().toISOString(),
       reason: 'Deleted by admin'
     });
     
     console.log('🚫 Blocked IP:', deleted.ip, 'Username:', deleted.username);
+    
+    // Gửi thông báo cho Admin qua Telegram
+    try {
+      await notifyAdmin(
+        `🚫 <b>TÀI KHOẢN BỊ XÓA VÀ CHẶN IP</b>\n\n` +
+        `👤 <b>Tên:</b> ${deleted.fullname}\n` +
+        `🆔 <b>Username:</b> ${deleted.username}\n` +
+        `📍 <b>IP bị chặn:</b> <code>${deleted.ip || 'N/A'}</code>\n` +
+        `📱 <b>Telegram:</b> ${deleted.telegram || 'N/A'}\n` +
+        `⏰ <b>Thời gian:</b> ${new Date().toLocaleString('vi-VN')}\n\n` +
+        `❌ Đại lý này không thể đăng nhập hoặc đăng ký lại!`
+      );
+    } catch (error) {
+      console.error('Failed to notify admin:', error);
+    }
     
     // Also delete agent's products
     globalProducts = globalProducts.filter(p => p.agentId != agentId && p.agentId !== id);
@@ -1084,7 +1113,8 @@ app.delete('/api/agents/:id', (req, res) => {
     res.json({
       success: true,
       message: 'Agent deleted and IP blocked',
-      agent: deleted
+      agent: deleted,
+      blockedIP: deleted.ip
     });
   } catch (error) {
     console.error('Error deleting agent:', error);
