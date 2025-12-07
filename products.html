@@ -51,7 +51,102 @@
   <!-- Main Content -->
   <main class="main-container">
     <div class="container">
-      <h2 class="page-title">Danh Sách Sản Phẩm</h2>
+      <!-- Sidebar Menu -->
+      <aside class="sidebar">
+        <div class="sidebar-section">
+          <h3 class="sidebar-title">📂 Danh Mục</h3>
+          <div class="category-menu" id="categoryMenu">
+            <button class="category-item active" data-category="" onclick="selectCategory('')">
+              <span class="category-icon">🏪</span>
+              <span>Tất Cả</span>
+              <span class="category-count" id="count-all">0</span>
+            </button>
+            <button class="category-item" data-category="food" onclick="selectCategory('food')">
+              <span class="category-icon">🍚</span>
+              <span>Đồ Ăn</span>
+              <span class="category-count" id="count-food">0</span>
+            </button>
+            <button class="category-item" data-category="drinks" onclick="selectCategory('drinks')">
+              <span class="category-icon">🥤</span>
+              <span>Đồ Uống</span>
+              <span class="category-count" id="count-drinks">0</span>
+            </button>
+            <button class="category-item" data-category="fruits" onclick="selectCategory('fruits')">
+              <span class="category-icon">🍎</span>
+              <span>Trái Cây</span>
+              <span class="category-count" id="count-fruits">0</span>
+            </button>
+            <button class="category-item" data-category="cosmetics" onclick="selectCategory('cosmetics')">
+              <span class="category-icon">💄</span>
+              <span>Mỹ Phẩm</span>
+              <span class="category-count" id="count-cosmetics">0</span>
+            </button>
+            <button class="category-item" data-category="personal" onclick="selectCategory('personal')">
+              <span class="category-icon">🧴</span>
+              <span>Chăm Sóc</span>
+              <span class="category-count" id="count-personal">0</span>
+            </button>
+            <button class="category-item" data-category="fashion" onclick="selectCategory('fashion')">
+              <span class="category-icon">👕</span>
+              <span>Thời Trang</span>
+              <span class="category-count" id="count-fashion">0</span>
+            </button>
+            <button class="category-item" data-category="electronics" onclick="selectCategory('electronics')">
+              <span class="category-icon">📱</span>
+              <span>Điện Tử</span>
+              <span class="category-count" id="count-electronics">0</span>
+            </button>
+            <button class="category-item" data-category="medicine" onclick="selectCategory('medicine')">
+              <span class="category-icon">💊</span>
+              <span>Thuốc</span>
+              <span class="category-count" id="count-medicine">0</span>
+            </button>
+            <button class="category-item" data-category="grocery" onclick="selectCategory('grocery')">
+              <span class="category-icon">🛒</span>
+              <span>Tạp Hóa</span>
+              <span class="category-count" id="count-grocery">0</span>
+            </button>
+            <button class="category-item" data-category="home" onclick="selectCategory('home')">
+              <span class="category-icon">🏠</span>
+              <span>Gia Dụng</span>
+              <span class="category-count" id="count-home">0</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <h3 class="sidebar-title">👥 Đại Lý</h3>
+          <div class="agent-filter" id="agentFilter">
+            <select class="agent-select" onchange="filterByAgent(this.value)">
+              <option value="">Tất cả đại lý</option>
+            </select>
+            <div class="agent-count">
+              <strong id="totalAgents">0</strong> đại lý
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <div class="content-area">
+        <h2 class="page-title">Danh Sách Sản Phẩm</h2>
+
+        <!-- Search Bar -->
+        <div class="search-section">
+          <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input 
+              type="text" 
+              id="searchInput" 
+              placeholder="Tìm kiếm sản phẩm theo tên, mô tả, đại lý..." 
+              oninput="filterProducts()"
+            >
+            <button class="search-clear" onclick="clearSearch()" style="display: none;">✕</button>
+          </div>
+          <div class="search-stats">
+            Tìm thấy <strong id="productCount">0</strong> sản phẩm
+          </div>
+        </div>
 
       <!-- Telegram Connection Banner -->
       <div class="telegram-banner" id="telegramBanner">
@@ -59,46 +154,11 @@
           <span class="banner-icon">🤖</span>
           <div class="banner-text">
             <h3>📱 Đặt Hàng Qua Telegram</h3>
-            <p>Khách hàng của bạn có thể đặt hàng trực tiếp qua Telegram Bot. Bạn sẽ nhận thông báo ngay lập tức và xử lý đơn hàng nhanh chóng!</p>
-            <div class="banner-features">
-              ✅ Nhận đơn hàng tức thì
-              ✅ Xác nhận đơn tự động
-              ✅ Chat trực tiếp với khách
-              ✅ Theo dõi trạng thái đơn
-            </div>
+            <p>Khách hàng của bạn có thể đặt hàng trực tiếp qua Telegram Bot. Bạn sẽ nhận thông báo ngay lập tức!</p>
           </div>
           <button class="connect-bot-btn" onclick="connectTelegramBot()">
-            Kết Nối Bot Ngay
+            Kết Nối Bot
           </button>
-        </div>
-      </div>
-
-      <!-- Filter Section -->
-      <div class="filter-section">
-        <div class="filter-group">
-          <label>Danh Mục:</label>
-          <select id="categoryFilter" onchange="filterProducts()">
-            <option value="">Tất cả</option>
-            <option value="food">🍚 Đồ Ăn</option>
-            <option value="drinks">🥤 Đồ Uống</option>
-            <option value="fruits">🍎 Trái Cây</option>
-            <option value="cosmetics">💄 Mỹ Phẩm</option>
-            <option value="personal">🧴 Chăm Sóc</option>
-            <option value="fashion">👕 Thời Trang</option>
-            <option value="electronics">📱 Điện Tử</option>
-            <option value="medicine">💊 Thuốc</option>
-            <option value="grocery">🛒 Tạp Hóa</option>
-            <option value="home">🏠 Gia Dụng</option>
-          </select>
-        </div>
-
-        <div class="filter-group">
-          <label>Tìm kiếm:</label>
-          <input type="text" id="searchInput" placeholder="Tìm sản phẩm..." oninput="filterProducts()">
-        </div>
-
-        <div class="product-count">
-          Có <strong id="productCount">0</strong> sản phẩm
         </div>
       </div>
 
@@ -106,6 +166,7 @@
       <div class="products-grid" id="productsGrid">
         <p class="empty-state">Đang tải sản phẩm...</p>
       </div>
+    </div>
     </div>
   </main>
 

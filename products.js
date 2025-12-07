@@ -2,6 +2,9 @@
 let allProducts = [];
 let filteredProducts = [];
 let currentProduct = null;
+let selectedCategory = '';
+let selectedAgent = '';
+let allAgents = [];
 
 // Check if user connected to Telegram Bot
 let userTelegram = localStorage.getItem('userTelegram') || null;
@@ -9,7 +12,14 @@ let userTelegram = localStorage.getItem('userTelegram') || null;
 // Load products on page load
 document.addEventListener('DOMContentLoaded', () => {
   loadAllProducts();
+  loadAgents();
   checkTelegramConnection();
+  
+  // Auto refresh every 10 seconds
+  setInterval(() => {
+    loadAllProducts();
+    loadAgents();
+  }, 10000);
 });
 
 async function loadAllProducts() {
@@ -55,8 +65,123 @@ async function loadAllProducts() {
   }
 
   console.log('📦 Total products loaded:', allProducts.length);
-  filteredProducts = [...allProducts];
+  updateCategoryCounts();
+  filterProducts();
+}
+
+async function loadAgents() {
+  try {
+    const response = await fetch('https://kohkonhbanhang1.onrender.com/api/agents');
+    if (response.ok) {
+      const data = await response.json();
+      allAgents = data.agents || [];
+    }
+  } catch (error) {
+    allAgents = JSON.parse(localStorage.getItem('agents')) || [];
+  }
+  
+  updateAgentFilter();
+}
+
+function updateAgentFilter() {
+  const select = document.querySelector('.agent-select');
+  const agentsWithProducts = new Set();
+  
+  allProducts.forEach(p => {
+    if (p.agentName || p.agentId) {
+      agentsWithProducts.add(p.agentName || p.agentId);
+    }
+  });
+  
+  select.innerHTML = '<option value="">Tất cả đại lý</option>';
+  
+  Array.from(agentsWithProducts).sort().forEach(agentName => {
+    const count = allProducts.filter(p => 
+      (p.agentName === agentName) || (p.agentId === agentName)
+    ).length;
+    
+    select.innerHTML += `<option value="${agentName}">${agentName} (${count})</option>`;
+  });
+  
+  document.getElementById('totalAgents').textContent = agentsWithProducts.size;
+}
+
+function updateCategoryCounts() {
+  const categories = ['food', 'drinks', 'fruits', 'cosmetics', 'personal', 'fashion', 'electronics', 'medicine', 'grocery', 'home'];
+  
+  // Count all
+  document.getElementById('count-all').textContent = allProducts.length;
+  
+  // Count by category
+  categories.forEach(cat => {
+    const count = allProducts.filter(p => p.category === cat).length;
+    const countEl = document.getElementById(`count-${cat}`);
+    if (countEl) {
+      countEl.textContent = count;
+    }
+  });
+}
+
+function selectCategory(category) {
+  selectedCategory = category;
+  
+  // Update active state
+  document.querySelectorAll('.category-item').forEach(item => {
+    item.classList.remove('active');
+  });
+  
+  const activeItem = document.querySelector(`[data-category="${category}"]`);
+  if (activeItem) {
+    activeItem.classList.add('active');
+  }
+  
+  filterProducts();
+}
+
+function filterByAgent(agentName) {
+  selectedAgent = agentName;
+  filterProducts();
+}
+
+function filterProducts() {
+  const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+  
+  // Show/hide clear button
+  const clearBtn = document.querySelector('.search-clear');
+  if (clearBtn) {
+    clearBtn.style.display = searchTerm ? 'flex' : 'none';
+  }
+  
+  filteredProducts = allProducts.filter(product => {
+    // Filter by category
+    if (selectedCategory && product.category !== selectedCategory) {
+      return false;
+    }
+    
+    // Filter by agent
+    if (selectedAgent && product.agentName !== selectedAgent && product.agentId !== selectedAgent) {
+      return false;
+    }
+    
+    // Filter by search term
+    if (searchTerm) {
+      const matchName = product.name.toLowerCase().includes(searchTerm);
+      const matchDesc = product.description?.toLowerCase().includes(searchTerm);
+      const matchAgent = product.agentName?.toLowerCase().includes(searchTerm);
+      const matchCategory = getCategoryName(product.category).toLowerCase().includes(searchTerm);
+      
+      return matchName || matchDesc || matchAgent || matchCategory;
+    }
+    
+    return true;
+  });
+  
   renderProducts();
+}
+
+function clearSearch() {
+  document.getElementById('searchInput').value = '';
+  filterProducts();
 }
 
 function renderProducts() {
