@@ -10,28 +10,12 @@
     <priority>1.0</priority>
   </url>
   
-  <!-- Products Page -->
-  <url>
-    <loc>https://taphoakohkong.live/products.html</loc>
-    <lastmod>2025-12-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  
   <!-- Login Page -->
   <url>
     <loc>https://taphoakohkong.live/login.html</loc>
     <lastmod>2025-12-07</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <!-- Dashboard (for agents only) -->
-  <url>
-    <loc>https://taphoakohkong.live/dashboard.html</loc>
-    <lastmod>2025-12-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.8</priority>
   </url>
 
 </urlset>

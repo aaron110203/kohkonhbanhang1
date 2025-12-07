@@ -3,7 +3,6 @@
 
 User-agent: *
 Allow: /
-Allow: /products.html
 Allow: /login.html
 Allow: /index.html
 
@@ -25,6 +24,9 @@ Disallow: /create-*.html
 
 # Allow CSS and mobile styles
 Allow: /*.css$
+
+# Sitemap location
+Sitemap: https://taphoakohkong.live/sitemap.xml
 
 # Specific rules for major search engines
 User-agent: Googlebot
