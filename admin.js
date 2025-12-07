@@ -154,26 +154,6 @@ function renderAgentsTable() {
     `;
   }).join('');
 }
-        <td><strong>${productsCount}</strong></td>
-        <td>${formatDate(agent.createdAt)}</td>
-        <td>
-          ${accountType === 'FREE' ? `
-            <button class="btn-upgrade" onclick="upgradeAgent('${agent.id}')">
-              👑 Nâng Cấp VIP
-            </button>
-          ` : `
-            <button class="btn-downgrade" onclick="downgradeAgent('${agent.id}')">
-              ⬇️ Hạ Xuống Thường
-            </button>
-          `}
-          <button class="btn-delete" onclick="deleteAgent('${agent.id}')">
-            🗑️ Xóa
-          </button>
-        </td>
-      </tr>
-    `;
-  }).join('');
-}
 
 function getTodayProductCount(agentId) {
   const today = new Date().toDateString();
