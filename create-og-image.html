@@ -187,70 +187,80 @@
   </div>
 
   <script>
+    // Auto-generate preview on load
+    window.addEventListener('DOMContentLoaded', () => {
+      generatePreview();
+    });
+
+    function generatePreview() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1200;
+      canvas.height = 630;
+      const ctx = canvas.getContext('2d');
+      
+      // Background gradient
+      const gradient = ctx.createLinearGradient(0, 0, 1200, 630);
+      gradient.addColorStop(0, '#667eea');
+      gradient.addColorStop(1, '#764ba2');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 1200, 630);
+      
+      // Decorative circles
+      ctx.fillStyle = 'rgba(255,255,255,0.1)';
+      ctx.beginPath();
+      ctx.arc(1100, 100, 150, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = 'rgba(255,255,255,0.05)';
+      ctx.beginPath();
+      ctx.arc(100, 530, 200, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Icon
+      ctx.font = 'bold 120px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillStyle = 'white';
+      ctx.fillText('🏪', 600, 180);
+      
+      // Title
+      ctx.font = 'bold 72px Arial';
+      ctx.shadowColor = 'rgba(0,0,0,0.2)';
+      ctx.shadowBlur = 8;
+      ctx.shadowOffsetY = 4;
+      ctx.fillText('KohKong Shop', 600, 270);
+      
+      // Subtitle
+      ctx.font = '36px Arial';
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetY = 0;
+      ctx.fillStyle = 'rgba(255,255,255,0.95)';
+      ctx.fillText('Nền Tảng Bán Hàng Online #1', 600, 320);
+      
+      // Description line 1
+      ctx.font = '28px Arial';
+      ctx.fillStyle = 'rgba(255,255,255,0.9)';
+      ctx.fillText('Mua sắm online dễ dàng • Hàng nghìn sản phẩm chất lượng', 600, 380);
+      
+      // Description line 2
+      ctx.fillText('Giao hàng nhanh chóng • Giá cả hợp lý', 600, 420);
+      
+      // URL Box
+      ctx.fillStyle = 'rgba(255,255,255,0.2)';
+      ctx.beginPath();
+      ctx.roundRect(350, 460, 500, 70, 35);
+      ctx.fill();
+      
+      // URL Text
+      ctx.font = 'bold 32px Arial';
+      ctx.fillStyle = 'white';
+      ctx.fillText('taphoakohkong.live', 600, 505);
+      
+      return canvas;
+    }
+
     async function downloadImage() {
       try {
-        // Tạo canvas
-        const canvas = document.createElement('canvas');
-        canvas.width = 1200;
-        canvas.height = 630;
-        const ctx = canvas.getContext('2d');
-        
-        // Background gradient
-        const gradient = ctx.createLinearGradient(0, 0, 1200, 630);
-        gradient.addColorStop(0, '#667eea');
-        gradient.addColorStop(1, '#764ba2');
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, 1200, 630);
-        
-        // Decorative circles
-        ctx.fillStyle = 'rgba(255,255,255,0.1)';
-        ctx.beginPath();
-        ctx.arc(1100, 100, 150, 0, Math.PI * 2);
-        ctx.fill();
-        
-        ctx.fillStyle = 'rgba(255,255,255,0.05)';
-        ctx.beginPath();
-        ctx.arc(100, 530, 200, 0, Math.PI * 2);
-        ctx.fill();
-        
-        // Icon
-        ctx.font = 'bold 120px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillStyle = 'white';
-        ctx.fillText('🏪', 600, 180);
-        
-        // Title
-        ctx.font = 'bold 72px Arial';
-        ctx.shadowColor = 'rgba(0,0,0,0.2)';
-        ctx.shadowBlur = 8;
-        ctx.shadowOffsetY = 4;
-        ctx.fillText('KohKong Shop', 600, 270);
-        
-        // Subtitle
-        ctx.font = '36px Arial';
-        ctx.shadowBlur = 0;
-        ctx.shadowOffsetY = 0;
-        ctx.fillStyle = 'rgba(255,255,255,0.95)';
-        ctx.fillText('Nền Tảng Bán Hàng Online #1', 600, 320);
-        
-        // Description line 1
-        ctx.font = '28px Arial';
-        ctx.fillStyle = 'rgba(255,255,255,0.9)';
-        ctx.fillText('Mua sắm online dễ dàng • Hàng nghìn sản phẩm chất lượng', 600, 380);
-        
-        // Description line 2
-        ctx.fillText('Giao hàng nhanh chóng • Giá cả hợp lý', 600, 420);
-        
-        // URL Box
-        ctx.fillStyle = 'rgba(255,255,255,0.2)';
-        ctx.beginPath();
-        ctx.roundRect(350, 460, 500, 70, 35);
-        ctx.fill();
-        
-        // URL Text
-        ctx.font = 'bold 32px Arial';
-        ctx.fillStyle = 'white';
-        ctx.fillText('taphoakohkong.live', 600, 505);
+        const canvas = generatePreview();
         
         // Download
         canvas.toBlob((blob) => {
@@ -260,12 +270,12 @@
           a.download = 'og-image-kohkong-shop.png';
           a.click();
           URL.revokeObjectURL(url);
+          
+          alert('✅ Ảnh đã được tải xuống!\n\n📁 File: og-image-kohkong-shop.png\n\n📝 Bước tiếp theo:\n1. Đổi tên thành "og-image.jpg"\n2. Copy vào folder dự án\n3. Commit và push lên GitHub');
         }, 'image/png');
-        
-        alert('✅ Ảnh đã được tải xuống!\n\nLưu ý: Đổi tên file thành "og-image.jpg" và upload lên website.');
       } catch (error) {
         console.error('Error:', error);
-        alert('❌ Lỗi khi tạo ảnh. Vui lòng thử lại.');
+        alert('❌ Lỗi khi tạo ảnh: ' + error.message);
       }
     }
     
