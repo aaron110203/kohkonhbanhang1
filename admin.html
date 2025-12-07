@@ -278,6 +278,43 @@
       </div>
     </div>
 
+    <!-- Announcement Bar Manager -->
+    <div class="agents-table" style="margin-top: 20px;">
+      <div style="padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+        <h3 style="margin: 0;">📢 Quản Lý Thanh Thông Báo</h3>
+      </div>
+      <div style="padding: 20px;">
+        <label style="display: block; margin-bottom: 10px; font-weight: bold; color: #333;">
+          Nội dung thông báo chạy:
+        </label>
+        <textarea 
+          id="announcementText" 
+          style="width: 100%; min-height: 100px; padding: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; font-family: inherit; resize: vertical;"
+          placeholder="Nhập nội dung thông báo (có thể dùng emoji: 🎉 🛍️ 🏆)..."
+        >🎉 Tạp Hóa Koh Kong là trang thương mại điện tử đầu tiên ở Koh Kong thu hút hàng nghìn khách hàng mỗi ngày! 🛍️ Giao hàng nhanh - Giá tốt - Uy tín hàng đầu! 🏆 Đăng ký ngay để trải nghiệm!</textarea>
+        
+        <div style="margin-top: 15px; display: flex; gap: 10px; align-items: center;">
+          <button onclick="saveAnnouncement()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: transform 0.2s;">
+            💾 Lưu Thông Báo
+          </button>
+          <button onclick="previewAnnouncement()" style="background: #28a745; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: transform 0.2s;">
+            👁️ Xem Trước
+          </button>
+          <span id="saveStatus" style="color: #28a745; font-weight: bold;"></span>
+        </div>
+        
+        <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #667eea;">
+          <strong>💡 Lưu ý:</strong>
+          <ul style="margin: 10px 0 0 20px; color: #666;">
+            <li>Text sẽ tự động scroll từ phải sang trái</li>
+            <li>Tốc độ: 25 giây cho 1 vòng</li>
+            <li>Hỗ trợ emoji và ký tự đặc biệt</li>
+            <li>Thay đổi sẽ hiển thị ngay lập tức</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
     <!-- Agents Table -->
     <div class="agents-table">
       <table>
@@ -361,6 +398,51 @@
   <script src="admin.js"></script>
   <script src="sample-products.js"></script>
   <script>
+    // Announcement Management Functions
+    function saveAnnouncement() {
+      const text = document.getElementById('announcementText').value.trim();
+      if (!text) {
+        alert('⚠️ Vui lòng nhập nội dung thông báo!');
+        return;
+      }
+      
+      // Save to localStorage
+      localStorage.setItem('announcementText', text);
+      
+      // Show success message
+      const status = document.getElementById('saveStatus');
+      status.textContent = '✅ Đã lưu thành công!';
+      status.style.color = '#28a745';
+      
+      setTimeout(() => {
+        status.textContent = '';
+      }, 3000);
+      
+      console.log('📢 Announcement saved:', text);
+    }
+    
+    function previewAnnouncement() {
+      const text = document.getElementById('announcementText').value.trim();
+      if (!text) {
+        alert('⚠️ Vui lòng nhập nội dung thông báo!');
+        return;
+      }
+      
+      // Save first
+      localStorage.setItem('announcementText', text);
+      
+      // Open homepage to preview
+      window.open('index.html', '_blank');
+    }
+    
+    // Load saved announcement on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedText = localStorage.getItem('announcementText');
+      if (savedText) {
+        document.getElementById('announcementText').value = savedText;
+      }
+    });
+
     // Add button to load sample products
     window.addEventListener('DOMContentLoaded', () => {
       const header = document.querySelector('.admin-header');

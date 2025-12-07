@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
@@ -104,11 +104,10 @@
   </nav>
 
   <!-- Announcement Bar -->
-  <div class="announcement-bar">
-    <div class="announcement-content">
-      <span>🎉 Tạp Hóa Koh Kong là trang thương mại điện tử đầu tiên ở Koh Kong thu hút hàng nghìn khách hàng mỗi ngày! 🛍️ Giao hàng nhanh - Giá tốt - Uy tín hàng đầu! 🏆 Đăng ký ngay để trải nghiệm!</span>
-      <span>🎉 Tạp Hóa Koh Kong là trang thương mại điện tử đầu tiên ở Koh Kong thu hút hàng nghìn khách hàng mỗi ngày! 🛍️ Giao hàng nhanh - Giá tốt - Uy tín hàng đầu! 🏆 Đăng ký ngay để trải nghiệm!</span>
-    </div>
+  <div id="announcement-bar">
+    <span id="announcement-text">
+      🔥 ƯU ĐÃI ĐẶC BIỆT HÔM NAY – ĐĂNG KÝ MIỄN PHÍ – HỖ TRỢ 24/7 🔥
+    </span>
   </div>
 
   <!-- Hero Section -->
@@ -116,98 +115,218 @@
     <div class="hero-background-image"></div>
     <div class="hero-container">
       <div class="hero-content">
-        <h1 class="hero-title">Bán Hàng Online <br><span class="highlight">Dễ Dàng & Hiệu Quả</span></h1>
-        <p class="hero-description">
+        <!-- Ô 1: Tiêu đề lớn -->
+        <h1 class="hero-title-large">Bán Hàng Online</h1>
+        
+        <!-- Ô 2: Slogan -->
+        <p class="hero-slogan">Tạp Hóa Koh Kong - Mua Bán Trao Đổi - Thương Hiệu Uy Tín</p>
+        
+        <!-- Ô 3: Mô tả -->
+        <i class="hero-description">
           Nền tảng bán hàng trực tuyến giúp bạn tiếp cận hàng nghìn khách hàng. 
           Đăng sản phẩm, nhận đơn qua Telegram, quản lý dễ dàng!
-        </p>
+        </i>
+        
+        <!-- Ô 4: Các nút -->
         <div class="hero-buttons">
-          <a href="#register" class="btn-primary" onclick="goToRegister(event)">
+          <a href="login.html" class="btn-primary">
             🚀 Bắt Đầu Miễn Phí
           </a>
           <a href="#how-it-works" class="btn-secondary">
             📖 Tìm Hiểu Thêm
           </a>
         </div>
-        <div class="hero-stats">
-          <div class="stat-item">
-            <h3>500+</h3>
-            <p>Đại Lý</p>
+        
+        <!-- Ô 6: Đánh giá -->
+        <div class="hero-reviews">
+          <div class="review-stars">
+            <span>⭐⭐⭐⭐⭐</span>
+            <span class="review-score">4.9/5</span>
           </div>
-          <div class="stat-item">
-            <h3>10,000+</h3>
-            <p>Sản Phẩm</p>
-          </div>
-          <div class="stat-item">
-            <h3>50,000+</h3>
-            <p>Đơn Hàng</p>
+          <p class="review-text">"Nền tảng tuyệt vời! Tôi đã bán được hàng nghìn đơn hàng"</p>
+          <div class="review-avatars">
+            <img src="https://i.pravatar.cc/40?img=1" alt="User 1">
+            <img src="https://i.pravatar.cc/40?img=2" alt="User 2">
+            <img src="https://i.pravatar.cc/40?img=3" alt="User 3">
+            <span>+500 đại lý tin dùng</span>
           </div>
         </div>
       </div>
-      <div class="hero-image">
-        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600" alt="Shopping">
-        </div>
+      
+      <!-- Ô 5: Hình ảnh lớn -->
+      <div class="hero-image-large">
+        <img src="https://i.pinimg.com/1200x/a6/49/63/a64963795a918526d55d05d492541567.jpg" alt="Shopping Online">
       </div>
+    </div>
   </section>
 
   <!-- Categories Section -->
   <section id="products" class="categories">
     <div class="section-container">
-      <div class="section-header">
-        <h2>Danh Mục Sản Phẩm</h2>
-        <p>Khám phá hàng ngàn sản phẩm từ các đại lý uy tín - Không cần đăng ký để xem</p>
+      <!-- Section Header với background -->
+      <div class="section-header-box">
+        <div class="section-header">
+          <h2>Danh Mục Sản Phẩm</h2>
+          <u>Khám phá hàng ngàn sản phẩm từ các đại lý uy tín - Không cần đăng ký để xem</u>
+        </div>
       </div>
       
-      <!-- Category Filter -->
-      <div class="category-filter">
-        <button class="filter-btn active" onclick="filterCategory('all')">
-          <span class="filter-icon">🛍️</span> Tất Cả
-        </button>
-        <button class="filter-btn" onclick="filterCategory('food')">
-          <span class="filter-icon">🍜</span> Đồ Ăn
-        </button>
-        <button class="filter-btn" onclick="filterCategory('fashion')">
-          <span class="filter-icon">👕</span> Quần Áo
-        </button>
-        <button class="filter-btn" onclick="filterCategory('medicine')">
-          <span class="filter-icon">💊</span> Thuốc
-        </button>
-        <button class="filter-btn" onclick="filterCategory('personal')">
-          <span class="filter-icon">🧴</span> Đồ Dùng Cá Nhân
-        </button>
-        <button class="filter-btn" onclick="filterCategory('grocery')">
-          <span class="filter-icon">🛒</span> Nhận Đi Chợ Hộ
-        </button>
-        <button class="filter-btn" onclick="filterCategory('fruits')">
-          <span class="filter-icon">🍎</span> Hoa Quả
-        </button>
-        <button class="filter-btn" onclick="filterCategory('drinks')">
-          <span class="filter-icon">🥤</span> Nước Uống
-        </button>
-        <button class="filter-btn" onclick="filterCategory('electronics')">
-          <span class="filter-icon">📱</span> Điện Tử
-        </button>
-        <button class="filter-btn" onclick="filterCategory('cosmetics')">
-          <span class="filter-icon">💄</span> Mỹ Phẩm
-        </button>
-        <button class="filter-btn" onclick="filterCategory('home')">
-          <span class="filter-icon">🏠</span> Đồ Gia Dụng
-        </button>
-      </div>
-
-      <!-- Products Grid -->
-      <div class="product-grid" id="productGrid">
-        <!-- Đồ Ăn -->
-        <div class="product-card" data-category="food">
-          <div class="product-image">
-            <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400" alt="Bánh mì">
-            <span class="product-badge">Hot</span>
+      <!-- Layout 3 cột: Lọc giá | Sản phẩm | Đại lý -->
+      <div class="products-layout">
+        
+        <!-- SIDEBAR TRÁI: Lọc theo giá -->
+        <aside class="price-filter-sidebar">
+          <div class="sidebar-header">
+            <h3>💰 Lọc Theo Giá</h3>
           </div>
-          <div class="product-info">
-            <h3>Bánh Mì Đặc Biệt</h3>
-            <p class="product-desc">Bánh mì thịt nguội, pate, rau thơm</p>
-            <div class="product-meta">
-              <span class="price">25.000đ</span>
+          <div class="price-filter-options">
+            <label class="price-option">
+              <input type="radio" name="price-range" value="all" checked onclick="filterByPrice('all')">
+              <span class="price-label">
+                <span class="price-icon">🛍️</span>
+                <div class="price-info">
+                  <strong>Tất Cả Giá</strong>
+                  <small>Xem toàn bộ sản phẩm</small>
+                </div>
+              </span>
+            </label>
+            
+            <label class="price-option">
+              <input type="radio" name="price-range" value="budget" onclick="filterByPrice('budget')">
+              <span class="price-label">
+                <span class="price-icon">💵</span>
+                <div class="price-info">
+                  <strong>Gói Phổ Thông</strong>
+                  <small>5$ - 10$</small>
+                </div>
+              </span>
+            </label>
+            
+            <label class="price-option">
+              <input type="radio" name="price-range" value="premium" onclick="filterByPrice('premium')">
+              <span class="price-label">
+                <span class="price-icon">💎</span>
+                <div class="price-info">
+                  <strong>Gói Cao Cấp</strong>
+                  <small>100$ - 1000$</small>
+                </div>
+              </span>
+            </label>
+            
+            <label class="price-option">
+              <input type="radio" name="price-range" value="contact" onclick="filterByPrice('contact')">
+              <span class="price-label">
+                <span class="price-icon">📞</span>
+                <div class="price-info">
+                  <strong>Giá Thỏa Thuận</strong>
+                  <small>Liên hệ để biết giá</small>
+                </div>
+              </span>
+            </label>
+          </div>
+          
+          <!-- Thống kê -->
+          <div class="price-stats">
+            <div class="stat-item">
+              <span class="stat-number">150+</span>
+              <span class="stat-label">Sản phẩm</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">50+</span>
+              <span class="stat-label">Đại lý</span>
+            </div>
+          </div>
+        </aside>
+        
+        <!-- GIỮA: Danh mục & Sản phẩm -->
+        <div class="products-main">
+          <!-- Category Filter với Dropdown Lọc Giá -->
+          <div class="category-filter">
+            <!-- Dropdown Lọc Giá -->
+            <div class="price-filter-dropdown">
+              <button class="price-dropdown-btn" onclick="togglePriceDropdown()">
+                💰 Lọc Theo Giá ▼
+              </button>
+              <div class="price-dropdown-menu" id="priceDropdownMenu">
+                <div class="price-dropdown-item active" onclick="selectPrice('all', this)">
+                  <span class="price-icon">🛍️</span>
+                  <div class="price-info">
+                    <strong>Tất Cả Giá</strong>
+                    <small>Xem toàn bộ</small>
+                  </div>
+                </div>
+                <div class="price-dropdown-item" onclick="selectPrice('budget', this)">
+                  <span class="price-icon">💵</span>
+                  <div class="price-info">
+                    <strong>Phổ Thông</strong>
+                    <small>5$ - 10$</small>
+                  </div>
+                </div>
+                <div class="price-dropdown-item" onclick="selectPrice('premium', this)">
+                  <span class="price-icon">💎</span>
+                  <div class="price-info">
+                    <strong>Cao Cấp</strong>
+                    <small>100$ - 1000$</small>
+                  </div>
+                </div>
+                <div class="price-dropdown-item" onclick="selectPrice('contact', this)">
+                  <span class="price-icon">📞</span>
+                  <div class="price-info">
+                    <strong>Thỏa Thuận</strong>
+                    <small>Liên hệ</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <button class="filter-btn active" onclick="filterCategory('all')">
+              <span class="filter-icon">🛍️</span> Tất Cả
+            </button>
+            <button class="filter-btn" onclick="filterCategory('food')">
+              <span class="filter-icon">🍜</span> Đồ Ăn
+            </button>
+            <button class="filter-btn" onclick="filterCategory('fashion')">
+              <span class="filter-icon">👕</span> Quần Áo
+            </button>
+            <button class="filter-btn" onclick="filterCategory('medicine')">
+              <span class="filter-icon">💊</span> Thuốc
+            </button>
+            <button class="filter-btn" onclick="filterCategory('personal')">
+              <span class="filter-icon">🧴</span> Đồ Dùng Cá Nhân
+            </button>
+            <button class="filter-btn" onclick="filterCategory('grocery')">
+              <span class="filter-icon">🛒</span> Nhận Đi Chợ Hộ
+            </button>
+            <button class="filter-btn" onclick="filterCategory('fruits')">
+              <span class="filter-icon">🍎</span> Hoa Quả
+            </button>
+            <button class="filter-btn" onclick="filterCategory('drinks')">
+              <span class="filter-icon">🥤</span> Nước Uống
+            </button>
+            <button class="filter-btn" onclick="filterCategory('electronics')">
+              <span class="filter-icon">📱</span> Điện Tử
+            </button>
+            <button class="filter-btn" onclick="filterCategory('cosmetics')">
+              <span class="filter-icon">💄</span> Mỹ Phẩm
+            </button>
+            <button class="filter-btn" onclick="filterCategory('home')">
+              <span class="filter-icon">🏠</span> Đồ Gia Dụng
+            </button>
+          </div>
+
+          <!-- Products Grid -->
+          <div class="product-grid" id="productGrid">
+            <!-- Đồ Ăn -->
+            <div class="product-card" data-category="food" data-price="budget" onclick="openProductLightbox('https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800', 'Bánh Mì Đặc Biệt', 'Bánh mì thịt nguội, pate, rau thơm, đầy đủ topping', '25.000đ')">
+              <div class="product-image">
+                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400" alt="Bánh mì">
+                <span class="product-badge">Hot</span>
+              </div>
+              <div class="product-info">
+                <h3>Bánh Mì Đặc Biệt</h3>
+                <p class="product-desc">Bánh mì thịt nguội, pate, rau thơm</p>
+                <div class="product-meta">
+                  <span class="price">25.000đ</span>
               <span class="seller">🍞 Quán Bánh Mì Ngon</span>
             </div>
             <div class="product-contact">
@@ -216,7 +335,7 @@
           </div>
         </div>
 
-        <div class="product-card" data-category="food">
+        <div class="product-card" data-category="food" data-price="budget" onclick="openProductLightbox('https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800', 'Cơm Tấm Sườn Bì', 'Cơm tấm sườn nướng, bì, chả trứng, nước mắm đậm đà', '35.000đ')">
           <div class="product-image">
             <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400" alt="Cơm tấm">
             <span class="product-badge">Mới</span>
@@ -234,7 +353,7 @@
           </div>
         </div>
 
-        <div class="product-card" data-category="food">
+        <div class="product-card" data-category="food" data-price="premium" onclick="openProductLightbox('https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=800', 'Pizza Hải Sản', 'Pizza size M, tôm, mực, phô mai mỹ, sốt đặc biệt', '120.000đ')">
           <div class="product-image">
             <img src="https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400" alt="Pizza">
           </div>
@@ -660,10 +779,152 @@
           </div>
         </div>
       </div>
-
+      
       <div class="view-more">
         <p class="info-text">💡 Xem sản phẩm không cần đăng ký. Đăng ký để bán hàng và quản lý đơn!</p>
         <a href="#register" class="btn-primary" onclick="goToRegister()">Đăng Ký Bán Hàng Ngay</a>
+      </div>
+        </div>
+        
+        <!-- SIDEBAR PHẢI: Danh sách đại lý -->
+        <aside class="agents-sidebar">
+          <div class="sidebar-header">
+            <h3>🏪 Đại Lý Uy Tín</h3>
+            <span class="badge">50+ đại lý</span>
+          </div>
+          
+          <div class="agents-list">
+            <div class="agent-card">
+              <div class="agent-avatar">
+                <img src="https://i.pravatar.cc/80?img=1" alt="Đại lý">
+                <span class="agent-badge">⭐ VIP</span>
+              </div>
+              <div class="agent-info">
+                <h4>Quán Bánh Mì Ngon</h4>
+                <p class="agent-category">🍞 Đồ Ăn</p>
+                <div class="agent-stats">
+                  <span>📦 120 SP</span>
+                  <span>⭐ 4.9</span>
+                </div>
+              </div>
+              <button class="btn-view-agent">Xem</button>
+            </div>
+            
+            <div class="agent-card">
+              <div class="agent-avatar">
+                <img src="https://i.pravatar.cc/80?img=2" alt="Đại lý">
+                <span class="agent-badge">🔥 Hot</span>
+              </div>
+              <div class="agent-info">
+                <h4>Shop Thời Trang ABC</h4>
+                <p class="agent-category">👕 Quần Áo</p>
+                <div class="agent-stats">
+                  <span>📦 85 SP</span>
+                  <span>⭐ 4.8</span>
+                </div>
+              </div>
+              <button class="btn-view-agent">Xem</button>
+            </div>
+            
+            <div class="agent-card">
+              <div class="agent-avatar">
+                <img src="https://i.pravatar.cc/80?img=3" alt="Đại lý">
+              </div>
+              <div class="agent-info">
+                <h4>Nhà Thuốc Long Châu</h4>
+                <p class="agent-category">💊 Thuốc</p>
+                <div class="agent-stats">
+                  <span>📦 200 SP</span>
+                  <span>⭐ 5.0</span>
+                </div>
+              </div>
+              <button class="btn-view-agent">Xem</button>
+            </div>
+            
+            <div class="agent-card">
+              <div class="agent-avatar">
+                <img src="https://i.pravatar.cc/80?img=4" alt="Đại lý">
+              </div>
+              <div class="agent-info">
+                <h4>Cửa Hàng Điện Tử XYZ</h4>
+                <p class="agent-category">📱 Điện Tử</p>
+                <div class="agent-stats">
+                  <span>📦 95 SP</span>
+                  <span>⭐ 4.7</span>
+                </div>
+              </div>
+              <button class="btn-view-agent">Xem</button>
+            </div>
+            
+            <div class="agent-card">
+              <div class="agent-avatar">
+                <img src="https://i.pravatar.cc/80?img=5" alt="Đại lý">
+              </div>
+              <div class="agent-info">
+                <h4>Mỹ Phẩm Hàn Quốc</h4>
+                <p class="agent-category">💄 Mỹ Phẩm</p>
+                <div class="agent-stats">
+                  <span>📦 150 SP</span>
+                  <span>⭐ 4.9</span>
+                </div>
+              </div>
+              <button class="btn-view-agent">Xem</button>
+            </div>
+            
+            <!-- Duplicate for infinite scroll -->
+            <div class="agent-card">
+              <div class="agent-avatar">
+                <img src="https://i.pravatar.cc/80?img=1" alt="Đại lý">
+                <span class="agent-badge">⭐ VIP</span>
+              </div>
+              <div class="agent-info">
+                <h4>Quán Bánh Mì Ngon</h4>
+                <p class="agent-category">🍞 Đồ Ăn</p>
+                <div class="agent-stats">
+                  <span>📦 120 SP</span>
+                  <span>⭐ 4.9</span>
+                </div>
+              </div>
+              <button class="btn-view-agent">Xem</button>
+            </div>
+            
+            <div class="agent-card">
+              <div class="agent-avatar">
+                <img src="https://i.pravatar.cc/80?img=2" alt="Đại lý">
+                <span class="agent-badge">🔥 Hot</span>
+              </div>
+              <div class="agent-info">
+                <h4>Shop Thời Trang ABC</h4>
+                <p class="agent-category">👕 Quần Áo</p>
+                <div class="agent-stats">
+                  <span>📦 85 SP</span>
+                  <span>⭐ 4.8</span>
+                </div>
+              </div>
+              <button class="btn-view-agent">Xem</button>
+            </div>
+            
+            <div class="agent-card">
+              <div class="agent-avatar">
+                <img src="https://i.pravatar.cc/80?img=3" alt="Đại lý">
+              </div>
+              <div class="agent-info">
+                <h4>Nhà Thuốc Long Châu</h4>
+                <p class="agent-category">💊 Thuốc</p>
+                <div class="agent-stats">
+                  <span>📦 200 SP</span>
+                  <span>⭐ 5.0</span>
+                </div>
+              </div>
+              <button class="btn-view-agent">Xem</button>
+            </div>
+          </div>
+          
+          <div class="view-all-agents">
+            <a href="#agents" class="btn-view-all">Xem Tất Cả Đại Lý →</a>
+          </div>
+        </aside>
+        
       </div>
     </div>
   </section>
@@ -1048,6 +1309,62 @@
       document.getElementById('productGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
+    // Filter products by price range
+    function filterByPrice(priceRange) {
+      const products = document.querySelectorAll('.product-card');
+      
+      products.forEach(product => {
+        const productPrice = product.getAttribute('data-price');
+        
+        if (priceRange === 'all') {
+          product.style.display = 'block';
+          setTimeout(() => product.style.opacity = '1', 10);
+        } else {
+          if (productPrice === priceRange) {
+            product.style.display = 'block';
+            setTimeout(() => product.style.opacity = '1', 10);
+          } else {
+            product.style.opacity = '0';
+            setTimeout(() => product.style.display = 'none', 300);
+          }
+        }
+      });
+
+      // Scroll to products
+      document.getElementById('productGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Toggle price dropdown
+    function togglePriceDropdown() {
+      const menu = document.getElementById('priceDropdownMenu');
+      menu.classList.toggle('active');
+    }
+
+    // Select price and filter
+    function selectPrice(priceRange, element) {
+      // Remove active from all items
+      document.querySelectorAll('.price-dropdown-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      
+      // Add active to selected item
+      element.classList.add('active');
+      
+      // Filter products
+      filterByPrice(priceRange);
+      
+      // Close dropdown
+      document.getElementById('priceDropdownMenu').classList.remove('active');
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      const dropdown = document.querySelector('.price-filter-dropdown');
+      if (dropdown && !dropdown.contains(e.target)) {
+        document.getElementById('priceDropdownMenu').classList.remove('active');
+      }
+    });
+
     // Navbar background on scroll
     window.addEventListener('scroll', () => {
       const navbar = document.querySelector('.navbar');
@@ -1251,6 +1568,63 @@
     // Auto-refresh mỗi 30 giây để cập nhật sản phẩm mới
     setInterval(loadDynamicProducts, 30000);
 
+    // ==================== ANNOUNCEMENT BAR DYNAMIC LOAD ====================
+    function loadAnnouncementText() {
+      const savedText = localStorage.getItem('announcementText');
+      if (savedText) {
+        // Update both spans in announcement bar
+        const spans = document.querySelectorAll('.announcement-content span');
+        spans.forEach(span => {
+          span.textContent = savedText;
+        });
+        console.log('📢 Loaded announcement:', savedText);
+      }
+    }
+    
+    // Load announcement on page load
+    window.addEventListener('DOMContentLoaded', loadAnnouncementText);
+    
+    // Check for updates every 5 seconds
+    setInterval(loadAnnouncementText, 5000);
+
+    // ==================== PRODUCT LIGHTBOX ====================
+    function openProductLightbox(imageSrc, title, desc, price) {
+      const lightbox = document.getElementById('productLightbox');
+      const lightboxImg = document.getElementById('lightboxImage');
+      const lightboxTitle = document.getElementById('lightboxTitle');
+      const lightboxDesc = document.getElementById('lightboxDesc');
+      const lightboxPrice = document.getElementById('lightboxPrice');
+      
+      lightboxImg.src = imageSrc;
+      lightboxTitle.textContent = title;
+      lightboxDesc.textContent = desc;
+      lightboxPrice.textContent = price;
+      
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeLightbox() {
+      const lightbox = document.getElementById('productLightbox');
+      lightbox.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+    
+    // Close lightbox when clicking outside
+    document.addEventListener('click', (e) => {
+      const lightbox = document.getElementById('productLightbox');
+      if (e.target === lightbox) {
+        closeLightbox();
+      }
+    });
+    
+    // Close lightbox with ESC key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeLightbox();
+      }
+    });
+
     // ==================== SHARE FUNCTIONS ====================
     function toggleShareMenu() {
       const menu = document.getElementById('shareMenu');
@@ -1272,6 +1646,43 @@
         shareMenu.classList.remove('active');
       }
     });
+
+    // ==================== ANNOUNCEMENT BAR SCROLLING ====================
+    const announcementText = document.getElementById("announcement-text");
+    let position = 100;
+
+    function moveAnnouncementText() {
+      position -= 0.2; // Tốc độ chạy (càng lớn càng nhanh)
+      if (position < -100) {
+        position = 100;
+      }
+      announcementText.style.transform = `translateX(${position}%)`;
+      requestAnimationFrame(moveAnnouncementText);
+    }
+
+    moveAnnouncementText();
   </script>
+
+  <!-- Product Lightbox Modal -->
+  <div id="productLightbox" class="product-lightbox">
+    <div class="lightbox-content">
+      <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+      <div class="lightbox-image-container">
+        <img id="lightboxImage" src="" alt="Product">
+        <div class="zoom-hint">🔍 Click để phóng to</div>
+      </div>
+      <div class="lightbox-info">
+        <h2 id="lightboxTitle"></h2>
+        <p id="lightboxDesc"></p>
+        <div class="lightbox-price-section">
+          <span class="lightbox-price" id="lightboxPrice"></span>
+          <a href="https://t.me/KohKongBanHang_bot" target="_blank" class="lightbox-btn-contact">
+            💬 Liên Hệ Đặt Hàng
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
