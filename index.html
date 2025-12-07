@@ -79,16 +79,18 @@
   <!-- Navigation -->
   <nav class="navbar">
     <div class="nav-container">
-      <div class="nav-logo">
-        <span class="logo-icon">🏪</span>
-        <span class="logo-text">KohKong Bán Hàng</span>
+      <div class="nav-logo-center">
+        <span class="logo-icon-big">🏪</span>
+        <span class="logo-text-big">KohKong Bán Hàng</span>
       </div>
+      
       <ul class="nav-menu">
         <li><a href="#home">Trang Chủ</a></li>
         <li><a href="#how-it-works">Cách Hoạt Động</a></li>
         <li><a href="#pricing">Bảng Giá</a></li>
         <li><a href="#contact">Liên Hệ</a></li>
       </ul>
+      
       <div class="nav-buttons">
         <a href="login.html" class="btn-login">Đăng Nhập</a>
         <a href="login.html" class="btn-register">Đăng Ký Ngay</a>
@@ -101,8 +103,17 @@
     </div>
   </nav>
 
+  <!-- Announcement Bar -->
+  <div class="announcement-bar">
+    <div class="announcement-content">
+      <span>🎉 Tạp Hóa Koh Kong là trang thương mại điện tử đầu tiên ở Koh Kong thu hút hàng nghìn khách hàng mỗi ngày! 🛍️ Giao hàng nhanh - Giá tốt - Uy tín hàng đầu! 🏆 Đăng ký ngay để trải nghiệm!</span>
+      <span>🎉 Tạp Hóa Koh Kong là trang thương mại điện tử đầu tiên ở Koh Kong thu hút hàng nghìn khách hàng mỗi ngày! 🛍️ Giao hàng nhanh - Giá tốt - Uy tín hàng đầu! 🏆 Đăng ký ngay để trải nghiệm!</span>
+    </div>
+  </div>
+
   <!-- Hero Section -->
   <section id="home" class="hero">
+    <div class="hero-background-image"></div>
     <div class="hero-container">
       <div class="hero-content">
         <h1 class="hero-title">Bán Hàng Online <br><span class="highlight">Dễ Dàng & Hiệu Quả</span></h1>
@@ -936,6 +947,37 @@
   </footer>
 
   <script>
+    // Active menu highlighting
+    const navLinks = document.querySelectorAll('.nav-menu a');
+    const sections = document.querySelectorAll('section[id]');
+
+    // Set active on click
+    navLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        navLinks.forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+
+    // Set active on scroll
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (scrollY >= (sectionTop - 200)) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href').includes(current)) {
+          link.classList.add('active');
+        }
+      });
+    });
+
     // Mobile menu toggle
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
